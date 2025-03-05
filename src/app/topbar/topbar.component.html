@@ -5,19 +5,21 @@
 
 <tui-textfield iconStart="@tui.search" class="search-wrapper" tuiTextfieldSize="m">
     <input placeholder="Search..." tuiTextfield [(ngModel)]="search" (ngModelChange)="debounceSearch()" #searchEl/>
-    <div class="search-results">
+    <div class="search-results" [class.empty]="results.length === 0 || search.trim() === '' || searchLoading">
         <span *ngIf="!searchLoading && search.trim() === ''">Start typing to search...</span>
         <span *ngIf="!searchLoading && search.trim() !== '' && results.length === 0">No results found</span>
         <tui-loader *ngIf="searchLoading" size="xs"></tui-loader>
-        <div class="search-results-list" *ngIf="!searchLoading && results.length > 0 && search.trim() !== ''">
-            <ng-container *ngFor="let result of results; let i = index;">
-                <a class="search-result">
-                    <div class="search-result-name" [innerHTML]="highlightSearch(result.name)"></div>
-                    <div class="search-result-type">{{ result.type }}</div>
-                </a>
-                <div class="search-result-divider" *ngIf="i < results.length - 1"></div>
-            </ng-container>
-        </div>
+        <tui-scrollbar>
+            <div class="search-results-list" *ngIf="!searchLoading && results.length > 0 && search.trim() !== ''">
+                <ng-container *ngFor="let result of results; let i = index;">
+                    <a class="search-result">
+                        <div class="search-result-name" [innerHTML]="highlightSearch(result.name)"></div>
+                        <div class="search-result-type">{{ result.type }}</div>
+                    </a>
+                    <div class="search-result-divider" *ngIf="i < results.length - 1"></div>
+                </ng-container>
+            </div>
+        </tui-scrollbar>
     </div>
 </tui-textfield>
 

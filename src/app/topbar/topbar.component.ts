@@ -3,7 +3,7 @@ import { VERSION, CDN_BASE, API_BASE } from '../../globals';
 import { UserService } from '../../services/user.service';
 import { NgIf, NgForOf } from '@angular/common';
 import { TuiButton, TuiHint, TuiTextfield, TuiLoader } from '@taiga-ui/core';
-import { TuiAppearance } from '@taiga-ui/core';
+import { TuiAppearance, TuiScrollbar } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { TuiBadgedContent, TuiBadgeNotification } from '@taiga-ui/kit';
@@ -18,7 +18,7 @@ const TEST_DATA = [
 
 @Component({
     selector: 'top-bar',
-    imports: [NgIf, NgForOf, TuiButton, TuiAppearance, TuiHint, TuiTextfield, FormsModule, TuiBadgedContent, TuiBadgeNotification, TuiLoader],
+    imports: [NgIf, NgForOf, TuiButton, TuiAppearance, TuiHint, TuiTextfield, FormsModule, TuiBadgedContent, TuiBadgeNotification, TuiLoader, TuiScrollbar],
     templateUrl: './topbar.component.html',
     styleUrl: './topbar.component.less',
 })
@@ -75,7 +75,7 @@ export class TopBar {
             // the aliases could be better matching so check
             let result = [];
             for(const item of res){
-                if(!item.aliases){
+                if(!item.aliases || item.name.toLowerCase().includes(search.toLowerCase())){
                     result.push({id: item.id, name: item.name, type: item.type});
                     continue;
                 }
