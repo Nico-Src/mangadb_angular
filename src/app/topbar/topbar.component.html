@@ -1,0 +1,29 @@
+<div class="top-bar-header">
+    <div class="logo-bg"><img class="logo" src="/img/logo/icon_alt.png" alt="MangaDB Logo" width="40" height="40"></div>
+    <img class="name" src="/img/logo/icon_2.png" alt="MangaDB Title">
+</div>
+
+<tui-textfield iconStart="@tui.search" class="search-wrapper" tuiTextfieldSize="m">
+    <input placeholder="Search..." tuiTextfield [(ngModel)]="search" (ngModelChange)="debounceSearch()" #searchEl/>
+    <div class="search-results">
+        <span *ngIf="!searchLoading && search.trim() === ''">Start typing to search...</span>
+        <span *ngIf="!searchLoading && search.trim() !== '' && results.length === 0">No results found</span>
+        <tui-loader *ngIf="searchLoading" size="xs"></tui-loader>
+        <div class="search-results-list" *ngIf="!searchLoading && results.length > 0 && search.trim() !== ''">
+            <ng-container *ngFor="let result of results; let i = index;">
+                <a class="search-result">
+                    <div class="search-result-name" [innerHTML]="highlightSearch(result.name)"></div>
+                    <div class="search-result-type">{{ result.type }}</div>
+                </a>
+                <div class="search-result-divider" *ngIf="i < results.length - 1"></div>
+            </ng-container>
+        </div>
+    </div>
+</tui-textfield>
+
+<tui-badged-content class="notifications">
+    <tui-badge-notification size="xs" tuiSlot="top"/>
+    <button appearance="flat" size="s" tuiIconButton type="button" tuiHintAppearance="dark" tuiHintDirection="bottom" tuiHint="Notifications" class="notification" iconStart="@tui.bell" [style.border-radius.%]="100"></button>
+</tui-badged-content>
+
+<img class="user-image" *ngIf="user().id" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">

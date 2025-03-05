@@ -1,0 +1,156 @@
+@import '../../variables.less';
+
+:host{
+    width: 100%;
+    height: @topbar-height;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    top: 0;
+    left: 0;
+    flex-shrink: 0;
+    position: relative;
+
+    .top-bar-header{
+        width: @sidebar-expanded-width;
+        height: @topbar-height;
+        display:flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0 15px 0 10px;
+
+        .logo-bg{
+            background-color: white;
+            border-radius: 12px;
+            height: calc(@topbar-height - 20px);
+            aspect-ratio: 1;
+        }
+    
+        .logo{
+            height: calc(@topbar-height - 20px);
+            filter: var(--logo-filters);
+        }
+    
+        .name{
+            height: calc(@topbar-height - 30px);
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            padding-left: 5px;
+            transform: translateY(3px);
+            filter: var(--logo-name-filters);
+            transition: opacity @transition-time ease;
+        }
+    }
+
+    .search-wrapper{
+        position: relative;
+        margin-left: auto;
+        margin-right: 10px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(@topbar-height - 25px);
+        width: 200px;
+        background-color: #eee;
+        border-radius: 500px;
+        padding: 0 10px;
+        transition: width @transition-time ease;
+
+        [tuiAppearance][data-appearance=textfield]{
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
+            outline: 0.125rem solid black !important;
+        }
+
+        &:focus-within{
+            width: 350px;
+
+            .search-results{
+                opacity: 1;
+                transform: translateY(0);
+                transition: opacity @transition-time ease 0s, transform @transition-time ease 0s;
+            }
+        }
+
+        .search-results{
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0; right: 0;
+            width: 100%;
+            height: fit-content;
+            padding: 5px;
+            background-color: #eee;
+            outline: 1px solid #ccc;
+            color: black !important;
+            display:flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            box-shadow:  2px 0px 8px 2px rgba(0,0,0,.05);
+            min-height: 40px;
+            max-height: 250px;
+            overflow-y: auto;
+            border-radius: 6px;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            will-change: opacity, transform;
+            transition: opacity @transition-time ease 0s, transform @transition-time ease 1s;
+
+            &.empty{
+                justify-content: center !important;
+            }
+
+            .search-results-list{
+                width: 100%;
+                height: fit-content;
+                display:flex;
+                justify-content: flex-start;
+                align-items: center;
+                flex-direction: column;
+
+                .search-result{
+                    width: 100%;
+                    height: fit-content;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    transition: background-color @transition-time ease;
+                    cursor: pointer;
+
+                    &:hover{
+                        background-color: #ddd;
+                    }
+
+                    .search-result-type{
+                        color: #808080;
+                    }
+                }
+
+                .search-result-divider{
+                    width: 100%;
+                    height: 0px;
+                    border-bottom: 1px solid #ccc;
+                    margin: 5px 0;
+                }
+            }
+        }
+    }
+
+    .notifications{
+        margin-right: 10px;
+        
+        .notification{
+            color: black !important;
+        }
+    }
+
+    .user-image{
+        margin-right: 10px;
+        height: calc(@topbar-height - 20px);
+        border-radius: 500px;
+    }
+}

@@ -1,0 +1,39 @@
+@import '../variables.less';
+
+.t-root-content{
+    width: 100%;
+    height: 100%;
+}
+
+.topbar{
+    width: 100%;
+    height: @topbar-height;
+    background-color: @topbar-color;
+    box-shadow:  2px 0px 8px 2px rgba(0,0,0,.05);
+}
+
+.sidebar{
+    width: @sidebar-width;
+    height: calc(100% - @topbar-height);
+    background-color: @sidebar-color;
+    box-shadow:  2px 0px 8px 2px rgba(0,0,0,.05);
+    float:left;
+    transition: width @transition-time ease;
+
+    &.expanded{
+        width: @sidebar-expanded-width;
+    }
+}
+
+.main-content{
+    width: calc(100% - @sidebar-width);
+    height: calc(100% - @topbar-height);
+    background-color: @bg-color;
+    float: left;
+    clear: right;
+    transition: width @transition-time ease;
+
+    &.expanded{
+        width: calc(100% - @sidebar-expanded-width);
+    }
+}

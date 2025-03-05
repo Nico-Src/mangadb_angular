@@ -1,0 +1,11 @@
+<tui-root>
+    <header class="topbar">
+        <top-bar></top-bar>
+    </header>
+    <aside class="sidebar" [class.expanded]="expanded()" (click)="handleToggle()">
+        <side-bar></side-bar>
+    </aside>
+    <main class="main-content" [class.expanded]="expanded()">
+        <router-outlet></router-outlet>
+    </main>
+</tui-root>
