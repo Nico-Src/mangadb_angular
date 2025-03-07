@@ -1,0 +1,68 @@
+{
+    "language": {
+        "label": "Sprache",
+        "de": "Deutsch",
+        "en": "Englisch",
+        "fr": "Französisch"
+    },
+    "title": {
+        "home": "Startseite",
+        "login": "Anmelden",
+        "register": "Registrieren"
+    },
+    "dialog": {
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen",
+        "logout-question": "Willst du dich wirklich abmelden?",
+        "logout-all": "Von allen Geräten abmelden",
+        "logout-success": "Abmeldung erfolgreich"
+    },
+    "auth": {
+        "username": "Benutzername",
+        "password": "Passwort"
+    },
+    "login": {
+        "title": "Anmelden bei MangaDB",
+        "desc": "Melde dich an, um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
+        "with": "Anmelden mit",
+        "success": "Anmeldung erfolgreich",
+        "error": "Anmeldung fehlgeschlagen",
+        "no-account-question": "Noch keinen Account?"
+    },
+    "register": {
+        "title": "Registrieren bei MangaDB",
+        "desc": "Registriere dich um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
+        "with": "Registrieren mit",
+        "success": "Registrierung erfolgreich",
+        "error": "Registrierung fehlgeschlagen"
+    },
+    "topbar": {
+        "notifications": "Benachrichtigungen",
+        "search": {
+            "placeholder": "Suche...",
+            "empty": "Tippen Sie, um zu suchen...",
+            "no-results": "Keine Ergebnisse gefunden"
+        },
+        "profile": {
+            "guest": "Gast",
+            "login": "Anmelden",
+            "register": "Registrieren",
+            "logout": "Abmelden"
+        }
+    },
+    "server": {
+        "error": {
+            "connection": "Verbindung zum Server fehlgeschlagen...",
+            "session-expired": "Sitzung abgelaufen..."
+        }
+    },
+    "volume": {
+        "type": {
+            "manga": "Manga",
+            "novel": "Roman",
+            "manwha": "Manhwa",
+            "manhua": "Manhua",
+            "other": "Andere"
+        }
+    }
+}

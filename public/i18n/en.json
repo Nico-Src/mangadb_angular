@@ -1,0 +1,68 @@
+{
+    "language": {
+        "label": "Language",
+        "de": "German",
+        "en": "English",
+        "fr": "French"
+    },
+    "title": {
+        "home": "Home",
+        "login": "Login",
+        "register": "Register"
+    },
+    "dialog": {
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "logout-question": "Do you really want to logout?",
+        "logout-all": "Logout from all devices",
+        "logout-success": "Logout successful"
+    },
+    "auth": {
+        "username": "Username",
+        "password": "Password"
+    },
+    "login": {
+        "title": "Login to MangaDB",
+        "desc": "Login to manage your collection, reading history and much more. Become a part of the community",
+        "with": "Login with",
+        "success": "Successfully logged in",
+        "error": "Login failed",
+        "no-account-question": "No account yet?"
+    },
+    "register": {
+        "title": "Register to MangaDB",
+        "desc": "Register to manage your collection, reading history and much more. Become a part of the community",
+        "with": "Register with",
+        "success": "Successfully registered",
+        "error": "Registration failed"
+    },
+    "topbar": {
+        "notifications": "Notifications",
+        "search": {
+            "placeholder": "Search...",
+            "empty": "Start typing to search...",
+            "no-results": "No results found"
+        },
+        "profile": {
+            "guest": "Guest",
+            "login": "Login",
+            "register": "Register",
+            "logout": "Logout"
+        }
+    },
+    "server": {
+        "error": {
+            "connection": "Connection to server failed...",
+            "session-expired": "Session expired..."
+        }
+    },
+    "volume": {
+        "type": {
+            "manga": "Manga",
+            "novel": "Novel",
+            "manwha": "Manhwa",
+            "manhua": "Manhua",
+            "other": "Other"
+        }
+    }
+}
