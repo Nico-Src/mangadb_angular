@@ -1,0 +1,34 @@
+<div class="wrapper">
+    <div class="background">
+        
+    </div>
+    <div class="login-container">
+        <div class="title">{{ 'login.title' | translate }}</div>
+        <div class="description">{{ 'login.desc' | translate }}&nbsp;<tui-icon icon="@tui.party-popper" [style.fontSize.px]="18"></tui-icon></div>
+        <label>
+            <span class="username-label">
+                <tui-icon icon="@tui.user" [style.fontSize.px]="20"></tui-icon>&nbsp;
+                {{ "auth.username" | translate }}
+            </span>
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="username" (keydown)="keyLogin($event)">
+            </tui-textfield>
+        </label>
+        <label>
+            <span class="password-label" style="margin-top: 10px; display:block;">
+                <tui-icon icon="@tui.key-square" [style.fontSize.px]="20"></tui-icon>&nbsp;
+                {{ "auth.password" | translate }}
+            </span>
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" (keydown)="keyLogin($event)">
+                <tui-icon [style.fontSize.px]="20" [icon]="!passwordVisible ? '@tui.eye' : '@tui.eye-off'" (click)="passwordVisible = !passwordVisible"/>
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [inheritColor]="true" [overlay]="true" [showLoader]="loggingIn">
+                <button size="s" tuiButton type="button" class="login-btn" appearance="accent" (click)="login()">{{ 'topbar.profile.login' | translate }}</button>
+            </tui-loader>
+            <button size="s" tuiButton type="button" class="register-btn" appearance="accent" routerLink="/register">{{ 'login.no-account-question' | translate }}</button>
+        </div>
+    </div>
+</div>

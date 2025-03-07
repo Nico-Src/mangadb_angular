@@ -1,20 +1,34 @@
+<div class="backdrop" [class.show]="showProfile || searchFocused" (click)="showProfile = false;"></div>
+
+<div class="logout-wrapper" [class.show]="showLogout">
+    <div class="window">
+        <div class="title">{{ 'topbar.profile.logout' | translate }}</div>
+        <div class="desc">{{ 'dialog.logout-question' | translate }}</div>
+        <div style="display: flex; align-items: center; margin: 5px 0;" class="desc"><input size="s" tuiCheckbox type="checkbox" [(ngModel)]="logoutAll"/>&nbsp;{{ 'dialog.logout-all' | translate }}</div>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="showLogout = false">{{ 'dialog.cancel' | translate }}</button>
+            <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="logout()">{{ 'dialog.confirm' | translate }}</button>
+        </div>
+    </div>
+</div>
+
 <div class="top-bar-header">
     <div class="logo-bg"><img class="logo" src="/img/logo/icon_alt.png" alt="MangaDB Logo" width="40" height="40"></div>
     <img class="name" src="/img/logo/icon_2.png" alt="MangaDB Title">
 </div>
 
 <tui-textfield iconStart="@tui.search" class="search-wrapper" tuiTextfieldSize="m">
-    <input placeholder="Search..." tuiTextfield [(ngModel)]="search" (ngModelChange)="debounceSearch()" #searchEl/>
+    <input [placeholder]="'topbar.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" (ngModelChange)="debounceSearch()" (focus)="searchFocused = true" (blur)="searchFocused = false" #searchEl/>
     <div class="search-results" [class.empty]="results.length === 0 || search.trim() === '' || searchLoading">
-        <span *ngIf="!searchLoading && search.trim() === ''">Start typing to search...</span>
-        <span *ngIf="!searchLoading && search.trim() !== '' && results.length === 0">No results found</span>
+        <span *ngIf="!searchLoading && search.trim() === ''">{{ 'topbar.search.empty' | translate }}</span>
+        <span *ngIf="!searchLoading && search.trim() !== '' && results.length === 0">{{ 'topbar.search.no-results' | translate }}</span>
         <tui-loader *ngIf="searchLoading" size="xs"></tui-loader>
         <tui-scrollbar>
             <div class="search-results-list" *ngIf="!searchLoading && results.length > 0 && search.trim() !== ''">
                 <ng-container *ngFor="let result of results; let i = index;">
                     <a class="search-result">
                         <div class="search-result-name" [innerHTML]="highlightSearch(result.name)"></div>
-                        <div class="search-result-type">{{ result.type }}</div>
+                        <div class="search-result-type">{{ `volume.type.${result.type.toLowerCase()}` | translate }}</div>
                     </a>
                     <div class="search-result-divider" *ngIf="i < results.length - 1"></div>
                 </ng-container>
@@ -25,7 +39,45 @@
 
 <tui-badged-content class="notifications">
     <tui-badge-notification size="xs" tuiSlot="top"/>
-    <button appearance="flat" size="s" tuiIconButton type="button" tuiHintAppearance="dark" tuiHintDirection="bottom" tuiHint="Notifications" class="notification" iconStart="@tui.bell" [style.border-radius.%]="100"></button>
+    <button appearance="flat" size="s" tuiIconButton type="button" tuiHintAppearance="dark" tuiHintDirection="bottom" [tuiHint]="'topbar.notifications' | translate" class="notification" iconStart="@tui.bell" [style.border-radius.%]="100"></button>
 </tui-badged-content>
 
-<img class="user-image" *ngIf="user().id" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
+<div class="profile-wrapper">
+    <img class="user-image" (click)="toggleProfile()" *ngIf="user().id" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
+    <img class="user-image" (click)="toggleProfile()" *ngIf="!user().id" crossorigin="anonymous" src="/img/default/profile.jpg">
+
+    <div class="profile-popup" [class.show]="showProfile">
+        <div class="profile-header">
+            <img class="image" (click)="toggleProfile()" *ngIf="user().id" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
+            <img class="image" (click)="toggleProfile()" *ngIf="!user().id" crossorigin="anonymous" src="/img/default/profile.jpg">
+            <div class="name" *ngIf="user().id">{{ user().username }}</div>
+            <div class="name" *ngIf="!user().id">{{ 'topbar.profile.guest' | translate }}</div>
+        </div>
+        <form [formGroup]="profileForm">
+            <label>
+                <span class="language-select-label">
+                    <tui-icon icon="@tui.languages" [style.fontSize.px]="20"></tui-icon>
+                    {{ "language.label" | translate }}
+                </span>
+                <tui-select formControlName="language" tuiTextfieldSize="s" (ngModelChange)="languageSelected($event)" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                    <tui-data-list-wrapper *tuiDataList [disabledItemHandler]="disabledLanguageHandler" [itemContent]="languageContent" [items]="languages"></tui-data-list-wrapper>
+                </tui-select>
+            </label>
+        </form>
+        <div class="divider"></div>
+        <div class="login-wrapper" *ngIf="!loggedIn()">
+            <button size="s" tuiButton type="button" appearance="accent" routerLink="/login">{{ 'topbar.profile.login' | translate }}</button>
+            <button size="s" tuiButton type="button" class="register" appearance="accent" routerLink="/register">{{ 'topbar.profile.register' | translate }}</button>
+        </div>
+        <div class="login-wrapper" *ngIf="loggedIn()">
+            <button size="s" tuiButton type="button" class="logout" appearance="accent" (click)="confirmLogout()"><tui-icon icon="@tui.log-out" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ 'topbar.profile.logout' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
