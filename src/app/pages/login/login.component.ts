@@ -88,6 +88,7 @@ export class LoginComponent {
                 });
             },500);
         }, (err: any) => {
+            this.loggingIn = false;
             // process errors
             if(err.status === 0){ // connection error
                 this.translate.get(_('server.error.connection')).subscribe((res: any) => {
@@ -97,9 +98,6 @@ export class LoginComponent {
                 this.translate.get(_('login.error')).subscribe((res: any) => {
                     errorAlert(this.alerts, res);
                 });
-                setTimeout(() => {
-                    this.loggingIn = false;
-                },500);
             } else { // other error
                 errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
             }
