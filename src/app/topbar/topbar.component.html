@@ -70,7 +70,7 @@
             <button size="s" tuiButton type="button" class="register" appearance="accent" routerLink="/register">{{ 'topbar.profile.register' | translate }}</button>
         </div>
         <div class="login-wrapper" *ngIf="loggedIn()">
-            <button size="s" tuiButton type="button" class="logout" appearance="accent" (click)="confirmLogout()"><tui-icon icon="@tui.log-out" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ 'topbar.profile.logout' | translate }}</button>
+            <button size="s" tuiButton type="button" class="logout" appearance="accent" (click)="showLogout = true;"><tui-icon icon="@tui.log-out" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ 'topbar.profile.logout' | translate }}</button>
         </div>
     </div>
 </div>
