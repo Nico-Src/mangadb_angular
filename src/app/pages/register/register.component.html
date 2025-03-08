@@ -5,5 +5,40 @@
     <div class="register-container">
         <div class="title">{{ 'register.title' | translate }}</div>
         <div class="description">{{ 'register.desc' | translate }}&nbsp;<tui-icon icon="@tui.party-popper" [style.fontSize.px]="18"></tui-icon></div>
+        <label>
+            <span class="username-label">
+                <tui-icon icon="@tui.user" [style.fontSize.px]="20"></tui-icon>&nbsp;
+                {{ "auth.username" | translate }}
+            </span>
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="username" (keydown)="keyRegister($event)">
+            </tui-textfield>
+        </label>
+        <label>
+            <span class="password-label" style="margin-top: 10px; display:block;">
+                <tui-icon icon="@tui.key-square" [style.fontSize.px]="20"></tui-icon>&nbsp;
+                {{ "auth.password" | translate }}
+            </span>
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" (keydown)="keyRegister($event)">
+                <tui-icon [style.fontSize.px]="20" [icon]="!passwordVisible ? '@tui.eye' : '@tui.eye-off'" (click)="passwordVisible = !passwordVisible"/>
+            </tui-textfield>
+        </label>
+        <label>
+            <span class="password-label" style="margin-top: 10px; display:block;">
+                <tui-icon icon="@tui.key-square" [style.fontSize.px]="20"></tui-icon>&nbsp;
+                {{ "auth.confirm-password" | translate }}
+            </span>
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="confirmPassword" (keydown)="keyRegister($event)">
+                <tui-icon [style.fontSize.px]="20" [icon]="!passwordVisible ? '@tui.eye' : '@tui.eye-off'" (click)="passwordVisible = !passwordVisible"/>
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="registering">
+                <button size="s" tuiButton type="button" class="register-btn" appearance="accent" (click)="register()">{{ registering ? '' : ('topbar.profile.register' | translate) }}</button>
+            </tui-loader>
+            <button size="s" tuiButton type="button" class="login-btn" appearance="accent" routerLink="/login">{{ 'register.already-registered' | translate }}</button>
+        </div>
     </div>
 </div>

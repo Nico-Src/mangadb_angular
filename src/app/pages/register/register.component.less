@@ -76,6 +76,49 @@
                 transform: translateY(3px);
             }
         }
+
+        tui-textfield [data-appearance=textfield]{
+            background: #eee !important;
+            box-shadow: none !important;
+        }
+
+        tui-textfield [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
+            color: black !important;
+            outline-color: black !important;
+        }
+
+        .input{
+            margin-top: 5px;
+        }
+
+        .button-wrapper{
+            margin-top: 20px;
+            width: 100%;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+
+            .loader{
+                flex: 3;
+               
+                ::ng-deep .t-loader{
+                    stroke: rgb(var(--mid-accent)) !important;
+                }
+            }
+
+            .register-btn{
+                width: 100%;
+            }
+
+            .login-btn{
+                --tui-background-accent-2: rgba(var(--accent-color),.2);
+                --tui-background-accent-2-hover: rgba(var(--light-accent),.4);
+                --tui-background-accent-2-pressed: rgba(var(--mid-accent),.4);
+                color: rgb(var(--mid-accent)) !important;
+                flex: 2;
+            }
+        }
     }
 }
 
