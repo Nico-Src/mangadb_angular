@@ -1,59 +1,97 @@
-# CalorieTracker
+# MangaDB
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+MangaDB is an Angular-based application designed to provide a structured and interactive database for manga series. It allows users to explore manga metadata, including series details, volumes, and contributors such as authors, artists, and publishers. The app features authentication, multilingual support, and a clean UI powered by Taiga UI.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Authentication System**
+  - Login, Register, and Logout functionality.
+  - Session validation via cookies.
+- **User Interface**
+  - Sidebar for navigation.
+  - Topbar with authentication options.
+  - Alerts and notifications using Taiga UI.
+- **Language Support**
+  - Multilingual support using `ngx-translate`.
+- **State Management**
+  - Authentication state is managed with a service.
 
-```bash
-ng serve
+## Installation
+
+1. **Clone the repository**
+
+   ```sh
+   git clone https://github.com/Nico-Src/mangadb_angular.git
+   cd mangadb_angular
+   ```
+
+2. **Install dependencies**
+
+   ```sh
+   npm install
+   ```
+
+3. **Run the development server**
+
+   ```sh
+   ng serve
+   ```
+
+   The app will be available at `http://localhost:4200/`.
+
+## Project Structure
+
+```
+├── src
+│   ├── app
+│   │   ├── components
+│   │   │   ├── sidebar
+│   │   │   ├── topbar
+│   │   │   ├── login
+│   │   │   ├── register
+│   │   ├── services
+│   │   │   ├── auth.service.ts
+│   │   ├── app.component.ts
+│   │   ├── app.routes.ts
+│   │   ├── app.config.ts
+│   ├── assets
+│   ├── styles
+│   ├── index.html
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Configuration
 
-## Code scaffolding
+Edit `app.config.ts` to modify:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- API Base URL (`API_BASE`)
+- Default settings (`DEFAULT_SETTINGS`)
+- Available languages (`LANGS`)
 
-```bash
-ng generate component component-name
-```
+## Running Tests
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The application includes unit tests written with Jasmine and Karma.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+```sh
 ng test
 ```
 
-## Running end-to-end tests
+## Technologies Used
 
-For end-to-end (e2e) testing, run:
+- **Angular** - Frontend framework
+- **Taiga UI** - UI components
+- **Ngx-translate** - Multi-language support
+- **RxJS** - Reactive programming
+- **Jasmine/Karma** - Testing framework
 
-```bash
-ng e2e
-```
+## Contributing
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature-name`)
+3. Commit your changes (`git commit -m 'Add feature'`)
+4. Push to the branch (`git push origin feature-name`)
+5. Open a Pull Request
 
-## Additional Resources
+## License
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project is licensed under the Apache-2.0 License.
+
