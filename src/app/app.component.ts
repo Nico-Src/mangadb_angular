@@ -39,8 +39,8 @@ export class AppComponent {
     }
 
     // sidebar state
-    protected expanded = signal(true);
-    protected handleToggle(): void { this.expanded.update((e) => !e); }
+    expanded = signal(true);
+    handleToggle(): void { this.expanded.update((e) => !e); }
 
     ngOnInit(): void {
         // get session cookie
@@ -66,7 +66,7 @@ export class AppComponent {
                 // delete cookie
                 this.cookieService.delete('auth_session');
                 // set auth state
-                this.auth.setUser({});
+                this.auth.setUser(this.auth.nullUser);
                 this.auth.setLoggedIn(false);
             }
         });
