@@ -14,6 +14,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy'; 
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
+import { SideBarService } from '../../services/sidebar.service';
 
 @Component({
     selector: 'top-bar',
@@ -54,8 +55,12 @@ export class TopBar {
 
     languages = LANGS;
 
-    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, private router: Router) {
+    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, private router: Router, public sidebar: SideBarService) {
         
+    }
+
+    toggleSidebar(){
+        this.sidebar.setOpen(!this.sidebar.isOpen());
     }
 
     ngOnInit(): void {

@@ -15,6 +15,7 @@
 <div class="top-bar-header">
     <div class="logo-bg"><img class="logo" src="/img/logo/icon_alt.png" alt="MangaDB Logo" width="40" height="40"></div>
     <img class="name" src="/img/logo/icon_2.png" alt="MangaDB Title">
+    <button (click)="toggleSidebar()" appearance="flat" size="m" tuiIconButton type="button" tuiHintAppearance="dark" tuiHintDirection="bottom" class="menu-btn" [iconStart]="sidebar.isOpen() ? '@tui.x' : '@tui.menu'" [style.border-radius.%]="100"></button>
 </div>
 
 <tui-textfield iconStart="@tui.search" class="search-wrapper" tuiTextfieldSize="m">
@@ -43,13 +44,13 @@
 </tui-badged-content>
 
 <div class="profile-wrapper">
-    <img class="user-image" (click)="toggleProfile()" *ngIf="user().id" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
-    <img class="user-image" (click)="toggleProfile()" *ngIf="!user().id" crossorigin="anonymous" src="/img/default/profile.jpg">
+    <img class="user-image" (click)="toggleProfile()" *ngIf="user().id && user().profile_image?.trim() !== ''" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
+    <img class="user-image" (click)="toggleProfile()" *ngIf="!user().id || user().profile_image?.trim() === ''" crossorigin="anonymous" src="/img/default/profile.jpg">
 
     <div class="profile-popup" [class.show]="showProfile">
         <div class="profile-header">
-            <img class="image" (click)="toggleProfile()" *ngIf="user().id" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
-            <img class="image" (click)="toggleProfile()" *ngIf="!user().id" crossorigin="anonymous" src="/img/default/profile.jpg">
+            <img class="image" (click)="toggleProfile()" *ngIf="user().id && user().profile_image?.trim() !== ''" crossorigin="anonymous" [src]="user().profile_image?.includes('http') ? user().profile_image : `${cdn_base}/user/avatar/${user().id}/scaled`">
+            <img class="image" (click)="toggleProfile()" *ngIf="!user().id || user().profile_image?.trim() === ''" crossorigin="anonymous" src="/img/default/profile.jpg">
             <div class="name" *ngIf="user().id">{{ user().username }}</div>
             <div class="name" *ngIf="!user().id">{{ 'topbar.profile.guest' | translate }}</div>
         </div>
