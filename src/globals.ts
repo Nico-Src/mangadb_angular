@@ -1,6 +1,12 @@
-export const VERSION = '0.0.1';
+import { TuiAlertService } from "@taiga-ui/core";
+
 export const API_BASE = 'http://localhost:4545';
 export const CDN_BASE = 'http://localhost:5555';
+
+export const CONFIG = {
+    version: '0.0.1',
+    default_locale: 'en'
+};
 
 export const LANGS = [
     {key: 'language.english', value: 'en', disabled: false},
@@ -15,3 +21,11 @@ export const DEFAULT_SETTINGS = {
     'nsfw-mode': 'settings.nsfw.hide-nsfw',
     'view-mode': 'column',
 };
+
+export const errorAlert = (alerts: TuiAlertService, message: string, label: string = 'Error'): void => {
+    alerts.open(message, {label: label, appearance: 'negative'}).subscribe();
+}
+
+export const successAlert = (alerts: TuiAlertService, message: string, label: string = 'Success'): void => {
+    alerts.open(message, {label: label, appearance: 'positive'}).subscribe();
+}
