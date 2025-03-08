@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, ViewChild } from '@angular/core';
-import { VERSION, CDN_BASE, API_BASE, LANGS } from '../../globals';
-import { UserService } from '../../services/user.service';
+import { CONFIG, CDN_BASE, API_BASE, LANGS, errorAlert, successAlert } from '../../globals';
+import { AuthService } from '../../services/auth.service';
 import { NgIf, NgForOf } from '@angular/common';
 import { TuiButton, TuiHint, TuiTextfield, TuiLoader, TUI_ALERT_POSITION, TuiAlertService, TuiDataList, TuiIcon, TuiIconPipe } from '@taiga-ui/core';
 import { TuiAppearance, TuiScrollbar } from '@taiga-ui/core';
@@ -30,23 +30,28 @@ import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
 
 export class TopBar {
     private readonly alerts = inject(TuiAlertService);
-    version = VERSION;
-    cdn_base = CDN_BASE;
-    user_service = inject(UserService);
-    user = computed(() => this.user_service.getUser());
-    loggedIn = computed(() => this.user_service.isLoggedIn());
+    private readonly auth = inject(AuthService);
+    readonly version = CONFIG.version;
+    readonly cdn_base = CDN_BASE;
+    readonly user = computed(() => this.auth.getUser());
+    readonly loggedIn = computed(() => this.auth.isLoggedIn());
     @ViewChild('searchEl') searchEl: any
+
     protected search = '';
+
     searchLoading = false;
     searchFocused = false;
     searchTimeout:any = null;
     results:any = [];
     showProfile = false;
+    toggleProfile() { this.showProfile = !this.showProfile; }
     showLogout = false;
     logoutAll = false;
+
     profileForm = new FormGroup({
         language: new FormControl(),
     });
+
     languages = LANGS;
 
     constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, private router: Router) {
@@ -54,9 +59,11 @@ export class TopBar {
     }
 
     ngOnInit(): void {
+        // set selected language in language switcher
         this.profileForm.get('language')?.setValue(LANGS.find(l => l.value === this.translate.currentLang));
     }
 
+    // listen to keyboard shortcuts
     @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) { 
         // ctrl + s to focus search
@@ -66,36 +73,50 @@ export class TopBar {
         }
     }
 
+    // debounce search (only update results after 500ms)
     debounceSearch() {
+        const DURATION = 1000;
+
+        // if search is empty, clear results and return
         if(this.search.trim() === ''){
             this.results = [];
             return;
         }
 
+        // if search is already loading
         if(this.searchLoading){
+            // clear results and timeout
             this.results = [];
             clearTimeout(this.searchTimeout);
+            // restart timeout
             this.searchTimeout = setTimeout(() => {
-                this.updateResults(this.search);
-            }, 1000);
+                this.updateSearchResults(this.search);
+            }, DURATION);
             return;
         }
 
+        // set loading status and create timeout
         this.searchLoading = true;
         this.searchTimeout = setTimeout(() => {
-            this.updateResults(this.search);
-        }, 1000);
+            this.updateSearchResults(this.search);
+        }, DURATION);
     }
 
-    updateResults(search: string) {
-        this.http.post(`${API_BASE}/series/search`,{ search, limit: 10 }).subscribe((res: any) => {
-            // the aliases could be better matching so check
+    // fetch search results based on search
+    updateSearchResults(search: string) {
+        const LIMIT = 10;
+
+        this.http.post(`${API_BASE}/series/search`,{ search, limit: LIMIT }).subscribe((res: any) => {
+            // check if aliases were matched in backend
             let result = [];
             for(const item of res){
+                // if there are no aliases or name matches search add item
                 if(!item.aliases || item.name.toLowerCase().includes(search.toLowerCase())){
                     result.push({id: item.id, name: item.name, type: item.type});
                     continue;
                 }
+
+                // else check aliases and add with found alias as name
                 const aliases = item.aliases.split(',');
                 for(const alias of aliases){
                     if(alias.toLowerCase().includes(search.toLowerCase())){
@@ -104,72 +125,70 @@ export class TopBar {
                     }
                 }
             }
+            // set results and stop loading indicator
             this.results = result;
             this.searchLoading = false;
         }, (err: any) => {
-            if(err.status === 0){
+            // process errors
+            if(err.status === 0){ // connection error
                 this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    this.errorAlert(res, `Server Error (Code: ${err.status})`);
+                    errorAlert(this.alerts, res, `Server Error (Code: ${err.status})`);
                 });
-            } else {
-                this.errorAlert(JSON.stringify(err), `Server Error (Code: ${err.status})`);
+            } else { // other error
+                errorAlert(this.alerts, JSON.stringify(err), `Server Error (Code: ${err.status})`);
             }
+            // clear results and stop loading indicator
             this.searchLoading = false;
             this.results = [];
         });
     }
 
+    // add bold tags to searched term in given text
     highlightSearch(text: string) {
         const regex = new RegExp(this.search, 'gi');
         return text.replace(regex, match => `<b>${match}</b>`);
     }
 
-    protected errorAlert(message: string, label: string = 'Error'): void {
-        this.alerts.open(message, {label: label, appearance: 'negative'}).subscribe();
-    }
-
-    protected successAlert(message: string, label: string = 'Success'): void {
-        this.alerts.open(message, {label: label, appearance: 'positive'}).subscribe();
-    }
-
-    toggleProfile() {
-        this.showProfile = !this.showProfile;
-    }
-
+    // change handler for language switcher (update locale and cookie)
     languageSelected(lang: { value: string, key: string }) {
         this.translate.use(lang.value);
         this.cookieService.set('language', lang.value);
     }
 
-    confirmLogout(){
-        this.showLogout = true;
-    }
-
+    // logout user
     logout(){
+        // get current session token
         const session_id = this.cookieService.get('auth_session');
         const header = "Bearer " + session_id;
 
+        // hide profile and logout modals
         this.showProfile = false;
         this.showLogout = false;
 
+        // send request to api
         this.http.post(`${API_BASE}/auth/logout`, {fromAllDevices: this.logoutAll}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe((res: any) => {
+            // delete cookie
             this.cookieService.delete('auth_session');
-            this.user_service.setLoggedIn(false);
-            this.user_service.setUser({}); // empty user
+            // clear auth state
+            this.auth.setLoggedIn(false);
+            this.auth.setUser(this.auth.nullUser);
             this.translate.get(_('dialog.logout-success')).subscribe((res: any) => {
-                this.successAlert(res);
+                successAlert(this.alerts,res);
             });
+            // redirect to login
             this.router.navigate(['/login']);
         }, (err: any) => {
-            if(err.status === 0){
+            // process errors
+            if(err.status === 0){ // connection error
                 this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    this.errorAlert(res, `Error (Code: ${err.status})`);
+                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
                 });
-            } else {
-                this.errorAlert(JSON.stringify(err), `Error (Code: ${err.status})`);
+            } else { // other error
+                errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
             }
         });
     }
 
+    // disabled language handler
     protected readonly disabledLanguageHandler: TuiBooleanHandler<any> = (v) => v.disabled === true;
 }
