@@ -2,10 +2,10 @@
     <header class="topbar">
         <top-bar></top-bar>
     </header>
-    <aside class="sidebar" [class.expanded]="expanded()" (click)="handleToggle()">
-        <side-bar></side-bar>
+    <aside class="sidebar" [class.expanded]="sidebar.isOpen()">
+        <side-bar [class.expanded]="sidebar.isOpen()"></side-bar>
     </aside>
-    <main class="main-content" [class.expanded]="expanded()">
+    <main class="main-content" [class.expanded]="sidebar.isOpen()">
         <router-outlet></router-outlet>
     </main>
 </tui-root>

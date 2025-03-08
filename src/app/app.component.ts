@@ -3,13 +3,14 @@ import { Component, inject, signal, TemplateRef, ViewChild } from '@angular/core
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SideBar } from "./sidebar/sidebar.component";
 import { TopBar } from "./topbar/topbar.component";
-import { API_BASE, DEFAULT_SETTINGS, CONFIG, LANGS, errorAlert } from "../globals";
+import { API_BASE, DEFAULT_SETTINGS, CONFIG, LANGS, errorAlert, hexToRGB } from "../globals";
 import { HttpClient } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { AuthService } from "../services/auth.service";
 // @ts-ignore
 import { pSBC, Color, Solver } from '../libs/filterTint.js';
 import { TranslateService, _ } from "@ngx-translate/core";
+import { SideBarService } from "../services/sidebar.service";
 
 @Component({
     standalone: true,
@@ -29,7 +30,7 @@ export class AppComponent {
     private readonly auth = inject(AuthService);
     private readonly alerts = inject(TuiAlertService);
 
-    constructor(private http:HttpClient, private cookieService:CookieService, private translate: TranslateService) {
+    constructor(private http:HttpClient, private cookieService:CookieService, private translate: TranslateService, public sidebar: SideBarService) {
         // setup languages
         this.translate.addLangs(LANGS.map(l => l.value));
         // set default locale
@@ -37,10 +38,6 @@ export class AppComponent {
         // set locale (based on cookie, if user already selected a language) or default
         this.translate.use(this.cookieService.get('language') || CONFIG.default_locale);
     }
-
-    // sidebar state
-    expanded = signal(true);
-    handleToggle(): void { this.expanded.update((e) => !e); }
 
     ngOnInit(): void {
         // get session cookie
@@ -53,6 +50,8 @@ export class AppComponent {
             // set auth state
             this.auth.setUser(res);
             this.auth.setLoggedIn(true);
+            // calc filter tint
+            this.calcFilterTint();
         }, (err: any) => {
             // process errors
             if(err.status === 0){ // connection error
@@ -70,5 +69,77 @@ export class AppComponent {
                 this.auth.setLoggedIn(false);
             }
         });
+    }
+
+    protected calcFilterTint(): void {
+        // get users settings
+        const settings = this.auth.getUser().settings;
+        // if there are no settings save default settings as users current settings
+        if(Object.keys(settings).length === 0){
+            this.http.post(`${API_BASE}/users/${this.auth.getUser().id}/save-settings`,{settings: DEFAULT_SETTINGS}, { headers: { 'Authorization': "Bearer " + this.cookieService.get('auth_session') }, responseType: 'text' }).subscribe((res: any) => {
+                this.auth.setUserField('settings', DEFAULT_SETTINGS);
+            }, (err: any) => {
+                // process errors
+                if(err.status === 0){ // connection error
+                    this.translate.get(_('server.error.connection')).subscribe((res: any) => {
+                        errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
+                    });
+                } else { // other error
+                    errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
+                }
+            });
+        }
+        // get current theme accent color
+        const savedColor = this.auth.isLoggedIn() ? this.auth.getUser().settings['theme-accent-color'] : DEFAULT_SETTINGS['theme-accent-color'];
+       // if there is a saved color (other than the default) set the css variables
+        if(savedColor && savedColor !== '#71c94e'){
+            const savedRGB = hexToRGB(savedColor);
+            document.body.style.setProperty('--accent-color', `${savedRGB?.r}, ${savedRGB?.g}, ${savedRGB?.b}`);
+            const midAccent = pSBC(-0.25, savedColor); // darken by 25%
+            const midAccentRGB = hexToRGB(midAccent);
+            document.body.style.setProperty('--mid-accent', `${midAccentRGB?.r}, ${midAccentRGB?.g}, ${midAccentRGB?.b}`);
+            const darkAccent = pSBC(-0.25, midAccent); // dark the previous darkened color by 25% again
+            const darkAccentRGB = hexToRGB(darkAccent);
+            document.body.style.setProperty('--dark-accent', `${darkAccentRGB?.r}, ${darkAccentRGB?.g}, ${darkAccentRGB?.b}`);
+        }
+
+        let result = {loss: Infinity, filter: '', originalColor: ''};
+        // Check if there is a saved result in local storage
+        let filter_css: any = localStorage.getItem('filter_css');
+        let savedResult: any = null;
+        try{ savedResult = JSON.parse(filter_css);} 
+        catch(e){console.log(e)}
+        // get current accent color
+        let color = getComputedStyle(document.body).getPropertyValue('--accent-color').trim();
+        
+        // check if accent color changed, if so recalculate result
+        if(savedResult && savedResult.originalColor === color){
+            result = savedResult;
+        }
+        // if color changed recalculate
+        if(savedResult?.originalColor !== color){
+            savedResult = null;
+            result = {loss: Infinity, filter: '', originalColor: ''};
+        }
+
+        // Calculate Filter
+        if(!savedResult){
+            const rgb = color.split(",");
+            const rgbColor = new Color(rgb[0], rgb[1], rgb[2]);
+            const solver = new Solver(rgbColor);
+            
+            // calculate till color loss is below 5
+            while(result.loss > 5){
+                result = solver.solve();
+            }
+            
+            // set original color
+            result.originalColor = color;
+            
+            // save to local storage
+            localStorage.setItem('filter_css',JSON.stringify(result));
+        }
+
+        document.body.style.setProperty('--accent-filters',result.filter.replace('filter: ','').replace(';','').trim());
     }
 }

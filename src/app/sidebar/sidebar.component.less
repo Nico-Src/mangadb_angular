@@ -1,1 +1,126 @@
 @import '../../variables.less';
+
+:host{
+    height: 100%;
+    width: 100%;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+
+    &:not(.expanded){
+        .item, .header-item{
+            .name{
+                opacity: 0;
+            }
+
+            &.active .icon{
+                transform: translateX(-3px);
+            }
+
+            &:not(.active) .icon{
+                transform: translateX(-8px);
+            }
+        }
+
+        .header-item{
+            height: 0;
+            margin: 0;
+
+            &::before{
+                opacity: 0;
+            }
+        }
+    }
+}
+
+.item{
+    font-size: 14px;
+    width: 100%;
+    max-width: 100%;
+    text-decoration: none;
+    height: 30px;
+    transition: background-color @transition-time ease;
+    cursor: pointer;
+    color: #000;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0 10px;
+    border-left: 8px solid transparent;
+    margin-top: 5px;
+
+    .name{
+        color: #404040;
+        font-family: 'Poppins';
+        margin-left: 10px;
+        transition: color @transition-time ease, opacity @transition-time ease, margin @transition-time ease;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        flex:1;
+        opacity: 1;
+    }
+
+    .icon{
+        transition: color @transition-time ease, transform calc(@transition-time / 2) ease;
+        flex-shrink: 0;
+    }
+
+    &.active{
+        border-color: rgb(var(--accent-color)) !important;
+        background-color: rgb(var(--mid-accent)) !important;
+
+        .icon, .name{
+            color: white;
+        }
+    }
+
+    &:hover{
+        background-color: #ddd;
+    }
+}
+
+.header-item{
+    font-size: 14px;
+    width: 100%;
+    max-width: 100%;
+    text-decoration: none;
+    height: 30px;
+    transition: background-color @transition-time ease, height @transition-time ease, margin @transition-time ease;
+    color: #000;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 4px;
+    position: relative;
+    z-index: 0;
+    margin-top: 5px;
+
+    &::before{
+        content: '';
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        border-bottom: 2px solid #bbb;
+        height: 0px;
+        z-index: -1;
+        opacity: 1;
+        transition: opacity @transition-time ease;
+    }
+
+    .name{
+        color: #404040;
+        font-family: 'Poppins';
+        margin-left: 10px;
+        transition: color @transition-time ease, opacity @transition-time ease, margin @transition-time ease;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        opacity: 1;
+        background-color: #eee;
+        padding: 2px 10px;
+        border-radius: 12px;
+    }
+}
