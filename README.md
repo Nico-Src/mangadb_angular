@@ -15,6 +15,26 @@ MangaDB is an Angular-based application designed to provide a structured and int
   - Multilingual support using `ngx-translate`.
 - **State Management**
   - Authentication state is managed with a service.
+ 
+## Screenshots
+
+<details>
+  <summary>Homepage</summary>
+  
+  [![image.png](https://i.postimg.cc/c4zGtPQp/image.png)](https://postimg.cc/HVbhfZvz)
+</details>
+
+<details>
+  <summary>Search</summary>
+  
+  [![image.png](https://i.postimg.cc/hPW5Fg1P/image.png)](https://postimg.cc/bdgTb75K)
+</details>
+
+<details>
+  <summary>Login</summary>
+  
+  [![image.png](https://i.postimg.cc/g25h5c3g/image.png)](https://postimg.cc/5XBjQV7z)
+</details>
 
 ## Installation
 
