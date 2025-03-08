@@ -1,29 +1,39 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { TranslateService } from '@ngx-translate/core';
+import { TuiRoot } from '@taiga-ui/core';
 
 describe('AppComponent', () => {
+    let component: AppComponent;
+    let fixture: any;
+    let translateService: TranslateService;
+    
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [AppComponent],
+            imports: [AppComponent, TuiRoot],
+            providers: [
+                { provide: TranslateService, useValue: jasmine.createSpyObj('TranslateService', ['addLangs', 'setDefaultLang', 'use', 'get']) }
+            ]
         }).compileComponents();
+
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        translateService = TestBed.inject(TranslateService);
     });
     
     it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
-        expect(app).toBeTruthy();
+        expect(component).toBeTruthy();
     });
-    
-    it(`should have the 'calorie-tracker' title`, () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
-        expect(app.title).toEqual('calorie-tracker');
+
+    it('should initialize translation service with correct languages', () => {
+        expect(translateService.addLangs).toHaveBeenCalled();
+        expect(translateService.setDefaultLang).toHaveBeenCalledWith(jasmine.any(String));
+        expect(translateService.use).toHaveBeenCalledWith(jasmine.any(String));
     });
-    
-    it('should render title', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        fixture.detectChanges();
-        const compiled = fixture.nativeElement as HTMLElement;
-        expect(compiled.querySelector('h1')?.textContent).toContain('Hello, calorie-tracker');
+
+    it('should toggle sidebar state', () => {
+        const initial = component.expanded();
+        component.handleToggle();
+        expect(component.expanded()).toBe(!initial);
     });
 });
