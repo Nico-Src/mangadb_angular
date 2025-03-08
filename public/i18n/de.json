@@ -8,7 +8,36 @@
     "title": {
         "home": "Startseite",
         "login": "Anmelden",
-        "register": "Registrieren"
+        "register": "Registrieren",
+        "collection": "Sammlung",
+        "reading-history": "Leseverlauf",
+        "lists": "Listen",
+        "settings": "Einstellungen",
+        "browse-series": "Serien durchsuchen...",
+        "browse-publishers": "Verlage durchsuchen...",
+        "browse-users": "Benutzer durchsuchen...",
+        "marketplace": "Marktplatz",
+        "about-us": "Über uns",
+        "privacy": "Datenschutz",
+        "imprint": "Impressum"
+    },
+    "sidebar": {
+        "home": "Startseite",
+        "personal": "Persönlich",
+        "collection": "Sammlung",
+        "reading-history": "Leseverlauf",
+        "lists": "Listen",
+        "settings": "Einstellungen",
+        "contents": "Inhalte",
+        "browse-series": "Serien durchsuchen...",
+        "browse-publishers": "Verlage durchsuchen...",
+        "random-series": "Zufällige Serie",
+        "community": "Community",
+        "browse-users": "Benutzer durchsuchen...",
+        "marketplace": "Marktplatz",
+        "about-us": "Über uns",
+        "privacy": "Datenschutz",
+        "imprint": "Impressum"
     },
     "dialog": {
         "confirm": "Bestätigen",
@@ -19,7 +48,8 @@
     },
     "auth": {
         "username": "Benutzername",
-        "password": "Passwort"
+        "password": "Passwort",
+        "confirm-password": "Passwort bestätigen"
     },
     "login": {
         "title": "Anmelden bei MangaDB",
@@ -27,19 +57,26 @@
         "with": "Anmelden mit",
         "success": "Anmeldung erfolgreich",
         "error": "Anmeldung fehlgeschlagen",
-        "no-account-question": "Noch keinen Account?"
+        "no-account-question": "Noch keinen Account?",
+        "fields-required": "Bitte fülle alle Felder aus"
     },
     "register": {
         "title": "Registrieren bei MangaDB",
         "desc": "Registriere dich um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
         "with": "Registrieren mit",
         "success": "Registrierung erfolgreich",
-        "error": "Registrierung fehlgeschlagen"
+        "error": "Registrierung fehlgeschlagen",
+        "already-registered": "Schon registriert?",
+        "fields-required": "Bitte fülle alle Felder aus",
+        "password-mismatch": "Passwörter stimmen nicht überein",
+        "username-taken": "Benutzername bereits vergeben",
+        "invalid-username": "Ungültiger Benutzername ({{min}}-{{max}} Zeichen)",
+        "invalid-password": "Ungültiges Passwort ({{min}}-{{max}} Zeichen)"
     },
     "topbar": {
         "notifications": "Benachrichtigungen",
         "search": {
-            "placeholder": "Suche...",
+            "placeholder": "Suche... (Strg + S)",
             "empty": "Tippen Sie, um zu suchen...",
             "no-results": "Keine Ergebnisse gefunden"
         },

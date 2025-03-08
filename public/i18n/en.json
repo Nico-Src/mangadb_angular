@@ -8,7 +8,36 @@
     "title": {
         "home": "Home",
         "login": "Login",
-        "register": "Register"
+        "register": "Register",
+        "collection": "Collection",
+        "reading-history": "Reading history",
+        "lists": "Lists",
+        "settings": "Settings",
+        "browse-series": "Browse series...",
+        "browse-publishers": "Browse publishers...",
+        "browse-users": "Browse users...",
+        "marketplace": "Marketplace",
+        "about-us": "About us",
+        "privacy": "Privacy",
+        "imprint": "Imprint"
+    },
+    "sidebar": {
+        "home": "Home",
+        "personal": "Personal",
+        "collection": "Collection",
+        "reading-history": "Reading history",
+        "lists": "Lists",
+        "settings": "Settings",
+        "contents": "Contents",
+        "browse-series": "Browse series...",
+        "browse-publishers": "Browse publishers...",
+        "random-series": "Random series",
+        "community": "Community",
+        "browse-users": "Browse users...",
+        "marketplace": "Marketplace",
+        "about-us": "About us",
+        "privacy": "Privacy",
+        "imprint": "Imprint"
     },
     "dialog": {
         "confirm": "Confirm",
@@ -19,7 +48,8 @@
     },
     "auth": {
         "username": "Username",
-        "password": "Password"
+        "password": "Password",
+        "confirm-password": "Confirm password"
     },
     "login": {
         "title": "Login to MangaDB",
@@ -27,19 +57,26 @@
         "with": "Login with",
         "success": "Successfully logged in",
         "error": "Login failed",
-        "no-account-question": "No account yet?"
+        "no-account-question": "No account yet?",
+        "fields-required": "Please fill in all fields"
     },
     "register": {
         "title": "Register to MangaDB",
         "desc": "Register to manage your collection, reading history and much more. Become a part of the community",
         "with": "Register with",
         "success": "Successfully registered",
-        "error": "Registration failed"
+        "error": "Registration failed",
+        "already-registered": "Already registered?",
+        "fields-required": "Please fill in all fields",
+        "password-mismatch": "Passwords do not match",
+        "username-taken": "Username already taken",
+        "invalid-username": "Invalid username ({{min}}-{{max}} characters)",
+        "invalid-password": "Invalid password ({{min}}-{{max}} characters)"
     },
     "topbar": {
         "notifications": "Notifications",
         "search": {
-            "placeholder": "Search...",
+            "placeholder": "Search... (Ctrl + S)",
             "empty": "Start typing to search...",
             "no-results": "No results found"
         },
