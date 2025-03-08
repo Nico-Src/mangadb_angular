@@ -2,7 +2,7 @@ import { signal, Injectable, computed } from "@angular/core";
 import { Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class AuthService {
     private user:any = signal({});
     private loggedIn = signal(document.cookie.includes('auth_session'));
     public getUser = computed(() => this.user());
