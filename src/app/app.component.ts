@@ -3,10 +3,10 @@ import { Component, inject, signal, TemplateRef, ViewChild } from '@angular/core
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SideBar } from "./sidebar/sidebar.component";
 import { TopBar } from "./topbar/topbar.component";
-import { API_BASE, DEFAULT_SETTINGS } from "../globals";
+import { API_BASE, DEFAULT_SETTINGS, CONFIG, LANGS, errorAlert } from "../globals";
 import { HttpClient } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
-import { UserService } from "../services/user.service";
+import { AuthService } from "../services/auth.service";
 // @ts-ignore
 import { pSBC, Color, Solver } from '../libs/filterTint.js';
 import { TranslateService, _ } from "@ngx-translate/core";
@@ -26,49 +26,48 @@ import { TranslateService, _ } from "@ngx-translate/core";
 })
 
 export class AppComponent {
-    title = 'calorie-tracker';
-    version = '0.0.1';
-    user_service = inject(UserService);
+    private readonly auth = inject(AuthService);
     private readonly alerts = inject(TuiAlertService);
 
     constructor(private http:HttpClient, private cookieService:CookieService, private translate: TranslateService) {
-        this.translate.addLangs(['de', 'en']);
-        this.translate.setDefaultLang('en');
-        this.translate.use(this.cookieService.get('language') || 'en');
+        // setup languages
+        this.translate.addLangs(LANGS.map(l => l.value));
+        // set default locale
+        this.translate.setDefaultLang(CONFIG.default_locale);
+        // set locale (based on cookie, if user already selected a language) or default
+        this.translate.use(this.cookieService.get('language') || CONFIG.default_locale);
     }
 
+    // sidebar state
     protected expanded = signal(true);
-
-    protected handleToggle(): void {
-        this.expanded.update((e) => !e);
-    }
-
-    protected errorAlert(message: string, label: string = 'Error'): void {
-        this.alerts.open(message, {label: label, appearance: 'negative'}).subscribe();
-    }
+    protected handleToggle(): void { this.expanded.update((e) => !e); }
 
     ngOnInit(): void {
-        const user_data = localStorage.getItem('user') || '{}'
-        const user = JSON.parse(user_data);
-        // stored in cookie with name 'auth_session'
+        // get session cookie
         const session_id = this.cookieService.get('auth_session');
+        // return if there is no session
         if(!session_id) return;
+        // else send validation request with session token
         const header = "Bearer " + session_id;
         this.http.post(`${API_BASE}/auth/session`, {}, { headers: { 'Authorization': header } }).subscribe((res: any) => {
-            this.user_service.setUser(res);
-            this.user_service.setLoggedIn(true);
+            // set auth state
+            this.auth.setUser(res);
+            this.auth.setLoggedIn(true);
         }, (err: any) => {
-            if(err.status === 0){
+            // process errors
+            if(err.status === 0){ // connection error
                 this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    this.errorAlert(res, `Error (Code: ${err.status})`);
+                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
                 });
-            } else if(err.status === 440){
+            } else if(err.status === 440){ // session expired
                 this.translate.get(_('server.error.session-expired')).subscribe((res: any) => {
-                    this.errorAlert(res, `Error (Code: ${err.status})`);
+                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
                 });
+                // delete cookie
                 this.cookieService.delete('auth_session');
-                this.user_service.setLoggedIn(false);
-                this.user_service.setUser({});
+                // set auth state
+                this.auth.setUser({});
+                this.auth.setLoggedIn(false);
             }
         });
     }
