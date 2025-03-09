@@ -1,0 +1,215 @@
+@import '../../../variables.less';
+
+:host{
+    padding-top: @topbar-height;
+}
+
+.slider{
+    width: 100%;
+    height: calc(430px + @topbar-height);
+    flex-shrink: 0;
+    background-color: #aaa;
+    overflow: hidden;
+    position: relative;
+    transition: opacity @transition-time ease;
+    opacity: 0;
+
+    &.show{
+        opacity: 1;
+    }
+
+    &.fast-transition .slides{
+        transition-duration: 0.05s !important;
+    }
+
+    .slider-track{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: #aaa;
+
+        .slider-title{
+            color: black;
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: 1px;
+            position: absolute;
+            top: calc(15px + @topbar-height);
+            left: 20px;
+            z-index: 3;
+        }
+
+        .slide-info{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            position: absolute;
+            z-index: 5;
+            bottom: 10px; right: 20px;
+
+            .slide-number{
+                color: black;
+                font-weight: 700;
+                width: 30px;
+                text-align: center;
+                font-size: 16px;
+                font-family: 'Poppins', sans-serif;
+                transition: padding var(--transition-duration) ease;
+            }
+
+            .arrow-btn{
+                color: black !important;
+            }
+        }
+
+        .slides{
+            display:flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            transition: transform @transition-time ease;
+            will-change: transform;
+
+            .slide-wrapper{
+                overflow: hidden;
+                border-radius: 0px !important;
+                height: 100%;
+                transition: opacity @transition-time ease;
+                position: relative;
+                opacity: 1;
+                will-change: opacity;
+                padding: calc(50px + @topbar-height) 20px;
+                padding-bottom: 70px;
+
+                &.hide{
+                    .slide manga-cover{
+                        opacity: 0;
+                    }
+                }
+
+                .background{
+                    position: absolute;
+                    z-index: -1;
+                    inset: 0;
+
+                    .overlay{
+                        position: absolute;
+                        z-index: 1;
+                        inset: 0;
+                        background: linear-gradient(to bottom, rgba(222, 222, 222,.5), rgba(222, 222, 222,.6), #dedede);
+                    }
+
+                    manga-cover{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .slide{
+                    width: 100%;
+                    height: 100%;
+                    display:flex;
+                    justify-content: flex-start;
+                    align-items: center;
+
+                    manga-cover{
+                        height: 100%;
+                        transition: opacity calc(@transition-time * 2) ease;
+                        will-change: opacity;
+                        flex-shrink: 0;
+                    }
+
+                    .details{
+                        height: 100%;
+                        flex-grow: 0;
+                        flex: 1;
+                        display:flex;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        flex-direction: column;
+                        margin-left: 20px;
+
+                        .name{
+                            font-size: 25px;
+                            font-weight: 700;
+                            line-height: 25px;
+                            color: black;
+                            cursor: pointer;
+                            flex-shrink: 0;
+                            pointer-events: none !important;
+                        }
+    
+                        .alias{
+                            font-size: 20px;
+                            line-height: 24px;
+                            font-weight: 500;
+                            color: #303030;
+                            margin-top: 4px;
+                            flex-shrink: 0;
+                            pointer-events: none !important;
+                        }
+    
+                        .description{
+                            font-size: 16px;
+                            line-height: 22px;
+                            color: #202020;
+                            text-align: justify;
+                            font-weight: 400;
+                            overflow: hidden;
+                            margin-top: 4px;
+                            flex: 1;
+                            flex-shrink: 1;
+                            position: relative;
+                            pointer-events: none !important;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            &.overflowing{
+                                color: transparent;
+                                background: linear-gradient(to bottom, #202020 50%, rgba(255,255,255,0) 100%);
+                                background-clip: text;
+                            }
+                        }
+
+                        .tag-wrapper{
+                            display:flex;
+                            gap: 7.5px;
+                            margin-top: auto;
+                            position: relative;
+                            border-radius: 4px;
+                            flex-wrap: wrap;
+                            overflow: hidden;
+                            height: 22px;
+                            flex-shrink: 0;
+                            margin-top: 20px;
+    
+                            .tag{
+                                font-size: 12px;
+                                border-radius: 4px;
+                                height: fit-content;
+                                padding: 1px 8px;
+                                background-color: #eee;
+                                color: #303030;
+                                font-weight: 500;
+                                white-space: nowrap;
+                                z-index: 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.section-title{
+    color: black;
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 1px;
+    transform: translateY(-20px);
+    margin-left: 20px;
+    z-index: 3;
+}

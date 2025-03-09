@@ -1,1 +1,33 @@
-<p style="color: rgb(var(--mid-accent))">home works!</p>
+<div class="slider" #slider [class.show]="showSlider">
+    <div class="slider-track" #sliderTrack>
+        <div class="slider-title">{{ 'home.trending-series' | translate }}</div>
+        <div class="slides" [style]="`transform: translateX(calc(-${slideIndex} * 100%))`">
+            <div #slide class="slide-wrapper" [class.hide]="slideIndex !== index" [style.minWidth.%]="100" [style.maxWidth.%]="100" *ngFor="let ser of trendingSeries; index as index" :key="ser.id">
+                <div class="background">
+                    <div class="overlay"></div>
+                    <manga-cover [id]="ser.volume.id" [blur]="true" fit="cover"></manga-cover>
+                </div>
+                <div class="slide">
+                    <manga-cover [id]="ser.volume.id" [aspectRatio]="ser.volume.aspect_ratio"></manga-cover>
+                    <div class="details">
+                        <tui-line-clamp [linesLimit]="2" class="name" [content]="ser.name"></tui-line-clamp>
+                        <tui-line-clamp [linesLimit]="2" class="alias" [content]="ser.alias"></tui-line-clamp>
+                        <div class="description" [innerHTML]="ser.description"></div>
+                        <div class="tag-wrapper">
+                            <div *ngFor="let tag of ser.contentTypeTags" class="tag type">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.contentRatingTags" class="tag content-rating">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.contentWarningTags" class="tag content-warning">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.otherTags" class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-info">
+            <button (click)="prevSlide()" [disabled]="slideIndex === 0" appearance="flat" size="m" tuiIconButton type="button" tuiHintAppearance="dark" iconStart="@tui.chevron-left" tuiHintDirection="bottom" class="arrow-btn" [style.border-radius.%]="100"></button>
+            <button (click)="nextSlide()" [disabled]="slideIndex === trendingSeries.length - 1" appearance="flat" size="m" tuiIconButton type="button" iconStart="@tui.chevron-right" tuiHintAppearance="dark" tuiHintDirection="bottom" class="arrow-btn" [style.border-radius.%]="100"></button>
+            <div [class]="`slide-number place-${slideIndex+1}`">{{ slideIndex + 1 }}#</div>
+        </div>
+    </div>
+</div>
+<div class="section-title">{{ 'home.recently-added' | translate }}</div>
