@@ -74,7 +74,7 @@ export class LoginComponent {
         // send request to api
         this.http.post(`${API_BASE}/auth/login`, { username: this.username.trim(), password: this.password.trim() }).subscribe((res: any) => {
             // set cookie
-            this.cookieService.set('auth_session', res.session.id);
+            this.cookieService.set('auth_session', res.session.id, 31, '/');
             // set auth state
             this.auth.setUser(res.user);
             this.auth.setLoggedIn(true);
