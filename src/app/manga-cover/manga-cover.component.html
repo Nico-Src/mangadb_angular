@@ -1,0 +1,1 @@
+<img class="cover" [style.aspectRatio]="fit !== 'cover' ? aspectRatio : undefined" [tuiSkeleton]="loading" [class.blur]="blur" [class.cover]="fit === 'cover'" tuiLoading="lazy" [src]="`${cdn_base}/volumes/cover/${id}/front/scaled`" *ngIf="id > 0" (load)="loading = false">
