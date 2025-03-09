@@ -43,7 +43,10 @@ export class AppComponent {
         // get session cookie
         const session_id = this.cookieService.get('auth_session');
         // return if there is no session
-        if(!session_id) return;
+        if(!session_id){
+            this.calcFilterTint();
+            return;
+        }
         // else send validation request with session token
         const header = "Bearer " + session_id;
         this.http.post(`${API_BASE}/auth/session`, {}, { headers: { 'Authorization': header } }).subscribe((res: any) => {
@@ -63,11 +66,12 @@ export class AppComponent {
                     errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
                 });
                 // delete cookie
-                this.cookieService.delete('auth_session');
+                this.cookieService.delete('auth_session','/');
                 // set auth state
                 this.auth.setUser(this.auth.nullUser);
                 this.auth.setLoggedIn(false);
             }
+            this.calcFilterTint();
         });
     }
 
@@ -75,7 +79,7 @@ export class AppComponent {
         // get users settings
         const settings = this.auth.getUser().settings;
         // if there are no settings save default settings as users current settings
-        if(Object.keys(settings).length === 0){
+        if((!settings || Object.keys(settings).length === 0) && this.auth.isLoggedIn()){
             this.http.post(`${API_BASE}/users/${this.auth.getUser().id}/save-settings`,{settings: DEFAULT_SETTINGS}, { headers: { 'Authorization': "Bearer " + this.cookieService.get('auth_session') }, responseType: 'text' }).subscribe((res: any) => {
                 this.auth.setUserField('settings', DEFAULT_SETTINGS);
             }, (err: any) => {
