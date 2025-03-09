@@ -38,7 +38,9 @@
               }
             ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less",
+              "src/variables.less",
+              "src/fonts.less"
             ],
             "scripts": []
           },
@@ -107,7 +109,8 @@
             ],
             "styles": [
               "src/styles.less",
-              "src/variables.less"
+              "src/variables.less",
+              "src/fonts.less"
             ],
             "scripts": []
           }
