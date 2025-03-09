@@ -1,7 +1,12 @@
-import { signal, Injectable, computed, WritableSignal } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { API_BASE } from "../globals";
+import { signal, Injectable, computed, WritableSignal, inject } from "@angular/core";
+import { CookieService } from "ngx-cookie-service";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    private http:HttpClient = inject(HttpClient);
+    private cookie:CookieService = inject(CookieService);
     // null user (for when the user is not logged in)
     nullUser: User = { id: null, slug: null, username: null, profile_image: null, role: null, age_verified: null, settings: null };
     // current user data
@@ -14,6 +19,19 @@ export class AuthService {
     public setUserField = (field: string, value: any) => this.user.update(user => ({ ...user, [field]: value }));
     public isLoggedIn = computed(() => this.loggedIn());
     public setLoggedIn = (data: boolean) => this.loggedIn.set(data);
+    public getSessionAsync = async () => {
+        return new Promise(resolve => {
+            // else send validation request with session token
+            const header = "Bearer " + this.cookie.get('auth_session');
+            this.http.post<User>(`${API_BASE}/auth/session`, {}, { headers: { 'Authorization': header } }).subscribe(user => {
+                this.setUser(user);
+                this.setLoggedIn(true);
+                resolve(user);
+            }, (err: any) => {
+                resolve(this.nullUser);
+            });
+        });
+    }
 }
 
 interface User {
