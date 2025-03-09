@@ -1,3 +1,5 @@
+<div class="state" [class.translucent]="routeTranslucent()"></div>
+
 <div class="backdrop" [class.show]="showProfile || searchFocused" (click)="showProfile = false;"></div>
 
 <div class="logout-wrapper" [class.show]="showLogout">
@@ -70,8 +72,9 @@
             <button size="s" tuiButton type="button" appearance="accent" routerLink="/login">{{ 'topbar.profile.login' | translate }}</button>
             <button size="s" tuiButton type="button" class="register" appearance="accent" routerLink="/register">{{ 'topbar.profile.register' | translate }}</button>
         </div>
-        <div class="login-wrapper" *ngIf="loggedIn()">
+        <div class="login-wrapper logged-in" *ngIf="loggedIn()">
             <button size="s" tuiButton type="button" class="logout" appearance="accent" (click)="showLogout = true;"><tui-icon icon="@tui.log-out" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ 'topbar.profile.logout' | translate }}</button>
+            <button *ngIf="user().role === 'Admin'" size="s" tuiButton type="button" class="switch-mode" appearance="accent" (click)="adminDashboard()"><tui-icon icon="@tui.key" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ sidebar.isInAdminArea() ? ('topbar.profile.admin-exit' | translate) : ('topbar.profile.admin-enter' | translate) }}</button>
         </div>
     </div>
 </div>

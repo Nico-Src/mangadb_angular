@@ -36,6 +36,14 @@ export class TopBar {
     readonly cdn_base = CDN_BASE;
     readonly user = computed(() => this.auth.getUser());
     readonly loggedIn = computed(() => this.auth.isLoggedIn());
+    readonly inAdminArea = computed(() => this.sidebar.isInAdminArea());
+    readonly routeStates = [
+        { url: '/', state: 'translucent' },
+        { url: '/login', state: 'translucent' },
+        { url: '/register', state: 'translucent' },
+        { url: 'collection', state: 'solid' }
+    ];
+    routeTranslucent = () => this.routeStates.find(r => r.url === this.router.url)?.state === 'translucent';
     @ViewChild('searchEl') searchEl: any
 
     protected search = '';
@@ -173,7 +181,7 @@ export class TopBar {
         // send request to api
         this.http.post(`${API_BASE}/auth/logout`, {fromAllDevices: this.logoutAll}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe((res: any) => {
             // delete cookie
-            this.cookieService.delete('auth_session');
+            this.cookieService.delete('auth_session','/');
             // clear auth state
             this.auth.setLoggedIn(false);
             this.auth.setUser(this.auth.nullUser);
@@ -192,6 +200,14 @@ export class TopBar {
                 errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
             }
         });
+    }
+
+    // redirect to admin dashboard
+    adminDashboard() {
+        const user = this.auth.getUser();
+        if(!user || user.role !== 'Admin') return;
+        if(this.sidebar.isInAdminArea()) this.router.navigate(['/']);
+        else this.router.navigate(['/admin/dashboard']);
     }
 
     // disabled language handler

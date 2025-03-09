@@ -8,8 +8,10 @@
 .topbar{
     width: 100%;
     height: @topbar-height;
-    background-color: @topbar-color;
-    box-shadow:  2px 0px 8px 2px rgba(0,0,0,.05);
+    position: absolute;
+    top: 0;
+    left: 0; right: 0;
+    z-index: 1;
 }
 
 .sidebar{
@@ -19,6 +21,7 @@
     box-shadow:  2px 0px 8px 2px rgba(0,0,0,.05);
     float:left;
     transition: width @transition-time ease;
+    margin-top: @topbar-height;
 
     &.expanded{
         width: @sidebar-expanded-width;
@@ -27,7 +30,7 @@
 
 .main-content{
     width: calc(100% - @sidebar-width);
-    height: calc(100% - @topbar-height);
+    height: 100%;
     background-color: @bg-color;
     float: left;
     clear: right;
