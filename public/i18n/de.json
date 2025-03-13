@@ -5,9 +5,32 @@
         "en": "Englisch",
         "fr": "Französisch"
     },
+    "date": {
+        "unknown": "Unbekannt",
+        "announced": "Angekündigt"
+    },
     "home": {
         "trending-series": "Beliebte Serien",
-        "recently-added": "Neu hinzugefügt"
+        "recently-added": "Neu hinzugefügt",
+        "next-releases": "Nächste Veröffentlichungen"
+    },
+    "browse-series":{
+        "search":{
+            "placeholder": "Suche..."
+        },
+        "filter": {
+            "label": "Filter",
+            "reset": "Zurücksetzen"
+        },
+        "order": {
+            "name": "Name",
+            "added": "Hinzugefügt"
+        },
+        "view": {
+            "list": "Liste",
+            "columns": "Spalten",
+            "grid": "Grid"
+        }
     },
     "title": {
         "home": "Startseite",
@@ -106,7 +129,12 @@
             "manwha": "Manhwa",
             "manhua": "Manhua",
             "other": "Andere"
-        }
+        },
+        "pages": {
+            "unknown": "Unbekannt"
+        },
+        "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
+        "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen."
     },
     "tags":{
         "category":{
