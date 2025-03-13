@@ -1,4 +1,4 @@
-import { TUI_ALERT_POSITION, TuiAlertContext, TuiAlertService, TuiRoot } from "@taiga-ui/core";
+import { TUI_ALERT_POSITION, TuiAlertContext, TuiAlertService, TuiRoot, TuiScrollbar } from "@taiga-ui/core";
 import { Component, inject, signal, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SideBar } from "./sidebar/sidebar.component";
@@ -76,26 +76,9 @@ export class AppComponent {
     }
 
     protected calcFilterTint(): void {
-        // get users settings
-        const settings = this.auth.getUser().settings;
-        // if there are no settings save default settings as users current settings
-        if((!settings || Object.keys(settings).length === 0) && this.auth.isLoggedIn()){
-            this.http.post(`${API_BASE}/users/${this.auth.getUser().id}/save-settings`,{settings: DEFAULT_SETTINGS}, { headers: { 'Authorization': "Bearer " + this.cookieService.get('auth_session') }, responseType: 'text' }).subscribe((res: any) => {
-                this.auth.setUserField('settings', DEFAULT_SETTINGS);
-            }, (err: any) => {
-                // process errors
-                if(err.status === 0){ // connection error
-                    this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                        errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                    });
-                } else { // other error
-                    errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
-                }
-            });
-        }
         // get current theme accent color
-        const savedColor = this.auth.isLoggedIn() ? this.auth.getUser().settings['theme-accent-color'] : DEFAULT_SETTINGS['theme-accent-color'];
-       // if there is a saved color (other than the default) set the css variables
+        const savedColor = this.auth.getUserSetting('theme-accent-color');
+        // if there is a saved color (other than the default) set the css variables
         if(savedColor && savedColor !== '#71c94e'){
             const savedRGB = hexToRGB(savedColor);
             document.body.style.setProperty('--accent-color', `${savedRGB?.r}, ${savedRGB?.g}, ${savedRGB?.b}`);

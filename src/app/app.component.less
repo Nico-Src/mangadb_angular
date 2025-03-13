@@ -11,7 +11,7 @@
     position: absolute;
     top: 0;
     left: 0; right: 0;
-    z-index: 1;
+    z-index: 2;
 }
 
 .sidebar{
@@ -29,12 +29,15 @@
 }
 
 .main-content{
+    background-color: @bg-color;
     width: calc(100% - @sidebar-width);
     height: 100%;
-    background-color: @bg-color;
     float: left;
     clear: right;
     transition: width @transition-time ease;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{width: 0;}
 
     &.expanded{
         width: calc(100% - @sidebar-expanded-width);
