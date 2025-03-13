@@ -1,0 +1,169 @@
+@import '../../../variables.less';
+
+:host{
+    display:block;
+    margin-top: @topbar-height;
+    padding: 20px;
+
+    .controls{
+        width: 100%;
+        height: fit-content;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-shrink: 0;
+        margin-bottom: 5px;
+        gap: 10px;
+
+        .control-row{
+            width: 100%;
+            height: fit-content;
+            display:flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            gap: 10px;
+
+            ::ng-deep .t-loader{
+                stroke: rgb(var(--mid-accent)) !important;
+            }
+
+            ::ng-deep [tuiAppearance][data-appearance=textfield]{
+                box-shadow: none !important;
+            }
+
+            .search-input{
+                flex: 1;
+                background-color: rgba(0, 0, 0, 0.05);
+
+                [tuiAppearance][data-appearance=textfield]{
+                    background-color: transparent !important;
+                    box-shadow: none !important;
+                    font-size: 14px;
+                }
+
+                [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
+                    outline: 0.125rem solid rgba(0,0,0,.25) !important;
+                }
+            }
+
+            .filter-btn{
+                padding: 0 25px;
+                flex-shrink: 0;
+            }
+
+            .order-select{
+                width: 250px;
+
+                --tui-background-base: rgba(0,0,0,.05);
+                --tui-background-accent-1: rgba(0,0,0,.25);
+            }
+
+            .view-mode{
+                &:before{
+                    background: rgb(var(--accent-color)) !important;
+                }
+
+                .view-item{
+                    display:flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 0 10px;
+
+                    &.tui-segmented_active{
+                        color: white !important;
+                    }
+
+                    ng-icon{
+                        transform: translateY(-1px);
+                        font-size: 16px;
+                    }
+                }
+            }
+
+            tui-pagination{
+                margin-left: auto;
+
+                --tui-background-accent-1: rgb(var(--accent-color));
+                --tui-background-accent-1-hover: rgb(var(--mid-accent));
+                --tui-background-accent-1-pressed: rgb(var(--dark-accent));
+                --tui-text-action: #606060;
+            }
+        }
+    }
+
+    .series-wrapper{
+        width: 100%;
+        height: fit-content;
+        margin-top: 10px;
+        transition: opacity @transition-time ease;
+
+        &.hidden{
+            opacity: 0;
+        }
+        
+        &.list{
+            display:flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        &.column{
+            display:flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            flex-direction: row !important;
+            gap: 10px;
+
+            .series{
+                flex: 1;
+                min-width: calc(50% - 20px);
+                width: unset !important;
+                flex-shrink: 0;
+            }
+        }
+
+        &.grid{
+            display:grid;
+            row-gap: .75rem;
+            column-gap: .75rem;
+            grid-template-columns: repeat(auto-fill,minmax(min(10.375rem,33.3%),1fr));
+
+            .series{
+                flex: 1;
+                aspect-ratio: 0.7;
+                height: unset !important;
+                margin-bottom: 0px !important;
+            }
+        }
+
+        .series{
+            width: 100%;
+            height: 200px;
+            display:flex;
+            justify-content: flex-start;
+            align-items: center;
+            border-radius: 6px;
+        }
+    }
+}
+
+.order-item{
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .order-name{
+        flex: 1;
+    }
+
+    .icon{
+        flex-shrink: 0;
+    }
+}

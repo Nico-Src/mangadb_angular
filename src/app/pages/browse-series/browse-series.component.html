@@ -1,0 +1,42 @@
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-loader class="loader" [overlay]="true" [showLoader]="loading">
+            <button size="s" tuiButton type="button" appearance="accent" class="filter-btn">{{ 'browse-series.filter.label' | translate }}</button>
+        </tui-loader>
+    </div>
+    <div class="control-row">
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-segmented class="view-mode" [(activeItemIndex)]="viewIndex" (activeItemIndexChange)="viewChanged($event)">
+            <button type="button" class="view-item" [disabled]="loading">
+                <ng-icon name="tablerList"/>
+            </button>
+            <button type="button" class="view-item" [disabled]="loading">
+                <ng-icon name="tablerLayoutColumns"/>
+            </button>
+            <button type="button" class="view-item" [disabled]="loading">
+                <ng-icon name="tablerLayoutGrid"/>
+            </button>
+        </tui-segmented>
+        <!-- Pagination -->
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+    </div>
+</div>
+<div class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading">
+    <div class="series" *ngFor="let ser of series">
+        <manga-series-list [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+        <manga-series-column [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+        <manga-series-grid [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+    </div>
+</div>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="language-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
