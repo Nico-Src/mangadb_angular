@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { API_BASE } from "../globals";
+import { API_BASE, DEFAULT_SETTINGS } from "../globals";
 import { signal, Injectable, computed, WritableSignal, inject } from "@angular/core";
 import { CookieService } from "ngx-cookie-service";
 
@@ -22,8 +22,14 @@ export class AuthService {
     public getSessionAsync = async () => {
         return new Promise(resolve => {
             // else send validation request with session token
-            const header = "Bearer " + this.cookie.get('auth_session');
+            const session_id = this.cookie.get('auth_session');
+            const header = "Bearer " + session_id;
+            if(!session_id) resolve(this.nullUser);
             this.http.post<User>(`${API_BASE}/auth/session`, {}, { headers: { 'Authorization': header } }).subscribe(user => {
+                if(!user.settings || Object.keys(user.settings).length === 0){
+                    this.updateSettings(user.id || -1, DEFAULT_SETTINGS);
+                    user.settings = DEFAULT_SETTINGS;
+                }
                 this.setUser(user);
                 this.setLoggedIn(true);
                 resolve(user);
@@ -31,6 +37,19 @@ export class AuthService {
                 resolve(this.nullUser);
             });
         });
+    }
+    public updateSettings = async (id: number, settings: any) => {
+        if(!id || id < 0) return;
+        const header = "Bearer " + this.cookie.get('auth_session');
+        this.http.post(`${API_BASE}/users/${id}/save-settings`,{settings: settings}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe((res: any) => {});
+    }
+    public getUserSetting = (setting:string) => {
+        const loggedIn = this.isLoggedIn();
+        if(!loggedIn) return DEFAULT_SETTINGS[setting];
+        const user = this.getUser();
+        const settings = user.settings;
+        if(!settings || Object.keys(settings).length === 0) return DEFAULT_SETTINGS[setting];
+        return settings[setting];
     }
 }
 
