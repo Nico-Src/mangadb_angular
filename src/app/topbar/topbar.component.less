@@ -17,9 +17,21 @@
         background-color: transparent;
         box-shadow: none;
 
+        .notifications .notification{
+            color: white !important;
+        }
+
         .top-bar-header{
             background-color: @topbar-color;
             border-radius: 0px 0px 12px 0px;
+        }
+
+        .search-wrapper{
+            background-color: rgba(255,255,255,.5) !important;
+
+            [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
+                outline: 0.125rem solid transparent !important;
+            }
         }
     }
 
@@ -75,6 +87,10 @@
         }
     }
 
+    .search-wrapper.hidden *{
+        pointer-events: none !important;
+    }
+
     .search-wrapper{
         position: relative;
         margin-left: auto;
@@ -87,7 +103,12 @@
         background-color: #eee;
         border-radius: 500px;
         padding: 0 10px;
-        transition: width @transition-time ease;
+        transition: width @transition-time ease, opacity @transition-time ease;
+
+        &.hidden{
+            opacity: 0;
+            pointer-events: none !important;
+        }
 
         [tuiAppearance][data-appearance=textfield]{
             background-color: transparent !important;
@@ -102,15 +123,29 @@
             width: 350px;
             z-index: 10 !important;
 
+            tui-scrollbar{
+                pointer-events: all;
+            }
+
             .search-results{
                 opacity: 1;
                 transform: translateY(0);
                 transition: opacity @transition-time ease 0s, transform @transition-time ease 0s;
+                pointer-events: all;
+            }
+
+            .search-results *{
+                pointer-events: all !important;
             }
         }
 
         tui-scrollbar{
             width: 100%;
+            pointer-events: none;
+        }
+
+        .search-results *{
+            pointer-events: none;
         }
 
         .search-results{

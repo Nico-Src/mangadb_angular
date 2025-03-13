@@ -63,7 +63,7 @@ export class TopBar {
 
     languages = LANGS;
 
-    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, private router: Router, public sidebar: SideBarService) {
+    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, public router: Router, public sidebar: SideBarService) {
         
     }
 
@@ -208,6 +208,15 @@ export class TopBar {
         if(!user || user.role !== 'Admin') return;
         if(this.sidebar.isInAdminArea()) this.router.navigate(['/']);
         else this.router.navigate(['/admin/dashboard']);
+    }
+
+    searchKeyDown(event: KeyboardEvent) {
+        if(event.key === 'Enter' && this.search.trim() !== ''){
+            // navigate to browse series page with search query
+            this.router.navigate(['/browse-series'], { queryParams: {search: this.search.trim()}});
+            this.searchFocused = false;
+            this.search = "";
+        }
     }
 
     // disabled language handler
