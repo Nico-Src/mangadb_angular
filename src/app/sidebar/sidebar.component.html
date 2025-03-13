@@ -1,64 +1,64 @@
 <div class="item" [routerLink]="['/']" [class.active]="router.url === '/'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.home' | translate) ">
-    <tui-icon icon="@tui.house" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="tablerHome" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.home' | translate }}</span>
 </div>
 <div class="header-item" *ngIf="!inAdminArea">
     <span class="name" tuiFade>{{ 'sidebar.personal' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/collection']" [class.active]="router.url === '/collection'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.collection' | translate) ">
-    <tui-icon icon="@tui.library" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarLibrary" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.collection' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/reading-history']" [class.active]="router.url === '/reading-history'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.reading-history' | translate) ">
-    <tui-icon icon="@tui.clock" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarHistory" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.reading-history' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/lists']" [class.active]="router.url === '/lists'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.lists' | translate) ">
-    <tui-icon icon="@tui.list" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarBillList" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.lists' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/settings']" [class.active]="router.url === '/settings'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.settings' | translate) ">
-    <tui-icon icon="@tui.settings" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarSettings" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.settings' | translate }}</span>
 </div>
 <div class="header-item" *ngIf="!inAdminArea">
     <span class="name" tuiFade>{{ 'sidebar.contents' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/browse-series']" [class.active]="router.url.startsWith('/browse-series')" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-series' | translate) ">
-    <tui-icon icon="@tui.layout-list" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="tablerListSearch" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.browse-series' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/browse-publishers']" [class.active]="router.url === '/browse-publishers'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-publishers' | translate) ">
-    <tui-icon icon="@tui.building-2" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarBuildingsLinear" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.browse-publishers' | translate }}</span>
 </div>
 <div class="item" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.random-series' | translate) ">
-    <tui-icon icon="@tui.dices" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="lucideDices" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.random-series' | translate }}</span>
 </div>
 <div class="header-item" *ngIf="!inAdminArea">
     <span class="name" tuiFade>{{ 'sidebar.community' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/browse-users']" [class.active]="router.url === '/browser-users'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-users' | translate) ">
-    <tui-icon icon="@tui.users" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarUsersGroupRounded" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.browse-users' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/marketplace']" [class.active]="router.url === '/marketplace'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.marketplace' | translate) ">
-    <tui-icon icon="@tui.store" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarCart4" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.marketplace' | translate }}</span>
 </div>
 <div class="header-item" *ngIf="!inAdminArea">
     <span class="name" tuiFade>MangaDB</span>
 </div>
 <div class="item" [routerLink]="['/about-us']" [class.active]="router.url === '/about-us'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.about-us' | translate) ">
-    <tui-icon icon="@tui.quote" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="tablerQuote" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.about-us' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/privacy']" [class.active]="router.url === '/privacy'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.privacy' | translate) ">
-    <tui-icon icon="@tui.earth-lock" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="matPrivacyTipOutline" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.privacy' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/imprint']" [class.active]="router.url === '/imprint'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.imprint' | translate) ">
-    <tui-icon icon="@tui.shield-alert" class="icon" [style.fontSize.px]="18"></tui-icon>
+    <ng-icon name="solarFileText" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.imprint' | translate }}</span>
 </div>

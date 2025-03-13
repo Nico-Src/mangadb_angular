@@ -16,11 +16,11 @@
             }
 
             &.active .icon{
-                transform: translateX(-3px);
+                transform: translateX(-3px) translateY(-2px);
             }
 
             &:not(.active) .icon{
-                transform: translateX(-8px);
+                transform: translateX(-8px)  translateY(-2px);
             }
         }
 
@@ -66,6 +66,8 @@
     .icon{
         transition: color @transition-time ease, transform calc(@transition-time / 2) ease;
         flex-shrink: 0;
+        transform: translateY(-2px);
+        overflow: unset !important;
     }
 
     &.active{
