@@ -24,11 +24,11 @@
 <div class="header-item" *ngIf="!inAdminArea">
     <span class="name" tuiFade>{{ 'sidebar.contents' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/browse-series']" [class.active]="router.url === '/browser-series'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-series' | translate) ">
+<div class="item" [routerLink]="['/browse-series']" [class.active]="router.url.startsWith('/browse-series')" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-series' | translate) ">
     <tui-icon icon="@tui.layout-list" class="icon" [style.fontSize.px]="18"></tui-icon>
     <span class="name" tuiFade>{{ 'sidebar.browse-series' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/browse-publishers']" [class.active]="router.url === '/browser-publishers'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-publishers' | translate) ">
+<div class="item" [routerLink]="['/browse-publishers']" [class.active]="router.url === '/browse-publishers'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-publishers' | translate) ">
     <tui-icon icon="@tui.building-2" class="icon" [style.fontSize.px]="18"></tui-icon>
     <span class="name" tuiFade>{{ 'sidebar.browse-publishers' | translate }}</span>
 </div>
