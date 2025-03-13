@@ -1,17 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, effect, HostListener, inject, signal, ViewChild, ViewChildren } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { API_BASE, DEFAULT_SETTINGS, CDN_BASE } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
-import { TuiButton, TuiAppearance } from '@taiga-ui/core';
+import { TuiButton, TuiAppearance, TuiLoader } from '@taiga-ui/core';
 import { MangaCover } from '../../manga-cover/manga-cover.component'; 
-import { TuiLineClamp } from '@taiga-ui/kit';
+import { MangaVolume } from '../../manga-volume/manga-volume.component';
+import { TuiLineClamp, TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 
 @Component({
     selector: 'app-home',
-    imports: [NgFor, TuiButton, TuiAppearance, MangaCover, TuiLineClamp, TranslatePipe],
+    imports: [NgFor, TuiButton, TuiAppearance, MangaCover, MangaVolume, TuiLineClamp, TranslatePipe, TuiCarousel, TuiPagination, TuiLoader, NgIf],
     templateUrl: './home.component.html',
     styleUrl: './home.component.less'
 })
@@ -19,6 +20,14 @@ export class HomeComponent {
     private auth = inject(AuthService);
     readonly cdn_base = CDN_BASE;
     trendingSeries:any = [];
+    recentlyAddedLoading = signal(true);
+    recentlyAddedVolumes:any = [];
+    recentlyAddedIndex = 0;
+    recentlyAddedShownItems = 0;
+    nextReleasesLoading = signal(true);
+    nextReleasesVolumes:any = [];
+    nextReleasesIndex = 0;
+    nextReleasesShownItems = 0;
     @ViewChild('slider') slider: any;
     @ViewChild('sliderTrack') sliderTrack: any;
     @ViewChildren('slide') slides: any;
@@ -34,8 +43,22 @@ export class HomeComponent {
             this.title.setTitle(`${res} | MangaDB`);
         });
 
+        this.recentlyAddedShownItems = Math.floor(window.innerWidth / 200);
+        this.nextReleasesShownItems = this.recentlyAddedShownItems;
+
         // fetch trending series
         this.fetchTrendingSeries();
+
+        setTimeout(()=>{
+            // fetch recently added volumes
+            this.fetchRecentlyAddedVolumes();
+        }, 500);
+
+        // fetch next releases
+        setTimeout(()=>{
+            // fetch recently added volumes
+            this.fetchNextReleases();
+        }, 1000);
     }
 
     // increment slide index
@@ -54,7 +77,7 @@ export class HomeComponent {
     fetchTrendingSeries() {
         const LIMIT = 10;
         // get users prefered content language
-        const contentLang = this.auth.isLoggedIn() ? this.auth.getUser().settings['prefered-content-language'] : DEFAULT_SETTINGS['prefered-content-language'];
+        const contentLang = this.auth.getUserSetting('prefered-content-language');
         const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
         // send request
         this.http.get(`${API_BASE}/series/trending/${LIMIT}/${lang}`).subscribe((res: any) => {
@@ -77,6 +100,36 @@ export class HomeComponent {
         });
     }
 
+    // fetch recently added volumes from api
+    fetchRecentlyAddedVolumes() {
+        this.recentlyAddedLoading.set(true);
+        const LIMIT = 24;
+        // get users prefered content language
+        const contentLang = this.auth.getUserSetting('prefered-content-language');
+        const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
+
+        // send request
+        this.http.get(`${API_BASE}/volumes/recently-added/${LIMIT}/${lang}`).subscribe((res: any) => {
+            this.recentlyAddedVolumes = res;
+            setTimeout(() => this.recentlyAddedLoading.set(false), 250);
+        });
+    }
+
+    // fetch next releases from api
+    fetchNextReleases() {
+        this.nextReleasesLoading.set(true);
+        const LIMIT = 24;
+        // get users prefered content language
+        const contentLang = this.auth.getUserSetting('prefered-content-language');
+        const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
+
+        // send request
+        this.http.get(`${API_BASE}/volumes/next-releases/${LIMIT}/${lang}`).subscribe((res: any) => {
+            this.nextReleasesVolumes = res;
+            setTimeout(() => this.nextReleasesLoading.set(false), 250);
+        });
+    }
+
     // check overflow status of given element
     checkOverflow(element: any) {
         if(!element) return false;
@@ -87,5 +140,11 @@ export class HomeComponent {
         element.style.flex = '1';
         const rectAfter = element.getBoundingClientRect();
         return rectAfter.height < rect.height;
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event:any) {
+        this.recentlyAddedShownItems = Math.floor(event.target.innerWidth / 200);
+        this.nextReleasesShownItems = this.recentlyAddedShownItems;
     }
 }

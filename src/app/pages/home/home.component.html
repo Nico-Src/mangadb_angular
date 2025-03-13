@@ -5,7 +5,7 @@
             <div #slide class="slide-wrapper" [class.hide]="slideIndex !== index" [style.minWidth.%]="100" [style.maxWidth.%]="100" *ngFor="let ser of trendingSeries; index as index" :key="ser.id">
                 <div class="background">
                     <div class="overlay"></div>
-                    <manga-cover [id]="ser.volume.id" [blur]="true" fit="cover"></manga-cover>
+                    <manga-cover [id]="ser.volume.id" [nsfw]="ser.volume.nsfw === 1" [nsfw18]="ser.volume.nsfw18 === 1" [blur]="true" fit="cover"></manga-cover>
                 </div>
                 <div class="slide">
                     <manga-cover [id]="ser.volume.id" [aspectRatio]="ser.volume.aspect_ratio"></manga-cover>
@@ -30,4 +30,24 @@
         </div>
     </div>
 </div>
-<div class="section-title">{{ 'home.recently-added' | translate }}</div>
+<div class="section-title recently-added">{{ 'home.recently-added' | translate }}</div>
+<div class="section-content recently-added loading" *ngIf="recentlyAddedLoading()">
+    <tui-loader class="loader" [inheritColor]="true" [showLoader]="true"></tui-loader>
+</div>
+<tui-carousel class="section-content recently-added" [class.hide]="recentlyAddedLoading()" [itemsCount]="recentlyAddedShownItems" [(index)]="recentlyAddedIndex" [draggable]="true">
+    <ng-content *ngFor="let volume of recentlyAddedVolumes">
+        <manga-volume *tuiItem [volume]="volume"></manga-volume>
+    </ng-content>
+</tui-carousel>
+<tui-pagination size="s" class="pagination" [length]="recentlyAddedVolumes.length - (recentlyAddedShownItems - 1)" [(index)]="recentlyAddedIndex"/>
+<div class="section-title">{{ 'home.next-releases' | translate }}</div>
+<div class="section-content next-releases loading" *ngIf="nextReleasesLoading()">
+    <tui-loader class="loader" [inheritColor]="true" [showLoader]="true"></tui-loader>
+</div>
+<tui-carousel class="section-content next-releases" [class.hide]="nextReleasesLoading()" [itemsCount]="nextReleasesShownItems" [(index)]="nextReleasesIndex" [draggable]="true">
+    <ng-content *ngFor="let volume of nextReleasesVolumes">
+        <manga-volume *tuiItem [volume]="volume"></manga-volume>
+    </ng-content>
+</tui-carousel>
+<tui-pagination size="s" class="pagination" [length]="nextReleasesVolumes.length - (nextReleasesShownItems - 1)" [(index)]="nextReleasesIndex"/>
+<div class="placeholder"></div>
