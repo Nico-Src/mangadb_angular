@@ -1,0 +1,25 @@
+<div class="cover-wrapper">
+    <manga-cover [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+</div>
+<div class="details">
+    <div class="header">
+        <div class="title">
+            <img class="origin" [src]="`/img/flags/${toLocale(series.origin)}.png`">
+            <span class="text">{{ series.name }}</span>
+        </div>
+        <div class="alias" v-if="series.alias">{{ series.alias }}</div>
+    </div>
+    <div class="description" [innerHTML]="series.description" *ngIf="series.description"></div>
+    <div class="description" *ngIf="!series.description">
+        <div class="no-desc">
+            <div class="title">{{ 'series.no-description.title' | translate }}</div>
+            <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
+        </div>
+    </div>
+    <div class="tag-wrapper" tuiFade>
+        <div *ngFor="let tag of series.contentTypeTags" class="tag type">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+        <div *ngFor="let tag of series.contentRatingTags" class="tag content-rating">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+        <div *ngFor="let tag of series.contentWarningTags" class="tag content-warning">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+        <div *ngFor="let tag of series.otherTags" class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+    </div>
+</div>
