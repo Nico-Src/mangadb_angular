@@ -19,11 +19,19 @@ export class MangaSeriesGridComponent {
     readonly cdn_base = CDN_BASE;
     loading = true;
     @Input() series:any = {};
+    @Input() search:any = "";
 
     constructor(private translate: TranslateService){}
 
     ngOnChanges(){
         
+    }
+
+    highlightSearch(text: string) {
+        if(!text || text.trim() === "") return text;
+        if(this.search.trim() === "") return text;
+        const regex = new RegExp(this.search, 'gi');
+        return text.replace(regex, match => `<b>${match}</b>`);
     }
 
     toLocale(lang:string){

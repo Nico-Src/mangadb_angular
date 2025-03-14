@@ -19,6 +19,7 @@ export class MangaSeriesColumnComponent {
     readonly cdn_base = CDN_BASE;
     loading = true;
     @Input() series:any = {};
+    @Input() search:any = "";
 
     constructor(private translate: TranslateService){}
 
@@ -31,6 +32,14 @@ export class MangaSeriesColumnComponent {
 
     ngOnChanges(){
         
+    }
+
+    // add bold tags to searched term in given text
+    highlightSearch(text: string) {
+        if(!text || text.trim() === "") return text;
+        if(this.search.trim() === "") return text;
+        const regex = new RegExp(this.search, 'gi');
+        return text.replace(regex, match => `<b>${match}</b>`);
     }
 
     toLocale(lang:string){

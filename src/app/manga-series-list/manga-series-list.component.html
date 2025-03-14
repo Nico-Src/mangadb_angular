@@ -5,9 +5,9 @@
     <div class="header">
         <div class="title">
             <img class="origin" [src]="`/img/flags/${toLocale(series.origin)}.png`">
-            <span class="text">{{ series.name }}</span>
+            <span class="text" [innerHTML]="highlightSearch(series.name)"></span>
         </div>
-        <div class="alias" v-if="series.alias">{{ series.alias }}</div>
+        <div class="alias" v-if="series.alias" [innerHTML]="highlightSearch(series.alias)"></div>
     </div>
     <div class="description" [innerHTML]="series.description" *ngIf="series.description"></div>
     <div class="description" *ngIf="!series.description">

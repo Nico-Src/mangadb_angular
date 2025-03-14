@@ -1,3 +1,5 @@
+@import '../../variables.less';
+
 :host{
     display:flex;
     justify-content: center;
@@ -7,6 +9,13 @@
     background-color: rgba(0,0,0,.05);
     border-radius: 4px;
     overflow: hidden;
+    cursor: pointer;
+
+    &:hover{
+        .cover-wrapper manga-cover{
+            transform: scale(0.95);
+        }
+    }
 
     .cover-wrapper{
         width: 150px;
@@ -21,6 +30,8 @@
             display:flex;
             justify-content: center;
             align-items: center;
+            transition: transform @transition-time ease;
+            will-change: transform;
         }
     }
 

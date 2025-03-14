@@ -19,6 +19,7 @@ export class MangaSeriesListComponent {
     readonly cdn_base = CDN_BASE;
     loading = true;
     @Input() series:any = {};
+    @Input() search:any = "";
 
     constructor(private translate: TranslateService){}
 
@@ -27,6 +28,13 @@ export class MangaSeriesListComponent {
         this.series.contentRatingTags = this.series.tags.filter((t: { type: string; name: string; }) => t.type == 'content-rating' && t.name != 'Safe' && t.name);
         this.series.contentWarningTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
         this.series.otherTags = this.series.tags.filter((t: { type: string; }) => t.type != 'publication-status' && t.type != 'origin-country' && t.type != 'language' && t.type != 'content-rating' && t.type != 'content-warning' && t.type != 'content-type');
+    }
+
+    highlightSearch(text: string) {
+        if(!text || text.trim() === "") return text;
+        if(this.search.trim() === "") return text;
+        const regex = new RegExp(this.search, 'gi');
+        return text.replace(regex, match => `<b>${match}</b>`);
     }
 
     ngOnChanges(){

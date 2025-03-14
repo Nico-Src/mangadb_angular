@@ -19,6 +19,10 @@
             .overlay{
                 opacity: 0;
             }
+
+            manga-cover{
+                transform: scale(1);
+            }
         }
 
         manga-cover{
@@ -27,6 +31,9 @@
             display:flex;
             justify-content: center;
             align-items: center;
+            transition: transform @transition-time ease;
+            will-change: transform;
+            transform: scale(1.05);
         }
 
         .overlay{
