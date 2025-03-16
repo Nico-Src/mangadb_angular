@@ -3,16 +3,27 @@
     --accent-color: 113, 201, 78;
     --mid-accent: 93, 167, 64;
     --dark-accent: 72, 131, 49;
+
+    --transition-duration: 0.3s;
 }
 
 @bg-color: #dedede;
+@dark-bg-color: #333;
 
 @topbar-height: 60px;
 @topbar-color: #fff;
+@dark-topbar-color: #222;
+@logo-name-filters: none;
+@dark-logo-name-filters: invert(.8);
 
 @sidebar-color: #eee;
+@dark-sidebar-color: #444;
 @sidebar-width: 60px;
 @sidebar-expanded-width: 260px;
 @sidebar-version-bg: #ddd;
 
-@transition-time: 0.3s;
+@media (prefers-reduced-motion: reduce) {
+    :root{
+        --transition-duration: 0s;
+    }
+}
