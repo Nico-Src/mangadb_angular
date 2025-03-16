@@ -31,11 +31,14 @@ export class MangaCover {
     needsSkeleton = signal(false);
 
     ngOnInit(){
+        // get nsfw mode
         let nsfwMode = this.auth.getUserSetting('nsfw-mode');
         let ageVerified = false;
+        // if user is logged in get age verified
         if(this.auth.isLoggedIn()){
             ageVerified = this.auth.getUser().age_verified || false;
         }
+        // check if nsfw placeholders are needed and if skeleton is needed
         this.needsNSFWPlaceholder.set(this.nsfw && nsfwMode === 'settings.nsfw.hide-nsfw');
         this.needsNSFW18Placeholder.set((this.nsfw18 && (nsfwMode === 'settings.nsfw.hide-nsfw' || nsfwMode === 'settings.nsfw.show-nsfw')) || (this.nsfw18 && ageVerified === false));
         this.needsSkeleton.set((this.needsNSFWPlaceholder() === false && this.needsNSFW18Placeholder() === false) || this.forceSkeleton === true);

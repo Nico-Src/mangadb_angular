@@ -31,7 +31,7 @@
             display:flex;
             justify-content: center;
             align-items: center;
-            transition: transform @transition-time ease;
+            transition: transform var(--transition-duration) ease;
             will-change: transform;
             transform: scale(1.05);
         }
@@ -48,7 +48,7 @@
             justify-content: flex-end;
             align-items: flex-start;
             flex-direction: column;
-            transition: opacity @transition-time ease;
+            transition: opacity var(--transition-duration) ease;
 
             .origin{
                 height: 15px;

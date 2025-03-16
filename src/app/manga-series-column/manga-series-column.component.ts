@@ -24,6 +24,7 @@ export class MangaSeriesColumnComponent {
     constructor(private translate: TranslateService){}
 
     ngOnInit(){
+        // seperate tags
         this.series.contentTypeTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-type');
         this.series.contentRatingTags = this.series.tags.filter((t: { type: string; name: string; }) => t.type == 'content-rating' && t.name != 'Safe' && t.name);
         this.series.contentWarningTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
@@ -34,7 +35,7 @@ export class MangaSeriesColumnComponent {
         
     }
 
-    // add bold tags to searched term in given text
+    // highlight search term in given text
     highlightSearch(text: string) {
         if(!text || text.trim() === "") return text;
         if(this.search.trim() === "") return text;
@@ -42,6 +43,7 @@ export class MangaSeriesColumnComponent {
         return text.replace(regex, match => `<b>${match}</b>`);
     }
 
+    // language to locale code
     toLocale(lang:string){
         return langToLocale(lang);
     }

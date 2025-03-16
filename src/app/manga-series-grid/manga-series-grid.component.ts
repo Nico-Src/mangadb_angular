@@ -27,6 +27,7 @@ export class MangaSeriesGridComponent {
         
     }
 
+    // highlight search term in given text
     highlightSearch(text: string) {
         if(!text || text.trim() === "") return text;
         if(this.search.trim() === "") return text;
@@ -34,6 +35,7 @@ export class MangaSeriesGridComponent {
         return text.replace(regex, match => `<b>${match}</b>`);
     }
 
+    // language to locale code
     toLocale(lang:string){
         return langToLocale(lang);
     }

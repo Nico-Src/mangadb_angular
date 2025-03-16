@@ -25,20 +25,25 @@ export class MangaVolume {
 
     constructor(private translate: TranslateService){}
 
+    // convert date to a more human-readable format
     releaseDate(date:string){
         return readableDate(date, this.translate.currentLang, true);
     }
 
+    // executed whenever inputs change
     ngOnChanges(){
         if(!this.volume?.id) return;
+        // update readable date variables
         this.volume.release_date_readable = this.releaseDate(this.volume.release_date);
         this.volume.release_date_text = (this.volume.release_date_readable === UNKNOWN_DATE || this.volume.release_date_readable === ANNOUNCED_DATE);
     }
 
+    // language to locale code
     toLocale(lang:string){
         return langToLocale(lang);
     }
 
+    // check if date is in future
     preOrder(date:string){
         return isDateInFuture(date);
     }

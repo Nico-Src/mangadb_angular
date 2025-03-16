@@ -24,12 +24,14 @@ export class MangaSeriesListComponent {
     constructor(private translate: TranslateService){}
 
     ngOnInit(){
+        // seperate tags
         this.series.contentTypeTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-type');
         this.series.contentRatingTags = this.series.tags.filter((t: { type: string; name: string; }) => t.type == 'content-rating' && t.name != 'Safe' && t.name);
         this.series.contentWarningTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
         this.series.otherTags = this.series.tags.filter((t: { type: string; }) => t.type != 'publication-status' && t.type != 'origin-country' && t.type != 'language' && t.type != 'content-rating' && t.type != 'content-warning' && t.type != 'content-type');
     }
 
+    // highlight search term in given text
     highlightSearch(text: string) {
         if(!text || text.trim() === "") return text;
         if(this.search.trim() === "") return text;
@@ -41,6 +43,7 @@ export class MangaSeriesListComponent {
         
     }
 
+    // language to locale code
     toLocale(lang:string){
         return langToLocale(lang);
     }
