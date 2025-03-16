@@ -3,8 +3,10 @@
         <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
             <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
         </tui-textfield>
+        
         <tui-loader class="loader" [overlay]="true" [showLoader]="loading">
-            <button size="s" tuiButton type="button" appearance="accent" class="filter-btn">{{ 'browse-series.filter.label' | translate }}</button>
+            <span class="filter-indicator" [class.hidden]="selectedFilters().length <= 0">{{ selectedFilters().length }}</span>
+            <button (click)="showFilterDialog = true" size="s" tuiButton type="button" appearance="accent" class="filter-btn"><ng-icon name="tablerFilter" [style.fontSize.px]="16"></ng-icon>{{ 'browse-series.filter.label' | translate }}</button>
         </tui-loader>
     </div>
     <div class="control-row">
@@ -22,15 +24,32 @@
                 <ng-icon name="tablerLayoutGrid"/>
             </button>
         </tui-segmented>
-        <!-- Pagination -->
         <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
     </div>
 </div>
-<div class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading">
+
+<div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+
+<div class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" *ngIf="series.length > 0">
     <div class="series" *ngFor="let ser of series">
-        <manga-series-list [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
-        <manga-series-column [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
-        <manga-series-grid [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+        <manga-series-list [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+        <manga-series-column [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+        <manga-series-grid [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+    </div>
+</div>
+
+<div class="filter-window-wrapper" [class.show]="showFilterDialog" (click)="hideFilters($event)" #filterDialog>
+    <div class="window">
+        <div class="tag-category" *ngFor="let category of tagCategories" :key="category">
+            <div class="divider"><span class="label">{{ (`tags.category.${category}`) | translate }}</span><div class="line"></div></div>
+            <div class="tag-wrapper">
+                <div [className]="`tag ${tagState(tag)}`" (click)="filterClick(tag)" *ngFor="let tag of tags[category]" :key="tag.id">{{ (`tags.${tag.name.toLowerCase()}`) | translate }}</div>
+            </div>
+        </div>
+        <div class="footer">
+            <button class="button reset-btn" size="s" tuiButton apperance="accent" (click)="resetFilters()">{{ 'browse-series.filter.reset' | translate }}</button>
+            <button class="button" size="s" tuiButton apperance="accent" (click)="applyFilters()">{{ 'browse-series.filter.apply' | translate }}</button>
+        </div>
     </div>
 </div>
 

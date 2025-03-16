@@ -5,6 +5,10 @@
     margin-top: @topbar-height;
     padding: 20px;
 
+    ::ng-deep .t-loader{
+        stroke: rgb(var(--mid-accent)) !important;
+    }
+
     .controls{
         width: 100%;
         height: fit-content;
@@ -25,10 +29,6 @@
             position: relative;
             gap: 10px;
 
-            ::ng-deep .t-loader{
-                stroke: rgb(var(--mid-accent)) !important;
-            }
-
             ::ng-deep [tuiAppearance][data-appearance=textfield]{
                 box-shadow: none !important;
             }
@@ -48,9 +48,39 @@
                 }
             }
 
+            .filter-indicator{
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                width: 15px;
+                aspect-ratio: 1;
+                border-radius: 6px;
+                padding: 0 5px;
+                color: white;
+                font-size: 12px;
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1;
+                background-color: rgb(var(--dark-accent));
+                transition: opacity var(--transition-duration) ease;
+
+                &.hidden{
+                    opacity: 0;
+                }
+            }
+
             .filter-btn{
                 padding: 0 25px;
                 flex-shrink: 0;
+
+                .icon{
+                    transform: translateY(-2px);
+                }
+
+                --tui-background-accent-2: rgb(var(--accent-color));
+                --tui-background-accent-2-hover: rgb(var(--mid-accent));
+                --tui-background-accent-2-pressed: rgb(var(--dark-accent));
             }
 
             .order-select{
@@ -98,7 +128,7 @@
         width: 100%;
         height: fit-content;
         margin-top: 10px;
-        transition: opacity @transition-time ease;
+        transition: opacity var(--transition-duration) ease;
 
         &.hidden{
             opacity: 0;
@@ -149,6 +179,136 @@
             justify-content: flex-start;
             align-items: center;
             border-radius: 6px;
+        }
+    }
+
+    .filter-window-wrapper{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        background-color: rgba(0,0,0,.25);
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        will-change: opacity;
+        transition: opacity var(--transition-duration) ease;
+        pointer-events: none;
+
+        .window{
+            width: 600px;
+            max-width: calc(100% - 50px);
+            background-color: #fff;
+            border-radius: 6px;
+            min-height: 50px;
+            max-height: 600px;
+            will-change: transform;
+            transition: transform var(--transition-duration) ease;
+            transform: scale(0.9);
+            padding: 20px;
+            overflow: auto;
+
+            .title{
+                font-size: 20px;
+            }
+
+            .tag-category{
+                width: 100%;
+                height: fit-content;
+                display:flex;
+                flex-direction: column;
+        
+                .divider{
+                    font-size: 18px;
+                    position: relative;
+                    height: 30px;
+        
+                    .line{
+                        position: absolute;
+                        inset: 0;
+                        height: 1px;
+                        transform: translateY(-3px);
+                        border-bottom: 2px solid #eee;
+                        margin: auto;
+                        z-index: 0;
+                    }
+        
+                    .label{
+                        position: absolute;
+                        padding-right: 10px;
+                        inset: 0; right: unset !important;
+                        z-index: 2;
+                        background-color: #fff;
+                        color: #303030;
+                    }
+                }
+        
+                .tag-wrapper{
+                    display:flex;
+                    gap: 10px;
+                    position: relative;
+                    overflow: hidden;
+                    flex-wrap: wrap;
+                    margin-top: 2px;
+                    margin-bottom: 10px;
+                    height: fit-content;
+                    width: 100%;
+        
+                    .tag{
+                        padding: 4px 10px;
+                        background-color: #ededed;
+                        color: #303030;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        flex-shrink: 0;
+                        cursor: pointer;
+                        border: 2px solid transparent;
+                        transition: background var(--transition-duration) ease, color var(--transition-duration) ease, border var(--transition-duration) ease;
+        
+                        &.include{
+                            background-color: rgba(var(--accent-color),.2);
+                            color: rgb(var(--mid-accent));
+                            border-color: rgb(var(--accent-color));
+                        }
+        
+                        &.exclude{
+                            background-color: transparent;
+                            color: rgb(213, 110, 110);
+                            border-color: rgb(213, 110, 110);
+                            border-style: dashed;
+                        }
+                    }
+                }
+            }
+        
+            .footer{
+                margin-top: 20px;
+                display:flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 10px;
+
+                --tui-background-accent-1: rgb(var(--accent-color));
+                --tui-background-accent-1-hover: rgb(var(--mid-accent));
+                --tui-background-accent-1-pressed: rgb(var(--dark-accent));
+
+                .reset-btn{
+                    --tui-background-accent-1: rgb(223, 117, 117);
+                    --tui-background-accent-1-hover: rgb(244, 150, 150);
+                    --tui-background-accent-1-pressed: rgb(197, 100, 100);
+                }
+            }
+        }
+
+        &.show{
+            opacity: 1;
+            pointer-events: all;
+
+            .window{
+                transform: scale(1);
+            }
         }
     }
 }
