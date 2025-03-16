@@ -1,5 +1,5 @@
 import { TUI_ALERT_POSITION, TuiAlertContext, TuiAlertService, TuiRoot, TuiScrollbar } from "@taiga-ui/core";
-import { Component, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SideBar } from "./sidebar/sidebar.component";
 import { TopBar } from "./topbar/topbar.component";
@@ -30,6 +30,8 @@ export class AppComponent {
     private readonly auth = inject(AuthService);
     private readonly alerts = inject(TuiAlertService);
 
+    theme = computed(() => this.auth.theme());
+
     constructor(private http:HttpClient, private cookieService:CookieService, private translate: TranslateService, public sidebar: SideBarService) {
         // setup languages
         this.translate.addLangs(LANGS.map(l => l.value));
@@ -55,6 +57,8 @@ export class AppComponent {
             this.auth.setLoggedIn(true);
             // calc filter tint
             this.calcFilterTint();
+            document.body.classList.add(res.settings.theme);
+            this.auth.setTheme(res.settings.theme);
         }, (err: any) => {
             // process errors
             if(err.status === 0){ // connection error
@@ -82,6 +86,9 @@ export class AppComponent {
         if(savedColor && savedColor !== '#71c94e'){
             const savedRGB = hexToRGB(savedColor);
             document.body.style.setProperty('--accent-color', `${savedRGB?.r}, ${savedRGB?.g}, ${savedRGB?.b}`);
+            const lightAccent = pSBC(0.25, savedColor); // lighten by 25%
+            const lightAccentRGB = hexToRGB(lightAccent);
+            document.body.style.setProperty('--light-accent', `${lightAccentRGB?.r}, ${lightAccentRGB?.g}, ${lightAccentRGB?.b}`);
             const midAccent = pSBC(-0.25, savedColor); // darken by 25%
             const midAccentRGB = hexToRGB(midAccent);
             document.body.style.setProperty('--mid-accent', `${midAccentRGB?.r}, ${midAccentRGB?.g}, ${midAccentRGB?.b}`);

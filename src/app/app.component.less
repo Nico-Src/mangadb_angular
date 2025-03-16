@@ -17,10 +17,9 @@
 .sidebar{
     width: @sidebar-width;
     height: calc(100% - @topbar-height);
-    background-color: @sidebar-color;
     box-shadow:  2px 0px 8px 2px rgba(0,0,0,.05);
     float:left;
-    transition: width @transition-time ease;
+    transition: width var(--transition-duration) ease, background var(--transition-duration) ease;
     margin-top: @topbar-height;
 
     &.expanded{
@@ -29,17 +28,46 @@
 }
 
 .main-content{
-    background-color: @bg-color;
     width: calc(100% - @sidebar-width);
     height: 100%;
     float: left;
     clear: right;
-    transition: width @transition-time ease;
+    transition: width var(--transition-duration) ease, background var(--transition-duration) ease;
     overflow-y: auto;
 
     &::-webkit-scrollbar{width: 0;}
 
     &.expanded{
         width: calc(100% - @sidebar-expanded-width);
+    }
+}
+
+::ng-deep body.light{
+    .main-content{background-color: @bg-color;}
+    .sidebar{background-color: @sidebar-color;}
+}
+
+::ng-deep body.dark{
+    .main-content{background-color: @dark-bg-color;}
+    .sidebar{background-color: @dark-sidebar-color;}
+    ::ng-deep tui-data-list-wrapper, ::ng-deep tui-dropdown{background-color: #444;}
+    ::ng-deep tui-dropdown .language-name, ::ng-deep tui-dropdown tui-icon{color: #ccc;}
+    ::ng-deep tui-hint{background-color: #444 !important; color: #ccc !important;}
+}
+
+@media (prefers-color-scheme: light) {
+    ::ng-deep body.system{
+        .main-content{background-color: @bg-color;}
+        .sidebar{background-color: @sidebar-color;}
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    ::ng-deep body.system {
+        .main-content{background-color: @dark-bg-color;}
+        .sidebar{background-color: @dark-sidebar-color;}
+        ::ng-deep tui-data-list-wrapper, ::ng-deep tui-dropdown{background-color: #444;}
+        ::ng-deep tui-dropdown .language-name, ::ng-deep tui-dropdown tui-icon{color: #ccc;}
+        ::ng-deep tui-hint{background-color: #444 !important; color: #ccc !important;}
     }
 }
