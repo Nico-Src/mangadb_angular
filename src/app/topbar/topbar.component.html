@@ -59,7 +59,7 @@
         <form [formGroup]="profileForm">
             <label>
                 <span class="language-select-label">
-                    <tui-icon icon="@tui.languages" [style.fontSize.px]="20"></tui-icon>
+                    <ng-icon class="icon" name="tablerLanguage" [style.fontSize.px]="18"></ng-icon>
                     {{ "language.label" | translate }}
                 </span>
                 <tui-select formControlName="language" tuiTextfieldSize="s" (ngModelChange)="languageSelected($event)" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">

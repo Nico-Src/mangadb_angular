@@ -15,10 +15,12 @@ import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
 import { SideBarService } from '../../services/sidebar.service';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { tablerLanguage } from '@ng-icons/tabler-icons';
 
 @Component({
     selector: 'top-bar',
-    imports: [NgIf, NgForOf, TuiButton, TuiAppearance, TuiHint, TuiTextfield, FormsModule, ReactiveFormsModule, TuiBadgedContent, TuiBadgeNotification, TuiLoader, TuiScrollbar, TranslatePipe, TuiSelectModule, TuiDataList, TuiDataListWrapper, TuiTextfieldControllerModule, TuiIcon, RouterLink, TuiCheckbox],
+    imports: [NgIf, NgForOf, TuiButton, NgIcon, TuiAppearance, TuiHint, TuiTextfield, FormsModule, ReactiveFormsModule, TuiBadgedContent, TuiBadgeNotification, TuiLoader, TuiScrollbar, TranslatePipe, TuiSelectModule, TuiDataList, TuiDataListWrapper, TuiTextfieldControllerModule, TuiIcon, RouterLink, TuiCheckbox],
     templateUrl: './topbar.component.html',
     styleUrl: './topbar.component.less',
     providers: [
@@ -26,7 +28,8 @@ import { SideBarService } from '../../services/sidebar.service';
             provide: TUI_ALERT_POSITION,
             useValue: 'auto 1rem 1rem auto',
         },
-    ]
+    ],
+    viewProviders: [provideIcons({ tablerLanguage })]
 })
 
 export class TopBar {
@@ -67,6 +70,7 @@ export class TopBar {
         
     }
 
+    // toggle sidebar state
     toggleSidebar(){
         this.sidebar.setOpen(!this.sidebar.isOpen());
     }
@@ -210,7 +214,9 @@ export class TopBar {
         else this.router.navigate(['/admin/dashboard']);
     }
 
+    // keydown handler for search input
     searchKeyDown(event: KeyboardEvent) {
+        // if enter key is pressed and search is not empty redirect to browse series page
         if(event.key === 'Enter' && this.search.trim() !== ''){
             // navigate to browse series page with search query
             this.router.navigate(['/browse-series'], { queryParams: {search: this.search.trim()}});
