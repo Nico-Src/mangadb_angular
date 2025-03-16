@@ -11,6 +11,7 @@ export class AuthService {
     nullUser: User = { id: null, slug: null, username: null, profile_image: null, role: null, age_verified: null, settings: null };
     // current user data
     private user:WritableSignal<User> = signal<User>(this.nullUser);
+    theme:WritableSignal<string> = signal<string>("light");
     // current user logged in status
     private loggedIn:WritableSignal<boolean> = signal<boolean>(document.cookie.includes('auth_session'));
     // getters and setters for both user data and logged in status
@@ -19,6 +20,7 @@ export class AuthService {
     public setUserField = (field: string, value: any) => this.user.update(user => ({ ...user, [field]: value }));
     public isLoggedIn = computed(() => this.loggedIn());
     public setLoggedIn = (data: boolean) => this.loggedIn.set(data);
+    public setTheme = (data: string) => this.theme.set(data);
     public getSessionAsync = async () => {
         return new Promise(resolve => {
             // else send validation request with session token
@@ -29,6 +31,7 @@ export class AuthService {
                 if(!user.settings || Object.keys(user.settings).length === 0){
                     this.updateSettings(user.id || -1, DEFAULT_SETTINGS);
                     user.settings = DEFAULT_SETTINGS;
+                    this.theme.set(user.settings.theme);
                 }
                 this.setUser(user);
                 this.setLoggedIn(true);
