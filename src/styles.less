@@ -17,6 +17,9 @@
 *{
     box-sizing: border-box;
     user-select: none;
+}
+
+*:not(ng-icon){
     font-family: 'Poppins', sans-serif !important;
 }
 
@@ -26,13 +29,8 @@ body,html{
     .full-w-h();
 }
 
-body {
-    background-color: @bg-color;
-}
-
 app-root, tui-root{
     display: block;
-    background-color: @bg-color;
     .full-w-h();
 }
 
@@ -43,3 +41,27 @@ tui-hint{
 .tag.type{background-color: rgb(var(--accent-color)) !important;color:white !important;}
 .tag.content-rating{background-color: rgb(var(--mid-accent)) !important;color:white !important;}
 .tag.content-warning{background-color: rgb(var(--dark-accent)) !important;color:white !important;}
+
+body.light {
+    background-color: @bg-color;
+    app-root, tui-root{background-color: @bg-color;}
+}
+
+body.dark {
+    background-color: @dark-bg-color;
+    app-root, tui-root{background-color: @dark-bg-color;}
+}
+
+@media (prefers-color-scheme: light) {
+    body.system{
+        background-color: @bg-color;
+        app-root, tui-root{background-color: @dark-bg-color;}
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body.system {
+        background-color: @dark-bg-color;
+        app-root, tui-root{background-color: @dark-bg-color;}
+    }
+}
