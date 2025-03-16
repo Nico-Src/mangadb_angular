@@ -24,13 +24,26 @@ export const LANGS = [
     {key: 'language.french', value: 'fr', disabled: true},
 ]
 
-export const DEFAULT_SETTINGS = {
+export const THEMES = [
+    {key: 'system'},
+    {key: 'light'},
+    {key: 'dark'},
+    {key: 'crimson', disable: true},
+];
+
+export const DEFAULT_SETTINGS:any = {
     'theme-accent-color': '#71c94e',
     'prefered-content-language': 'interface',
     'theme': 'light',
     'nsfw-mode': 'settings.nsfw.hide-nsfw',
     'view-mode': 'column',
 };
+
+export const NSFW_SETTINGS = [
+    {key: 'settings.nsfw.hide-nsfw'},
+    {key: 'settings.nsfw.show-nsfw'},
+    {key: 'settings.nsfw.show-nsfw-18'}
+];
 
 export const ANNOUNCED_DATE = "date.announced";
 export const UNKNOWN_DATE = "date.unknown";
