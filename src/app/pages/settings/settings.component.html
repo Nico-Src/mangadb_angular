@@ -1,0 +1,98 @@
+<div class="search-wrapper">
+    <tui-textfield iconStart="@tui.search" class="search" tuiTextfieldSize="m">
+        <input [placeholder]="'settings.search.placeholder' | translate" (ngModelChange)="updateSettingsState()" tuiTextfield [(ngModel)]="search" #searchEl/>
+    </tui-textfield>
+</div>
+<div class="settings-wrapper">
+    <div class="setting-categories" #settingCategories>
+        <div class="category" [class.active]="selectedCategory === 'all'" data-category="all" (click)="selectCategory('all')">
+            <ng-icon class="icon" name="tablerHome" [style.fontSize.px]="18"></ng-icon>
+            <span class="name nop">{{ 'settings.category.all' | translate }}</span>
+        </div>
+        <div class="category" [class.active]="selectedCategory === 'appearance'" data-category="all" (click)="selectCategory('appearance')">
+            <ng-icon class="icon" name="tablerBrush" [style.fontSize.px]="18"></ng-icon>
+            <span class="name nop">{{ 'settings.category.appearance' | translate }}</span>
+        </div>
+        <div class="category" [class.active]="selectedCategory === 'account'" data-category="all" (click)="selectCategory('account')">
+            <ng-icon class="icon" name="tablerUser" [style.fontSize.px]="18"></ng-icon>
+            <span class="name nop">{{ 'settings.category.account' | translate }}</span>
+        </div>
+        <div class="category" [class.active]="selectedCategory === 'language'" data-category="all" (click)="selectCategory('language')">
+            <ng-icon class="icon" name="tablerLanguage" [style.fontSize.px]="18"></ng-icon>
+            <span class="name nop">{{ 'settings.category.language' | translate }}</span>
+        </div>
+        <div class="category" [class.active]="selectedCategory === 'content'" data-category="all" (click)="selectCategory('content')">
+            <ng-icon class="icon" name="tablerWallpaper" [style.fontSize.px]="18"></ng-icon>
+            <span class="name nop">{{ 'settings.category.content' | translate }}</span>
+        </div>
+    </div>
+    <div class="setting-container" auto-animate>
+        <div class="setting vertical" *ngIf="settings.appearance.theme">
+            <div class="title">{{ 'settings.appearance.theme.title' | translate }}</div>
+            <div class="description">{{ 'settings.appearance.theme.desc' | translate }}</div>
+            <div class="themes" ref="themes">
+                <div class="theme" [class.active]="selectedTheme === theme.key" [class.disable]="theme.disable" *ngFor="let theme of availableThemes" (click)="selectTheme(theme.key)">
+                    <div class="mockup">
+                        <div class="selected">
+                            <ng-icon class="icon" name="tablerCheck" [style.fontSize.px]="16"></ng-icon>
+                        </div>
+                        <div class="wip" *ngIf="theme.disable">
+                            WIP
+                        </div>
+                        <img class="image" [src]="`img/themes/${theme.key}.jpg`">
+                    </div>
+                    <div class="name nop">{{ (`theme.${theme.key}`) | translate }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="setting vertical" *ngIf="settings.appearance.theme_accent">
+            <div class="details">
+                <div class="title">{{ 'settings.appearance.theme_accent.title' | translate }}</div>
+                <div class="description">{{ 'settings.appearance.theme_accent.desc' | translate }}</div>
+            </div>
+            <div class="inputs">
+                <div class="color-input-wrapper">
+                    <div class="preview" [style.background]="selectedAccentColor"></div>
+                    <div class="value">{{ selectedAccentColor }}</div>
+                    <button (click)="resetAccentColor()" size="s" tuiButton type="button" appearance="accent" class="default-btn">{{ 'settings.default' | translate }}</button>
+                    <input type="color" [(ngModel)]="selectedAccentColor" (change)="selectColor()" class="color-input">
+                </div>
+            </div>
+        </div>
+        <div class="setting vertical" *ngIf="settings.language.content">
+            <div class="details">
+                <div class="title">{{ 'settings.language.content.title' | translate }}</div>
+                <div class="description" [innerHTML]="'settings.language.content.desc' | translate"></div>
+            </div>
+            <div class="inputs">
+                <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedContentLanguage" (ngModelChange)="selectContentLanguage($event)" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                    <tui-data-list-wrapper *tuiDataList [disabledItemHandler]="disabledLanguageHandler" [itemContent]="languageContent" [items]="availableContentLanguages"></tui-data-list-wrapper>
+                </tui-select>
+            </div>
+        </div>
+        <div class="setting vertical" *ngIf="settings.content.nsfw_mode">
+            <div class="details">
+                <div class="title">{{ 'settings.content.nsfw_mode.title' | translate }}</div>
+                <div class="description" [innerHTML]="'settings.content.nsfw_mode.desc' | translate"></div>
+            </div>
+            <div class="inputs">
+                <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedNSFWOption" (ngModelChange)="selectNSFWMode($event)" [valueContent]="nsfwContent" [tuiTextfieldLabelOutside]="true">
+                    <tui-data-list-wrapper *tuiDataList [disabledItemHandler]="disabledNSFWOptionHandler" [itemContent]="nsfwContent" [items]="nsfwSettings"></tui-data-list-wrapper>
+                </tui-select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`" *ngIf="item.value && item.value !== 'interface'">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #nsfwContent let-item>
+    <div class="language-item">
+        <span class="language-name">{{ item.key | translate }}</span>
+    </div>
+</ng-template>

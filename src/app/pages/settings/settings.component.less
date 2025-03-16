@@ -1,0 +1,348 @@
+@import '../../../variables.less';
+
+:host{
+    display:flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    height: calc(100% - @topbar-height);
+    margin-top: @topbar-height;
+    padding: 20px;
+
+    .search-wrapper{
+        height: fit-content;
+        width: 100%;
+        flex-shrink: 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ccc;
+
+        ::ng-deep [tuiAppearance][data-appearance=textfield]{
+            box-shadow: none !important;
+        }
+
+        .search{
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.05);
+
+            [tuiAppearance][data-appearance=textfield]{
+                background-color: transparent !important;
+                box-shadow: none !important;
+                font-size: 14px;
+            }
+
+            [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
+                outline: 0.125rem solid rgba(0,0,0,.25) !important;
+            }
+        }
+    }
+
+    .settings-wrapper{
+        flex: 1;
+        max-height: calc(100% - 40px);
+        width: 100%;
+        padding: 10px 0px 0px 0px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+
+        .setting-categories{
+            width: clamp(180px, 15vw, 250px);
+            height: 100%;
+            padding: 0px 10px 0px 0px;
+            border-right: 2px solid #ccc;
+            flex-shrink: 0;
+
+            .category{
+                width: 100%;
+                padding: 3px 15px 3px 10px;
+                display:flex;
+                justify-content: flex-start;
+                align-items: center;
+                border-radius: 4px;
+                margin-bottom: 5px;
+                cursor: pointer;
+                transition: background-color var(--transition-duration) ease;
+
+                &:hover{
+                    background-color: #ddd;
+
+                    .icon{color: #000;}
+                    .name{color: #000;}
+                }
+
+                &.active{
+                    background-color: rgb(var(--accent-color));
+
+                    .icon{color: #fff;}
+                    .name{color: #fff;}
+                }
+                
+                .icon{
+                    color: #909090;
+                    transition: var(--transition-duration) ease;
+                    flex-shrink: 0;
+                    transform: translateY(-2px);
+                }
+
+                .name{
+                    margin-left: 5px;
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: #909090;
+                    transition: color var(--transition-duration) ease;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    flex: 1;
+                }
+            }
+        }
+
+        .setting-container{
+            flex: 1;
+            height: 100%;
+            display:flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 0px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            &::-webkit-scrollbar{width:0;}
+
+            .setting{
+                width: 100%;
+                min-height: 50px;
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px 0px;
+                flex-shrink: 0;
+
+                &:not(:last-child){border-bottom: 2px solid #ccc;}
+                &:first-child{padding: 10px 0px;}
+
+                .details{
+                    flex: 1;
+                    height: 100%;
+                    display:flex;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    flex-direction: column;
+                }
+
+                .title{
+                    width: 100%;
+                    text-align: left;
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: black;
+                }
+
+                .description{
+                    width: 100%;
+                    text-align: left;
+                    font-size: 14px;
+                    color: #707070;
+                    line-height: 22px;
+                    margin-bottom: 5px;
+                    margin-top: 5px;
+                }
+
+                &.vertical{
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    flex-direction: column;
+
+                    .details{
+                        width: 100%;
+                    }
+
+                    .inputs{
+                        width: 100%;
+                        margin-top: 5px;
+                        justify-content: flex-start !important;
+                        padding: 0px;
+                    }
+                }
+
+                .color-input-wrapper{
+                    width: 400px;
+                    max-width: 100%;
+                    height: 40px;
+                    display:flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 7.5px;
+                    padding: 0 7.5px;
+                    border-radius: 6px;
+                    background-color: rgba(0,0,0,.1);
+                    position: relative;
+
+                    .preview{
+                        height: 25px;
+                        width: 25px;
+                        border-radius: 6px;
+                    }
+
+                    .value{
+                        font-size: 15px;
+                    }
+
+                    .default-btn{
+                        margin-left: auto;
+
+                        height: 25px;
+
+                        --tui-background-accent-2: rgb(var(--accent-color));
+                        --tui-background-accent-2-hover: rgb(var(--mid-accent));
+                        --tui-background-accent-2-pressed: rgb(var(--dark-accent));
+                    }
+
+                    input{
+                        position: absolute;
+                        top: 7.5px;
+                        left: 7.5px;
+                        width: 25px;
+                        height:25px;
+                        opacity: 0;
+                    }
+                }
+
+                .themes{
+                    width: 100%;
+                    height: fit-content;
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-bottom: 5px;
+                    gap: 10px;
+                    padding: 10px;
+                    border-radius: 4px;
+                    background-color: rgba(0,0,0,.1);
+
+                    .theme{
+                        flex: 1;
+                        flex-shrink: 0;
+                        min-width: 200px;
+                        max-width: 300px;
+                        height: fit-content;
+                        display:flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        cursor: pointer;
+
+                        &.disable{
+                            pointer-events: none;
+                            cursor: block;
+                            opacity: .7;
+                        }
+
+                        &.active .selected{
+                            opacity: 1 !important;
+                            transform: scale(1) !important;
+                        }
+
+                        .mockup{
+                            width: 100%;
+                            aspect-ratio: 1.85;
+                            border-radius: 4px;
+                            overflow: hidden;
+                            box-shadow: 0px 0px 4px 2px rgba(0,0,0,.05);
+                            position: relative;
+
+                            .selected{
+                                position: absolute;
+                                bottom: 10px;
+                                right: 10px;
+                                background-color: rgb(var(--accent-color));
+                                opacity: 0;
+                                width: 20px;
+                                height: 20px;
+                                display:flex;
+                                justify-content: center;
+                                align-items:center;
+                                color:white;
+                                border-radius: 50%;
+                                z-index: 1;
+                                transform: scale(0.75);
+                                will-change: opacity, transform;
+                                transition: opacity var(--transition-duration) ease, transform var(--transition-duration) ease;
+
+                                .icon{
+                                    transform: translateY(-1px);
+                                }
+                            }
+
+                            .image{
+                                width: 100%;
+                                aspect-ratio: 1.85;
+                                object-fit: cover;
+                            }
+
+                            .wip{
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                background-color: #f5930b;
+                                display:flex;
+                                justify-content: center;
+                                align-items: center;
+                                border-radius: 12px;
+                                font-size: 10px;
+                                color: black;
+                                padding: 1px 5px;
+                                font-weight: 700;
+                            }
+                        }
+
+                        .name{
+                            flex-shrink: 0;
+                            width: 100%;
+                            text-align: center;
+                            padding: 2px 10px;
+                            font-family: 'Poppins';
+                            font-weight: 300;
+                            font-size: 15px;
+                            color: #505050;
+                            margin-top: 2px;
+                        }
+                    }
+                }
+
+                .description ::ng-deep .option{
+                    background-color: rgba(var(--accent-color),.2);
+                    padding: 2px 5px;
+                    border-radius: 4px;
+                    color: rgb(var(--mid-accent));
+                }
+
+                tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{
+                    background: rgba(0,0,0,.1) !important;
+                    box-shadow: none !important;
+                }
+    
+                tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]._focused._focused:after{
+                    color: rgba(0,0,0,.1) !important;
+                }
+            }
+        }
+    }
+}
+
+.language-item{
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 7.5px;
+
+    .language-image{
+        height: 14px;
+        border-radius: 4px;
+    }
+
+    .language-name{
+        font-size: 12px !important;
+    }
+}
