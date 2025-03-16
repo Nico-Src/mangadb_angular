@@ -1,6 +1,7 @@
 {
     "language": {
         "label": "Language",
+        "interface": "User interface language",
         "de": "German",
         "en": "English",
         "fr": "French"
@@ -20,7 +21,8 @@
         },
         "filter": {
             "label": "Filter",
-            "reset": "Reset"
+            "reset": "Reset",
+            "apply": "Apply"
         },
         "order": {
             "name": "Name",
@@ -31,6 +33,52 @@
             "columns": "Columns",
             "grid": "Grid"
         }
+    },
+    "settings":{
+        "default": "Default",
+        "search": {
+            "placeholder": "Search..."
+        },
+        "category":{
+            "all": "All",
+            "appearance": "Appearance",
+            "account": "Account",
+            "language": "Language",
+            "content": "Content"
+        },
+        "appearance": {
+            "theme": {
+                "title": "Theme",
+                "desc": "Choose from different themes to customize the appearance of our website."
+            },
+            "theme_accent": {
+                "title": "Theme accent color",
+                "desc": "Choose your own accent color to customize the appearance of our website."
+            }
+        },
+        "language": {
+            "content": {
+                "title": "Language of the content (series, volumes, ...)",
+                "desc": "Customize the language of the content. If an option other than <span class='option'>User interface language</span> is selected, content will be loaded in this language instead if available."
+            }
+        },
+        "content": {
+            "nsfw_mode": {
+                "title": "Display of adult content",
+                "desc": "Decide which content (suggestive, explicit) you want to see and which not. To view 18+ content you must be age-verified."
+            }
+        },
+        "nsfw": {
+            "hide-nsfw": "Hide suggestive (16+) and explicit (18+) content",
+            "show-nsfw": "Show suggestive (16+) content",
+            "show-nsfw-18": "Show suggestive (16+) and explicit (18+) content"
+        }
+    },
+    "theme": {
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark",
+        "crimson": "Crimson"
     },
     "title": {
         "home": "Home",
@@ -135,6 +183,12 @@
         },
         "nsfw-hint": "This cover has 16+ content. Enable it in settings to view.",
         "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view."
+    },
+    "series": {
+        "no-description": {
+            "title": "No description available",
+            "desc": "There is no description for this series yet. Do you have an idea? Share your knowledge with the community and help us make MangaDB even better!"
+        }
     },
     "tags":{
         "category":{

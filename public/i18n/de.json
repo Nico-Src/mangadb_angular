@@ -1,6 +1,7 @@
 {
     "language": {
         "label": "Sprache",
+        "interface": "Benutzeroberflächen-Sprache",
         "de": "Deutsch",
         "en": "Englisch",
         "fr": "Französisch"
@@ -20,7 +21,8 @@
         },
         "filter": {
             "label": "Filter",
-            "reset": "Zurücksetzen"
+            "reset": "Zurücksetzen",
+            "apply": "Anwenden"
         },
         "order": {
             "name": "Name",
@@ -31,6 +33,52 @@
             "columns": "Spalten",
             "grid": "Grid"
         }
+    },
+    "settings":{
+        "default": "Standard",
+        "search": {
+            "placeholder": "Suche..."
+        },
+        "category":{
+            "all": "Alle",
+            "appearance": "Aussehen",
+            "account": "Konto",
+            "language": "Sprache",
+            "content": "Inhalt"
+        },
+        "appearance": {
+            "theme": {
+                "title": "Theme",
+                "desc": "Wähle aus verschiedenen Themes, um das Erscheinungsbild unserer Website anzupassen."
+            },
+            "theme_accent": {
+                "title": "Theme Akzent-Farbe",
+                "desc": "Wähle deine eigene Akzent-Farbe um das Erscheinungsbild unserer Website anzupassen."
+            }
+        },
+        "language": {
+            "content": {
+                "title": "Sprache des Inhalts (Serien, Bände, ...)",
+                "desc": "Passe die Sprache der Inhalte an. Wenn eine andere Option als <span class='option'>Benutzeroberflächen-Sprache</span> ausgewählt ist werden Inhalte stattdessen in dieser Sprache geladen wenn verfügbar."
+            }
+        },
+        "content": {
+            "nsfw_mode": {
+                "title": "Anzeige von nicht jugendfreien Inhalten",
+                "desc": "Entscheide welche Inhalte (Suggestiv, Explizit) du sehen können und welche nicht. Um 18+ Inhalte ansehen zu können musst du altersverifiziert sein."
+            }
+        },
+        "nsfw": {
+            "hide-nsfw": "Suggestive (16+) und Explizite (18+) Inhalte verstecken",
+            "show-nsfw": "Suggestive (16+) Inhalte anzeigen",
+            "show-nsfw-18": "Suggestive (16+) und Explizite (18+) Inhalte anzeigen"
+        }
+    },
+    "theme": {
+        "system": "System",
+        "light": "Hell",
+        "dark": "Dunkel",
+        "crimson": "Karmesin"
     },
     "title": {
         "home": "Startseite",
@@ -135,6 +183,12 @@
         },
         "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
         "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen."
+    },
+    "series": {
+        "no-description": {
+            "title": "Keine Beschreibung vorhanden",
+            "desc": "Zu dieser Serie gibt es noch keine Beschreibung. Hast du eine Idee? Teile dein Wissen mit der Community und hilf uns, MangaDB noch besser zu machen!"
+        }
     },
     "tags":{
         "category":{
