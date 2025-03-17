@@ -47,6 +47,7 @@ export class AppComponent {
         // return if there is no session
         if(!session_id){
             this.calcFilterTint();
+            document.body.classList.add(DEFAULT_SETTINGS['theme']);
             return;
         }
         // else send validation request with session token

@@ -6,6 +6,6 @@
         <side-bar [class]="theme()" [class.expanded]="sidebar.isOpen()"></side-bar>
     </aside>
     <main class="main-content" [class.expanded]="sidebar.isOpen()">
-        <router-outlet></router-outlet>
+        <router-outlet [class]="theme()"></router-outlet>
     </main>
 </tui-root>
