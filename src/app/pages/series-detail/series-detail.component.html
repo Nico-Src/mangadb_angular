@@ -1,0 +1,149 @@
+<div class="banner-wrapper">
+    <div class="banner">
+        <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" fit="cover" [blur]="true" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="content" #content>
+        <div class="cover-wrapper">
+            <manga-cover *ngIf="series.volume?.id" [res]="'high'" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+        </div>
+        <div class="detail-wrapper">
+            <div class="top" *ngIf="series">
+                <div class="title" #seriesTitle>
+                    {{series.name}}
+                </div>
+                <div class="alias" #seriesAlias *ngIf="series.alias">
+                    {{series.alias}}
+                </div>
+                <div class="copyright-wrapper">
+                    <div class="copyright"><ng-icon class="icon" name="faCopyright" [style.fontSize.px]="16"/>{{series?.volume?.copyright}}</div>
+                    <button appearance="flat" size="m" tuiIconButton type="button" class="report-btn" [style.border-radius.%]="100">
+                        <ng-icon class="icon" name="faFlag" [style.fontSize.px]="16"></ng-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="actions">
+                    <button appearance="accent" size="m" tuiButton type="button" class="list-btn">
+                        <ng-icon class="icon" name="faSolidPlus" [style.fontSize.px]="20"></ng-icon>{{ 'series.add-to-list' | translate }}
+                    </button>
+                    <button appearance="accent" size="m" tuiButton type="button" [tuiHint]="'series.reading-history' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom" class="reading-history-btn">
+                        <ng-icon class="icon" name="faBookmark" [style.fontSize.px]="20"></ng-icon>
+                    </button>
+                    <button appearance="accent" size="m" tuiButton type="button" [tuiHint]="'series.rating' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom" class="rating-btn">
+                        <ng-icon class="icon" name="faStar" [style.fontSize.px]="20"></ng-icon>
+                        <span>{{ roundRating() }}
+                            <span *ngIf="series?.rating_count > 0">&nbsp;({{ series?.rating_count }})</span>
+                        </span>
+                    </button>
+                </div>
+                <div class="tag-wrapper" tuiFade>
+                    <div *ngFor="let tag of series?.contentTypeTags" class="tag type">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.contentRatingTags" class="tag content-rating">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.contentWarningTags" class="tag content-warning">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.otherTags" class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="description-wrapper">
+            <div class="header">
+                <span>{{ 'series.description' | translate }}</span>
+            </div>
+            <div class="description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="series?.description?.description"></div>
+            <div class="show-more-wrapper" [class.hide-description]="checkingDescOverflow" [class.show]="descOverflowing">
+                <div class="show-more-btn" (click)="toggleDesc()">
+                    <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
+                    <ng-icon name="solarDoubleAltArrowUp" class="icon" [style.fontSize.px]="16" *ngIf="expandDesc"></ng-icon>
+                    {{ (expandDesc ? 'series.show-less' : 'series.show-more') | translate }}
+                    <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
+                    <ng-icon name="solarDoubleAltArrowUp" class="icon" [style.fontSize.px]="16" *ngIf="expandDesc"></ng-icon>
+                </div>
+            </div>
+        </div>
+        <div class="description-select" [class.overflowing]="descOverflowing">
+            <tui-select class="edition-select" tuiTextfieldSize="s" [(ngModel)]="selectedEdition" tuiTextfieldSize="s" (ngModelChange)="editionSelected($event)" [valueContent]="editionContent">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="editionContent" [items]="editions"></tui-data-list-wrapper>
+            </tui-select>
+            <div class="source-wrapper" *ngIf="series?.description?.source">{{ 'series.source' | translate }}:&nbsp;<span class="source" (click)="openLinkDialog(series?.description?.source.split('|')[1])">{{ series?.description?.source.split('|')[0] }}</span></div>
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedDescLang" tuiTextfieldSize="s" (ngModelChange)="descSelected($event)" [valueContent]="languageContent">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableDescLangs"></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <div class="tab-controls">
+            <tui-segmented class="tabs" [(activeItemIndex)]="tabIndex" [size]="'s'" (activeItemIndexChange)="tabSelected()">
+                <button type="button" class="tab-item">
+                    {{ 'series.volumes' | translate }}&nbsp;<tui-badge [size]="'s'">{{ tabsLoading ? '...' : volume_count }}</tui-badge>
+                </button>
+                <button type="button" class="tab-item" [disabled]="special_count === 0">
+                    {{ 'series.special-editions' | translate }}&nbsp;<tui-badge [size]="'s'">{{ tabsLoading ? '...' : special_count }}</tui-badge>
+                </button>
+                <button type="button" class="tab-item" [disabled]="relation_count === 0">
+                    {{ 'series.relations' | translate }}&nbsp;<tui-badge [size]="'s'">{{ tabsLoading ? '...' : relation_count }}</tui-badge>
+                </button>
+            </tui-segmented>
+            <tui-pagination [(index)]="page" [length]="max" (indexChange)="pageUpdate()" *ngIf="tabIndex === 0"/>
+            <tui-pagination [(index)]="special_page" [length]="special_max" (indexChange)="specialPageUpdate()" *ngIf="tabIndex === 1"/>
+            <tui-segmented class="view-mode" [(activeItemIndex)]="viewIndex" (activeItemIndexChange)="viewChanged($event)" *ngIf="tabIndex === 2">
+                <button type="button" class="view-item">
+                    <ng-icon name="tablerList"/>
+                </button>
+                <button type="button" class="view-item">
+                    <ng-icon name="tablerLayoutColumns"/>
+                </button>
+                <button type="button" class="view-item">
+                    <ng-icon name="tablerLayoutGrid"/>
+                </button>
+            </tui-segmented>
+        </div>
+        <tui-elastic-container>
+            <div class="volume-wrapper" *ngIf="tabIndex === 0">
+                <manga-volume [volume]="vol" [class]="theme()" *ngFor="let vol of volumes"></manga-volume>
+            </div>
+            <div class="volume-wrapper" *ngIf="tabIndex === 1">
+                <manga-volume [volume]="vol" [class]="theme()" *ngFor="let vol of special_editions"></manga-volume>
+            </div>
+            <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 0">
+                <ng-container *ngFor="let key of series.relation_keys">
+                    <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
+                    <div class="series-section list">
+                        <manga-series-list class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-list>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 1">
+                <ng-container *ngFor="let key of series.relation_keys">
+                    <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
+                    <div class="series-section column">
+                        <manga-series-column class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-column>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 2">
+                <ng-container *ngFor="let key of series.relation_keys">
+                    <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
+                    <div class="series-section grid">
+                        <manga-series-grid class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-grid>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="placeholder" style="height: 50px; width: 100%; display:block;"></div>
+        </tui-elastic-container>
+    </div>
+</div>
+
+<link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #editionContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${langToLoc(item.language)}.png`">
+        <span class="language-name" *ngIf="item.id">{{ `language.${langToLoc(item.language)}` | translate }}&nbsp;-&nbsp;{{ item.name }}</span>
+        <span class="language-name" *ngIf="!item.id">{{ `language.${langToLoc(item.language)}` | translate }}</span>
+    </div>
+</ng-template>
