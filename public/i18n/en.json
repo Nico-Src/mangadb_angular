@@ -4,7 +4,11 @@
         "interface": "User interface language",
         "de": "German",
         "en": "English",
-        "fr": "French"
+        "fr": "French",
+        "es": "Spanish",
+        "it": "Italian",
+        "jpn": "Japanese",
+        "kor": "Korean"
     },
     "date": {
         "unknown": "Unknown",
@@ -188,7 +192,28 @@
         "no-description": {
             "title": "No description available",
             "desc": "There is no description for this series yet. Do you have an idea? Share your knowledge with the community and help us make MangaDB even better!"
+        },
+        "add-to-list": "Add to list",
+        "reading-history": "Reading history",
+        "rating": "Rating",
+        "description": "Description",
+        "source": "Source",
+        "show-more": "Show more",
+        "show-less": "Show less",
+        "volumes": "Volumes",
+        "special-editions": "Special Editions",
+        "relations": "Related Series",
+        "relation": {
+            "Spin-Off": "Spin-Offs",
+            "Sequel": "Sequels",
+            "Prequel": "Prequels",
+            "Main-Story": "Main-Story"
         }
+    },
+    "link-dialog": {
+        "title": "Warning",
+        "desc": "You will be redirected to an external site. The content may not be safe to view at this time.",
+        "visit": "Visit"
     },
     "tags":{
         "category":{
