@@ -7,6 +7,7 @@ import { MangaCover } from '../manga-cover/manga-cover.component';
 import { TuiIcon } from '@taiga-ui/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { solarNotebook, solarCalendar } from '@ng-icons/solar-icons/outline';
+import { lucideLibrary } from '@ng-icons/lucide';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -14,7 +15,7 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
     imports: [MangaCover, NgIcon, TranslatePipe, NgIf],
     templateUrl: './manga-volume.component.html',
     styleUrl: './manga-volume.component.less',
-    viewProviders: [provideIcons({ solarNotebook, solarCalendar })]
+    viewProviders: [provideIcons({ solarNotebook, solarCalendar, lucideLibrary })]
 })
 export class MangaVolume {
     readonly cdn_base = CDN_BASE;
