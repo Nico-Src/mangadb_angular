@@ -1,3 +1,5 @@
+<div class="theme" [class]="theme()"></div>
+
 <div class="search-wrapper">
     <tui-textfield iconStart="@tui.search" class="search" tuiTextfieldSize="m">
         <input [placeholder]="'settings.search.placeholder' | translate" (ngModelChange)="updateSettingsState()" tuiTextfield [(ngModel)]="search" #searchEl/>

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TuiTextfield, TuiAppearance, TuiButton } from '@taiga-ui/core';
@@ -28,6 +28,7 @@ export class SettingsComponent {
     private auth = inject(AuthService);
     readonly availableThemes = THEMES;
     readonly colorMask = {mask: ['#', ...new Array(6).fill(/[0-9a-f]/i)]};
+    readonly theme = computed(() => this.auth.theme());
     search:string = "";
     selectedCategory:string = "all";
     settings:any = {
@@ -59,6 +60,7 @@ export class SettingsComponent {
 
         // get current settings
         this.selectedTheme = this.auth.getUserSetting('theme');
+        console.log(this.selectedTheme)
         this.selectedAccentColor = this.auth.getUserSetting('theme-accent-color');
 
         this.availableContentLanguages.unshift({key: 'language.interface', value: 'interface', disabled: false});

@@ -14,7 +14,7 @@
         width: 100%;
         flex-shrink: 0;
         padding-bottom: 10px;
-        border-bottom: 2px solid #ccc;
+        transition: border var(--transition-duration) ease;
 
         ::ng-deep [tuiAppearance][data-appearance=textfield]{
             box-shadow: none !important;
@@ -22,7 +22,7 @@
 
         .search{
             flex: 1;
-            background-color: rgba(0, 0, 0, 0.05);
+            transition: background var(--transition-duration) ease;
 
             [tuiAppearance][data-appearance=textfield]{
                 background-color: transparent !important;
@@ -31,7 +31,7 @@
             }
 
             [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
-                outline: 0.125rem solid rgba(0,0,0,.25) !important;
+                outline: 0.125rem solid transparent !important;
             }
         }
     }
@@ -49,8 +49,8 @@
             width: clamp(180px, 15vw, 250px);
             height: 100%;
             padding: 0px 10px 0px 0px;
-            border-right: 2px solid #ccc;
             flex-shrink: 0;
+            transition: border var(--transition-duration) ease;
 
             .category{
                 width: 100%;
@@ -63,18 +63,11 @@
                 cursor: pointer;
                 transition: background-color var(--transition-duration) ease;
 
-                &:hover{
-                    background-color: #ddd;
-
-                    .icon{color: #000;}
-                    .name{color: #000;}
-                }
-
                 &.active{
-                    background-color: rgb(var(--accent-color));
+                    background-color: rgb(var(--accent-color)) !important;
 
-                    .icon{color: #fff;}
-                    .name{color: #fff;}
+                    .icon{color: #fff !important;}
+                    .name{color: #fff !important;}
                 }
                 
                 .icon{
@@ -119,8 +112,8 @@
                 align-items: center;
                 padding: 20px 0px;
                 flex-shrink: 0;
+                transition: border var(--transition-duration) ease;
 
-                &:not(:last-child){border-bottom: 2px solid #ccc;}
                 &:first-child{padding: 10px 0px;}
 
                 .details{
@@ -137,17 +130,17 @@
                     text-align: left;
                     font-size: 18px;
                     font-weight: 500;
-                    color: black;
+                    transition: color var(--transition-duration) ease;
                 }
 
                 .description{
                     width: 100%;
                     text-align: left;
                     font-size: 14px;
-                    color: #707070;
                     line-height: 22px;
                     margin-bottom: 5px;
                     margin-top: 5px;
+                    transition: color var(--transition-duration) ease;
                 }
 
                 &.vertical{
@@ -177,8 +170,8 @@
                     gap: 7.5px;
                     padding: 0 7.5px;
                     border-radius: 6px;
-                    background-color: rgba(0,0,0,.1);
                     position: relative;
+                    transition: background var(--transition-duration) ease;
 
                     .preview{
                         height: 25px;
@@ -219,7 +212,7 @@
                     gap: 10px;
                     padding: 10px;
                     border-radius: 4px;
-                    background-color: rgba(0,0,0,.1);
+                    transition: background var(--transition-duration) ease;
 
                     .theme{
                         flex: 1;
@@ -305,8 +298,8 @@
                             font-family: 'Poppins';
                             font-weight: 300;
                             font-size: 15px;
-                            color: #505050;
                             margin-top: 2px;
+                            transition: color var(--transition-duration) ease;
                         }
                     }
                 }
@@ -344,5 +337,127 @@
 
     .language-name{
         font-size: 12px !important;
+    }
+}
+
+:host:has(.theme.light){
+    .search-wrapper{
+        border-bottom: 2px solid #ccc;
+        .search{background-color: rgba(0, 0, 0, 0.05);}
+    }
+
+    .settings-wrapper{
+        .setting-categories{
+            border-right: 2px solid #ccc;
+            
+            .category:hover{
+                background-color: #ccc;
+                .icon,.name{color: #000;}
+            }
+        }
+        .setting:not(:last-child){border-bottom: 2px solid #ccc;}
+        .setting{
+            .title{color: black;}
+            .description{color: #707070;}
+            .color-input-wrapper,.themes{background-color: rgba(0,0,0,.1);}
+            .color-input-wrapper .value{color: black;}
+            .themes .name{color: #505050;}
+        }
+    }
+}
+
+:host:has(.theme.dark){
+    .search-wrapper{
+        border-bottom: 2px solid #555;
+        .search{
+            background-color: rgba(255,255,255,0.1); color: #ccc;
+            input,input::-webkit-input-placeholder{color: #ccc;}
+        }
+    }
+
+    .settings-wrapper{
+        .setting-categories{
+            border-right: 2px solid #555;
+
+            .category:hover{
+                background-color: #444;
+                .icon,.name{color: #ccc;}
+            }
+        }
+        .setting:not(:last-child){border-bottom: 2px solid #555;}
+        .setting{
+            .title{color: white;}
+            .description{color: #ccc;}
+            .color-input-wrapper,.themes{background-color: rgba(255,255,255,.1);}
+            .color-input-wrapper .value{color: white;}
+            .themes .name{color: #ccc;}
+            tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{background: #444 !important;}
+            tui-select ::ng-deep [tuiWrapper][data-appearance=icon]{color: #ccc;}
+        }
+    }
+    .language-item .language-name{color: #ccc;}
+}
+
+@media (prefers-color-scheme: light) {
+    :host:has(.theme.system){
+        .search-wrapper{
+            border-bottom: 2px solid #ccc;
+            .search{background-color: rgba(0, 0, 0, 0.05);}
+        }
+
+        .settings-wrapper{
+            .setting-categories{
+                border-right: 2px solid #ccc;
+
+                .category:hover{
+                    background-color: #ccc;
+                    .icon,.name{color: #000;}
+                }
+            }
+            .setting:not(:last-child){border-bottom: 2px solid #ccc;}
+            .setting{
+                .title{color: black;}
+                .description{color: #707070;}
+                .color-input-wrapper,.themes{background-color: rgba(0,0,0,.05);}
+                .color-input-wrapper .value{color: black;}
+                .themes .name{color: #505050;}
+            }
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :host:has(.theme.system) {
+        .search-wrapper{
+            border-bottom: 2px solid #555;
+            .search{
+                background-color: rgba(255,255,255,0.1); color: #ccc;
+                input,input::-webkit-input-placeholder{color: #ccc;}
+            }
+        }
+
+        .settings-wrapper{
+            .setting-categories{
+                border-right: 2px solid #555;
+
+                .category:hover{
+                    background-color: #444;
+                    .icon,.name{color: #ccc;}
+                }
+            }
+            .setting:not(:last-child){border-bottom: 2px solid #555;}
+            .setting{
+                .title{color: white;}
+                .description{color: #ccc;}
+                .color-input-wrapper,.themes{background-color: rgba(255,255,255,.05);}
+                .color-input-wrapper .value{color: white;}
+                .themes .name{color: #ccc;}
+
+                tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{background: #444 !important;}
+                tui-select ::ng-deep [tuiWrapper][data-appearance=icon]{color: #ccc;}
+            }
+        }
+
+        .language-item .language-name{color: #ccc;}
     }
 }
