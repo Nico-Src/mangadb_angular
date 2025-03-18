@@ -24,14 +24,6 @@
         &:not(.expanded) .top-bar-header{
             border-radius: 0px 0px 12px 0px;
         }
-
-        .search-wrapper{
-            background-color: rgba(255,255,255,.5) !important;
-
-            [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){
-                outline: 0.125rem solid transparent !important;
-            }
-        }
     }
 
     .backdrop{
@@ -414,6 +406,11 @@
         .top-bar-header{
             background-color: @topbar-color;
         }
+
+        .search-wrapper{
+            background-color: rgba(255,255,255,.5) !important;
+            input, input::-webkit-input-placeholder{color: black !important;}
+        }
     }
 
     .top-bar-header{
@@ -462,6 +459,11 @@
     &:has(.state.translucent){
         .top-bar-header{
             background-color: @dark-topbar-color;
+        }
+
+        .search-wrapper{
+            background-color: rgba(0,0,0,.25) !important;
+            input, input::-webkit-input-placeholder{color: white !important;}
         }
     }
 
@@ -530,6 +532,11 @@
         &:has(.state.translucent){
             .top-bar-header{
                 background-color: @topbar-color;
+            }
+
+            .search-wrapper{
+                background-color: rgba(255,255,255,.5) !important;
+                input, input::-webkit-input-placeholder{color: black !important;}
             }
         }
 

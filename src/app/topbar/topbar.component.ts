@@ -12,7 +12,7 @@ import { TranslateService, TranslatePipe, TranslateDirective, _ } from "@ngx-tra
 import { TuiSelectModule } from '@taiga-ui/legacy';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy'; 
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
 import { SideBarService } from '../../services/sidebar.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -41,12 +41,18 @@ export class TopBar {
     readonly loggedIn = computed(() => this.auth.isLoggedIn());
     readonly inAdminArea = computed(() => this.sidebar.isInAdminArea());
     readonly routeStates = [
-        { url: '/', state: 'translucent' },
         { url: '/login', state: 'translucent' },
         { url: '/register', state: 'translucent' },
-        { url: 'collection', state: 'solid' }
+        { url: '/series/', state: 'translucent' },
+        { url: '/settings', state: 'solid' },
+        { url: '/collection', state: 'solid' }
     ];
-    routeTranslucent = () => this.routeStates.find(r => r.url === this.router.url)?.state === 'translucent';
+    routeTranslucent = () => {
+        let isTranslucent = false;
+        if(this.router.url === '/') isTranslucent = true;
+        else isTranslucent = this.routeStates.find(r => this.router.url.startsWith(r.url))?.state === 'translucent';
+        return isTranslucent;
+    };
     @ViewChild('searchEl') searchEl: any
 
     protected search = '';
@@ -66,7 +72,7 @@ export class TopBar {
 
     languages = LANGS;
 
-    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, public router: Router, public sidebar: SideBarService) {
+    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, public router: Router, public sidebar: SideBarService, private route: ActivatedRoute) {
         
     }
 

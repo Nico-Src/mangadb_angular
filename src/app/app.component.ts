@@ -31,6 +31,7 @@ export class AppComponent {
     private readonly alerts = inject(TuiAlertService);
 
     theme = computed(() => this.auth.theme());
+    @ViewChild('main') main:any;
 
     constructor(private http:HttpClient, private cookieService:CookieService, private translate: TranslateService, public sidebar: SideBarService) {
         // setup languages
@@ -136,5 +137,9 @@ export class AppComponent {
         }
 
         document.body.style.setProperty('--accent-filters',result.filter.replace('filter: ','').replace(';','').trim());
+    }
+
+    mainScroll(){
+        this.sidebar.scrollTop.set(this.main.nativeElement.scrollTop);
     }
 }
