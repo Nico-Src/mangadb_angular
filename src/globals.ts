@@ -22,6 +22,10 @@ export const LANGS = [
     {key: 'language.english', value: 'en', disabled: false},
     {key: 'language.german', value: 'de', disabled: false},
     {key: 'language.french', value: 'fr', disabled: true},
+    {key: 'language.italian', value: 'it', disabled: true},
+    {key: 'language.spanish', value: 'es', disabled: true},
+    {key: 'language.japanese', value: 'jpn', disabled: true},
+    {key: 'language.korean', value: 'kor', disabled: true},
 ]
 
 export const THEMES = [
@@ -120,6 +124,20 @@ export const langToLocale = (lang:string) => {
         case "Chinese": return "cn";
         case "Japanese": return "jpn";
         default: return "en";
+    }
+}
+
+export const localeToLang = (locale:string) => {
+    switch(locale){
+        case "de": return "German";
+        case "en": return "English";
+        case "fr": return "French";
+        case "es": return "Spanish";
+        case "it": return "Italian";
+        case "kor": return "Korean";
+        case "cn": return "Chinese";
+        case "jpn": return "Japanese";
+        default: return "English";
     }
 }
 
