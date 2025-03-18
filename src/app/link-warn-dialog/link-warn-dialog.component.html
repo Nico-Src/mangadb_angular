@@ -1,0 +1,12 @@
+<div class="window" [class.show]="show" #window>
+    <div class="title">{{ 'link-dialog.title' | translate }}</div>
+    <div class="description">{{ 'link-dialog.desc' | translate }}</div>
+    <div class="link">
+        <div class="url">{{ link }}</div>
+        <ng-icon name="solarLinkBold" [style.fontSize.px]="16" class="icon"></ng-icon>
+    </div>
+    <div class="button-wrapper">
+        <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="show = false">{{ 'dialog.cancel' | translate }}</button>
+        <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="openLink()">{{ 'link-dialog.visit' | translate }}</button>
+    </div>
+</div>
