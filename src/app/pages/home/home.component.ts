@@ -18,6 +18,7 @@ import { TuiLineClamp, TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 })
 export class HomeComponent {
     private auth = inject(AuthService);
+    readonly theme = computed(() => this.auth.theme());
     readonly cdn_base = CDN_BASE;
     trendingSeries:any = [];
     recentlyAddedLoading = signal(true);

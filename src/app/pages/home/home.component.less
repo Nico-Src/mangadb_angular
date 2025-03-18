@@ -8,7 +8,6 @@
     width: 100%;
     height: calc(430px + @topbar-height);
     flex-shrink: 0;
-    background-color: #aaa;
     overflow: hidden;
     position: relative;
     transition: opacity var(--transition-duration) ease;
@@ -26,10 +25,8 @@
         position: relative;
         width: 100%;
         height: 100%;
-        background-color: #aaa;
 
         .slider-title{
-            color: black;
             font-weight: 600;
             font-size: 26px;
             font-family: 'Quicksand' !important;
@@ -50,17 +47,12 @@
             bottom: 10px; right: 20px;
 
             .slide-number{
-                color: black;
                 font-weight: 700;
                 width: 30px;
                 text-align: center;
                 font-size: 16px;
                 font-family: 'Poppins', sans-serif;
                 transition: padding var(--transition-duration) ease;
-            }
-
-            .arrow-btn{
-                color: black !important;
             }
         }
 
@@ -99,7 +91,6 @@
                         position: absolute;
                         z-index: 1;
                         inset: 0;
-                        background: linear-gradient(to bottom, rgba(222, 222, 222,.5), rgba(222, 222, 222,.6), #dedede);
                     }
 
                     manga-cover{
@@ -136,7 +127,6 @@
                             font-size: 25px;
                             font-weight: 700;
                             line-height: 25px;
-                            color: black;
                             cursor: pointer;
                             flex-shrink: 0;
                             pointer-events: none !important;
@@ -146,7 +136,6 @@
                             font-size: 20px;
                             line-height: 24px;
                             font-weight: 500;
-                            color: #303030;
                             margin-top: 4px;
                             flex-shrink: 0;
                             pointer-events: none !important;
@@ -155,7 +144,6 @@
                         .description{
                             font-size: 14px;
                             line-height: 22px;
-                            color: #202020;
                             text-align: justify;
                             font-weight: 400;
                             overflow: hidden;
@@ -169,7 +157,6 @@
 
                             &.overflowing{
                                 color: transparent;
-                                background: linear-gradient(to bottom, #202020 50%, rgba(255,255,255,0) 100%);
                                 background-clip: text;
                             }
                         }
@@ -191,8 +178,6 @@
                                 border-radius: 4px;
                                 height: fit-content;
                                 padding: 1px 8px;
-                                background-color: #eee;
-                                color: #303030;
                                 font-weight: 500;
                                 white-space: nowrap;
                                 z-index: 1;
@@ -206,7 +191,6 @@
 }
 
 .section-title{
-    color: black;
     font-weight: 600;
     font-size: 26px;
     letter-spacing: 1px;
@@ -286,4 +270,88 @@ tui-pagination{
     display:block;
     width: 100%;
     height: 50px;
+}
+
+:host:has(.theme.light){
+    .slider-title,.slide-info .slide-number,.slide-info .arrow-btn,.section-title{color: black;}
+    .slides{
+        .slide-wrapper{
+            .overlay{
+                background: linear-gradient(to bottom, rgba(222, 222, 222,.5), rgba(222, 222, 222,.6), #dedede);
+            }
+        }
+
+        .slide .details{
+            .name{color: black;}
+            .alias,.description{color: #303030;}
+            .description.overflowing{background: linear-gradient(to bottom, #303030 50%, rgba(255,255,255,0) 100%);}
+            .tag-wrapper .tag{background-color: #eee;color: #303030;}
+        }
+    }
+
+    tui-pagination{--tui-background-neutral-1: rgba(0,0,0,.1); --tui-background-neutral-1-hover: rgba(0,0,0,.2); --tui-background-neutral-1-pressed: rgba(0,0,0,.3);}
+}
+
+:host:has(.theme.dark){
+    .slider-title,.slide-info .slide-number,.slide-info .arrow-btn,.section-title{color: white; --tui-background-neutral-1-hover: rgba(255,255,255,.1);}
+    .slides{
+        .slide-wrapper{
+            .overlay{
+                background: linear-gradient(to bottom, rgba(0, 0, 0,.5), rgba(0, 0, 0,.6), #333);
+            }
+        }
+
+        .slide .details{
+            .name{color: white;}
+            .alias,.description{color: #ccc;}
+            .description.overflowing{background: linear-gradient(to bottom, #ccc 50%, rgba(0,0,0,0) 100%);}
+            .tag-wrapper .tag{background-color: #555;color: #ccc;}
+        }
+    }
+
+    tui-pagination{--tui-background-neutral-1: rgba(255,255,255,.1); --tui-background-neutral-1-hover: rgba(255,255,255,.2); --tui-background-neutral-1-pressed: rgba(255,255,255,.3);}
+}
+
+@media (prefers-color-scheme: light) {
+    .slider-title,.slide-info .slide-number,.slide-info .arrow-btn,.section-title{color: black;}
+    :host:has(.theme.system){
+        .slides{
+            .slide-wrapper{
+                .overlay{
+                    background: linear-gradient(to bottom, rgba(222, 222, 222,.5), rgba(222, 222, 222,.6), #dedede);
+                }
+            }
+        }
+
+        .slide .details{
+            .name{color: black;}
+            .alias,.description{color: #303030;}
+            .description.overflowing{background: linear-gradient(to bottom, #303030 50%, rgba(255,255,255,0) 100%);}
+            .tag-wrapper .tag{background-color: #eee;color: #303030;}
+        }
+    }
+
+    tui-pagination{--tui-background-neutral-1: rgba(0,0,0,.1); --tui-background-neutral-1-hover: rgba(0,0,0,.2); --tui-background-neutral-1-pressed: rgba(0,0,0,.3);}
+}
+
+@media (prefers-color-scheme: dark) {
+    .slider-title,.slide-info .slide-number,.slide-info .arrow-btn,.section-title{color: white; --tui-background-neutral-1-hover: rgba(255,255,255,.1);}
+    :host:has(.theme.system){
+        .slides{
+            .slide-wrapper{
+                .overlay{
+                    background: linear-gradient(to bottom, rgba(0, 0, 0,.5), rgba(0, 0, 0,.6), #333);
+                }
+            }
+        }
+
+        .slide .details{
+            .name{color: white;}
+            .alias,.description{color: #ccc;}
+            .description.overflowing{background: linear-gradient(to bottom, #ccc 50%, rgba(0,0,0,0) 100%);}
+            .tag-wrapper .tag{background-color: #555;color: #ccc;}
+        }
+    }
+
+    tui-pagination{--tui-background-neutral-1: rgba(255,255,255,.1); --tui-background-neutral-1-hover: rgba(255,255,255,.2); --tui-background-neutral-1-pressed: rgba(255,255,255,.3);}
 }
