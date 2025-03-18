@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, computed, inject, ViewChild } from '@angular/core';
 import { API_BASE } from '../../../globals';
 import { Meta, Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -25,6 +25,7 @@ import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-g
 })
 export class BrowseSeriesComponent {
     private auth = inject(AuthService);
+    readonly theme = computed(() => this.auth.theme());
     search:string = "";
     currentSearch:string = "";
     prevSearch:string = "";
@@ -90,6 +91,11 @@ export class BrowseSeriesComponent {
     // get selected filters array
     selectedFilters(){
         return this.dialogFilters.filter((f: { state: string; }) => f.state !== 'none');
+    }
+
+    // navigate to series detail page
+    seriesClick(ser: { slug: any; }){
+        this.router.navigate(['series', ser.slug]);
     }
 
     // reset filters

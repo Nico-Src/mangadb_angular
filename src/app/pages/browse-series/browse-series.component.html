@@ -1,3 +1,5 @@
+<div class="theme" [class]="theme()"></div>
+
 <div class="controls">
     <div class="control-row">
         <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
@@ -32,9 +34,9 @@
 
 <div class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" *ngIf="series.length > 0">
     <div class="series" *ngFor="let ser of series">
-        <manga-series-list [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
-        <manga-series-column [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
-        <manga-series-grid [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+        <manga-series-list (click)="seriesClick(ser)" [class]="theme()" [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+        <manga-series-column (click)="seriesClick(ser)" [class]="theme()" [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+        <manga-series-grid (click)="seriesClick(ser)" [class]="theme()" [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
     </div>
 </div>
 
@@ -55,7 +57,7 @@
 
 <ng-template #orderContent let-item>
     <div class="order-item">
-        <span class="language-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
         <ng-icon class="icon" [name]="item.icon"></ng-icon>
     </div>
 </ng-template>
