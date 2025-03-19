@@ -38,14 +38,14 @@
                     </button>
                 </div>
                 <div class="tag-wrapper" tuiFade>
-                    <div *ngFor="let tag of series?.contentTypeTags" class="tag type">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
-                    <div *ngFor="let tag of series?.contentRatingTags" class="tag content-rating">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
-                    <div *ngFor="let tag of series?.contentWarningTags" class="tag content-warning">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
-                    <div *ngFor="let tag of series?.otherTags" class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.contentTypeTags" class="tag type" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.contentRatingTags" class="tag content-rating" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.contentWarningTags" class="tag content-warning" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                    <div *ngFor="let tag of series?.otherTags" class="tag" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
                 </div>
             </div>
         </div>
-        <div class="description-wrapper">
+        <div class="description-wrapper" [class.hide]="checkingDescOverflow">
             <div class="header">
                 <span>{{ 'series.description' | translate }}</span>
             </div>
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="description-select" [class.overflowing]="descOverflowing">
+        <div class="description-select" [class.overflowing]="descOverflowing" [class.hide]="checkingDescOverflow">
             <tui-select class="edition-select" tuiTextfieldSize="s" [(ngModel)]="selectedEdition" tuiTextfieldSize="s" (ngModelChange)="editionSelected($event)" [valueContent]="editionContent">
                 <tui-data-list-wrapper *tuiDataList [itemContent]="editionContent" [items]="editions"></tui-data-list-wrapper>
             </tui-select>
@@ -69,7 +69,7 @@
                 <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableDescLangs"></tui-data-list-wrapper>
             </tui-select>
         </div>
-        <div class="tab-controls">
+        <div class="tab-controls" [class.hide]="checkingDescOverflow">
             <tui-segmented class="tabs" [(activeItemIndex)]="tabIndex" [size]="'s'" (activeItemIndexChange)="tabSelected()">
                 <button type="button" class="tab-item">
                     {{ 'series.volumes' | translate }}&nbsp;<tui-badge [size]="'s'">{{ tabsLoading ? '...' : volume_count }}</tui-badge>
@@ -95,7 +95,7 @@
                 </button>
             </tui-segmented>
         </div>
-        <tui-elastic-container>
+        <tui-elastic-container [class.hide]="checkingDescOverflow">
             <div class="volume-wrapper" *ngIf="tabIndex === 0">
                 <manga-volume [volume]="vol" [class]="theme()" *ngFor="let vol of volumes"></manga-volume>
             </div>
@@ -114,7 +114,7 @@
                 <ng-container *ngFor="let key of series.relation_keys">
                     <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
                     <div class="series-section column">
-                        <manga-series-column class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-column>
+                        <manga-series-column (click)="seriesClick(ser)" class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-column>
                     </div>
                 </ng-container>
             </div>
@@ -132,6 +132,7 @@
 </div>
 
 <link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
+<tag-dialog [tag]="tagDialogTag" #tagDialog></tag-dialog>
 
 <ng-template #languageContent let-item>
     <div class="language-item">

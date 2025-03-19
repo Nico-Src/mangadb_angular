@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { API_BASE, LANGS, localeToLang, langToLocale } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
@@ -16,6 +16,7 @@ import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { solarDoubleAltArrowDown, solarDoubleAltArrowUp } from '@ng-icons/solar-icons/outline';
 import { LinkWarnDialog } from '../../link-warn-dialog/link-warn-dialog.component';
+import { TagDialog } from '../../tag-dialog/tag-dialog.component';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { TuiBadge } from '@taiga-ui/kit';
 import { MangaVolume } from '../../manga-volume/manga-volume.component';
@@ -29,7 +30,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 @Component({
     selector: 'series-detail',
-    imports: [MangaCover, NgIf, NgFor, NgIcon, MangaVolume, MangaSeriesListComponent, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
+    imports: [MangaCover, NgIf, NgFor, NgIcon, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
     templateUrl: './series-detail.component.html',
     styleUrl: './series-detail.component.less',
     viewProviders: [provideIcons({ faCopyright, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
@@ -46,6 +47,8 @@ export class SeriesDetailComponent {
     checkingDescOverflow: boolean = true;
     // Link Dialog
     linkDialogURL: string = "";
+    // Tag Dialog
+    tagDialogTag: string = "";
     // Tab Controls
     tabIndex: number = 0;
     viewIndex: number = 0;
@@ -67,6 +70,7 @@ export class SeriesDetailComponent {
     @ViewChild('content') content: any;
     @ViewChild('desc') desc: any;
     @ViewChild('linkDialog') linkDialog: any;
+    @ViewChild('tagDialog') tagDialog: any;
     constructor(private translate: TranslateService, private meta: Meta, private cookie: CookieService, private title: Title, private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
     
     ngOnInit() {
@@ -96,6 +100,7 @@ export class SeriesDetailComponent {
             this.series.relation_keys = Object.keys(this.series.relations);
             this.title.setTitle(this.series.name);
 
+            // get count of relations
             this.relation_count = 0;
             for(let key in this.series.relations){
                 this.relation_count += this.series.relations[key].length;
@@ -119,12 +124,15 @@ export class SeriesDetailComponent {
             this.series.contentWarningTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
             this.series.otherTags = this.series.tags.filter((t: { type: string; }) => t.type != 'publication-status' && t.type != 'origin-country' && t.type != 'language' && t.type != 'content-rating' && t.type != 'content-warning' && t.type != 'content-type');
 
+            // set selected description
             this.availableDescLangs = LANGS.filter(l => this.series.descriptions.find((d: { language: string; }) => this.langToLoc(d.language) === l.value));
             this.selectedDescLang = this.availableDescLangs.find((l: { value: string; }) => l.value === this.langToLoc(description.language));
 
+            // load editions
             this.loadEditions();
 
             setTimeout(()=>{
+                // fit title and alias to container and check overflow for current description
                 this.fitToParent(this.seriesTitle?.nativeElement,{max: 50, height: 120});
                 if(this.series.alias) this.fitToParent(this.seriesAlias?.nativeElement,{max: 25, height: 70});
                 this.checkDescriptionOverflow(description?.description);
@@ -138,6 +146,12 @@ export class SeriesDetailComponent {
         localStorage.setItem('viewMode', index.toString());
     }
 
+    // open tag dialog for given tag
+    openTagDialog(tag:any){
+        this.tagDialog.showDialog(tag);
+    }
+
+    // load editions of seris
     loadEditions(){
         this.http.get(`${API_BASE}/series/volume-editions/${this.series.id}`).subscribe((res: any) => {
             this.editions = res;
@@ -162,25 +176,31 @@ export class SeriesDetailComponent {
             } else {
                 edition = this.editions.find((e:any)=>e.language === userLang);
             }
+            // if there is no edition in the users language just take the first one
             if(!edition) edition = this.editions[0];
             this.selectedEdition = edition;
 
+            // load volumes for given edition
             this.loadVolumes(this.getEditionKey(edition), true, false);
-
+            // update router params
             this.updateRouterParams();
         });
     }
 
+    // load volumes for given edition and optionally include special volumes or exclude default volumes
     async loadVolumes(edition:any, include_special:boolean, exclude_default:boolean){
         const VOLUME_LIMIT = 24;
         const promises = [];
 
+        // calc offsets
         const offset = this.page * VOLUME_LIMIT;
         const specialOffset = this.special_page * VOLUME_LIMIT;
 
+        // get session_id
         const session_id = this.cookie.get('auth_session');
         const header = "Bearer " + session_id;
 
+        // based on which volumes to fetch add requests to promises array
         if(include_special === true){
             if(exclude_default === false) promises.push(this.http.get(`${API_BASE}/series/volumes/${this.series.id}?edition=${edition}&limit=${VOLUME_LIMIT}&offset=${offset}`,{headers: {'Authorization': header}}).toPromise());
             promises.push(this.http.get(`${API_BASE}/series/volumes/${this.series.id}?edition=${edition}&special=true&limit=${VOLUME_LIMIT}&offset=${specialOffset}`,{headers: {'Authorization': header}}).toPromise());
@@ -188,11 +208,11 @@ export class SeriesDetailComponent {
             promises.push(this.http.get(`${API_BASE}/series/volumes/${this.series.id}?edition=${edition}&limit=${VOLUME_LIMIT}&offset=${offset}`,{headers: {'Authorization': header}}).toPromise());
         }
 
+        // execute all promises
         const data:any = await Promise.all(promises);
 
         if(exclude_default === false){
             this.volumes = data[0].volumes;
-            console.log(this.volumes)
             this.max = data[0].max;
             this.volume_count = data[0].count;
         }
@@ -201,11 +221,11 @@ export class SeriesDetailComponent {
             this.special_editions = data[1].volumes;
             this.special_max = data[1].max;
             this.special_count = data[1].count;
-            console.log(this.special_editions)
 
             if(this.special_count === 0 && this.tabIndex === 1) this.tabIndex = 0; 
         }
 
+        // show tabs
         this.tabsLoading = false;
     }
 
@@ -235,36 +255,48 @@ export class SeriesDetailComponent {
         return (Math.round(this.series?.rating * 100) / 100).toFixed(2)
     }
 
+    // convert language to locale code
     langToLoc(lang:string){
         return langToLocale(lang);
     }
 
+    // get current language
     currentLang(){
         return localeToLang(this.translate.currentLang || 'en');
     }
 
+    // description changed event
     descSelected(e:any){
+        // find description
         const desc = this.series.descriptions.find((d: { language: string; }) => this.langToLoc(d.language) === e.value);
         this.series.description = desc;
+        // reset description state (not expanded, max height and remove clamp)
         this.expandDesc = false;
         this.desc.nativeElement.style.maxHeight = '120px';
         this.desc.nativeElement.classList.remove('clamp');
+        // check overflow for new description
         this.checkingDescOverflow = true;
         this.checkDescriptionOverflow(desc.description);
     }
 
+    // edition changed event
     editionSelected(e:any){
+        // load volumes for new edition
         this.loadVolumes(this.getEditionKey(this.selectedEdition),true, false);
+        // update router params
         this.updateRouterParams();
     }
 
+    // toggle description expanded state
     toggleDesc(){
         this.expandDesc = !this.expandDesc;
         this.desc.nativeElement.classList.toggle('clamp');
+        // based on expanded state set max-height of description
         if(this.expandDesc) this.desc.nativeElement.style.maxHeight = `${this.desc.nativeElement.getAttribute('data-max-height')}px`;
         else this.desc.nativeElement.style.maxHeight = '120px';
     }
 
+    // check overflow of given description
     checkDescriptionOverflow(descText:string){
         if(!descText) return;
         // create temporary element
@@ -290,33 +322,51 @@ export class SeriesDetailComponent {
         desc.classList.add('loaded');
     }
 
+    // open link dialog for given link
     openLinkDialog(link:string){
         this.linkDialog.showDialog();
         this.linkDialogURL = link;
     }
 
+    // tab selected event
     tabSelected(){
+        // update router params
         this.updateRouterParams();
     }
 
+    // convert edition to a string (key)
     getEditionKey(edition:any){
         let key = edition.id ? `${edition.language.toLowerCase()}:${edition.id}` : edition.language;
+        // add '-digital' if edition is for e-books
         if(edition.digital) key += '-digital';
         return key;
     }
 
+    // page update event
     pageUpdate(){
+        // update router params
         this.updateRouterParams();
+        // load new volumes (exclude special)
         this.loadVolumes(this.getEditionKey(this.selectedEdition), false, false);
     }
 
+    // special edition page update
     specialPageUpdate(){
+        // update router params
         this.updateRouterParams();
+        // load new volumes (exclude default)
         this.loadVolumes(this.getEditionKey(this.selectedEdition), true, true);
     }
 
+    // update router params
     updateRouterParams(){
         // navigate router without reloading and without pushing to history
         this.router.navigate([], { queryParams: {edition:this.getEditionKey(this.selectedEdition),tab:this.tabIndex.toString(),page:this.page,special_page:this.special_page}, queryParamsHandling: 'merge', replaceUrl: true });
+    }
+
+    // series click event
+    seriesClick(ser:any){
+        // navigate to empty without location change and redirect to series page again (for seamless reload)
+        this.router.navigateByUrl('/empty', { skipLocationChange: true }).then(() => {this.router.navigate(['series', ser.slug])});
     }
 }

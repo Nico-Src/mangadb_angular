@@ -244,6 +244,7 @@
                             z-index: 1;
                             background-color: #ccc;
                             color: #303030;
+                            cursor: pointer;
                         }
                     }
                 }
@@ -265,6 +266,11 @@
                 border-radius: 4px;
                 overflow: hidden;
                 position: relative;
+                opacity: 1;
+
+                &.hide{
+                    opacity: 0;
+                }
 
                 .header{
                     width: 100%;
@@ -346,6 +352,12 @@
                 justify-content: flex-end;
                 align-items: center;
                 gap: 20px;
+                opacity: 1;
+                transition: opacity var(--transition-duration) ease;
+
+                &.hide{
+                    opacity: 0;
+                }
 
                 &:not(.overflowing){
                     margin-top: 10px;
@@ -377,6 +389,12 @@
                 justify-content: space-between;
                 align-items: center;
                 margin: 10px 0;
+                opacity: 1;
+                transition: opacity var(--transition-duration) ease;
+
+                &.hide{
+                    opacity: 0;
+                }
 
                 tui-pagination{
                     --tui-background-accent-1: rgb(var(--accent-color));
@@ -444,6 +462,12 @@
             tui-elastic-container{
                 width: 100%;
                 height: fit-content;
+                opacity: 1;
+                transition: opacity var(--transition-duration) ease;
+
+                &.hide{
+                    opacity: 0;
+                }
             }
 
             .volume-wrapper{
