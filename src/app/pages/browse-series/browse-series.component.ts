@@ -46,7 +46,7 @@ export class BrowseSeriesComponent {
     tagCategories:any = [];
     selectedOrder: any = this.orders[0];
     series:any = [];
-    @ViewChild('filterDialog') filterDialog:any
+    @ViewChild('filterDialog') filterDialog:any;
     constructor(private translate: TranslateService, private meta: Meta, private title: Title, private http:HttpClient, private router: Router, private route: ActivatedRoute) { }
     
     ngOnInit() {
