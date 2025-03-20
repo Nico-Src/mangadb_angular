@@ -9,6 +9,7 @@ import { AuthGuard } from '../guards/authGuard';
 import { BrowseSeriesComponent } from './pages/browse-series/browse-series.component';
 import { SeriesDetailComponent } from './pages/series-detail/series-detail.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { EmptyComponent } from './pages/empty/empty.component';
 
 export const routes: Routes = [
     {
