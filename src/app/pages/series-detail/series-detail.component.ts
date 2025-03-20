@@ -6,7 +6,7 @@ import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { API_BASE, LANGS, localeToLang, langToLocale } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, NgForOf } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { faCopyright, faFlag, faBookmark, faStar } from '@ng-icons/font-awesome/regular';
 import { faSolidPlus } from '@ng-icons/font-awesome/solid';
@@ -27,13 +27,15 @@ import { TuiElasticContainer } from '@taiga-ui/kit';
 import { TuiPagination } from '@taiga-ui/kit';
 import { tablerList, tablerLayoutColumns, tablerLayoutGrid } from '@ng-icons/tabler-icons';
 import { CookieService } from 'ngx-cookie-service';
+import { TuiTable } from '@taiga-ui/addon-table';
+import { heroArrowTurnDownRight } from '@ng-icons/heroicons/outline';
 
 @Component({
     selector: 'series-detail',
-    imports: [MangaCover, NgIf, NgFor, NgIcon, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
+    imports: [MangaCover, NgIf, NgFor, NgForOf, NgIcon, TuiTable, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
     templateUrl: './series-detail.component.html',
     styleUrl: './series-detail.component.less',
-    viewProviders: [provideIcons({ faCopyright, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
+    viewProviders: [provideIcons({ faCopyright, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
 })
 export class SeriesDetailComponent {
     private auth = inject(AuthService);
@@ -86,6 +88,24 @@ export class SeriesDetailComponent {
 
         // get users view mode (list, column or grid)
         this.viewIndex = parseInt(localStorage.getItem('viewMode') || '0');
+
+        this.route.paramMap.subscribe(()=>{
+            this.tabIndex = 0;
+            this.page = 0;
+            this.special_page = 0;
+
+            // reset description state (not expanded, max height and remove clamp)
+            this.expandDesc = false;
+            this.desc.nativeElement.style.maxHeight = '120px';
+            this.desc.nativeElement.classList.remove('clamp');
+            // check overflow for new description
+            this.checkingDescOverflow = true;
+
+            this.content.nativeElement.classList.remove('fits');
+
+            const slug = this.route.snapshot.paramMap.get('slug');
+            this.loadSeries(slug);
+        });
     }
 
     // load series by slug
@@ -107,11 +127,35 @@ export class SeriesDetailComponent {
             }
             if(this.relation_count === 0 && this.tabIndex === 2) this.tabIndex = 0; 
 
+            // put editions in publisher
+            for(const publisher of this.series.publishers){
+                const editions = this.series.publisher_editions?.filter((e:any)=>e.publisher_id === publisher.id) || [];
+                publisher.editions = editions;
+            }
+
             // check if there is a alias with the given language
             const langName = localeToLang(lang);
             let alias = this.series.aliases.find((a: { language: string; title: any; }) => a.language === langName && a.title !== this.series.name);
             if(!alias) alias = this.series.aliases.find((a: { title: any; }) => a.title !== this.series.name);
             if(alias) this.series.alias = alias.title;
+
+            // group aliases
+            const groupedAliases:any = [];
+            for(const alias of this.series.aliases){
+                if(!groupedAliases.find((ga:any) => ga.title === alias.title)){
+                    groupedAliases.push({
+                        title: alias.title,
+                        languages: [{
+                            name: alias.language
+                        }]
+                    });
+                } else {
+                    groupedAliases.find((ga:any) => ga.title === alias.title).languages.push({
+                        name: alias.language
+                    });
+                }
+            }
+            this.series.groupedAliases = groupedAliases;
 
             // check if there is a description with the given language
             let description = this.series.descriptions.find((d: { language: string; }) => d.language === langName);
@@ -367,6 +411,30 @@ export class SeriesDetailComponent {
     // series click event
     seriesClick(ser:any){
         // navigate to empty without location change and redirect to series page again (for seamless reload)
-        this.router.navigateByUrl('/empty', { skipLocationChange: true }).then(() => {this.router.navigate(['series', ser.slug])});
+        this.router.navigate(['series', ser.slug]);
+    }
+
+    // redirect to amazon search in given language and with given text
+    searchAmazon(alias:any,lang:any){
+        switch(lang.name){
+            case 'Japanese':
+                window.open('https://www.amazon.co.jp/s?k='+alias.title,'_blank');
+                break;
+            case 'English':
+                window.open('https://www.amazon.com/s?k='+alias.title,'_blank');
+                break;
+            case 'German':
+                window.open('https://www.amazon.de/s?k='+alias.title,'_blank');
+                break;
+            case 'French':
+                window.open('https://www.amazon.fr/s?k='+alias.title,'_blank');
+                break;
+            case 'Spanish':
+                window.open('https://www.amazon.es/s?k='+alias.title,'_blank');
+                break;
+            case 'Italian':
+                window.open('https://www.amazon.it/s?k='+alias.title,'_blank');
+                break;
+        }
     }
 }

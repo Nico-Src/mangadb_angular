@@ -17,7 +17,7 @@
                 </div>
                 <div class="copyright-wrapper">
                     <div class="copyright"><ng-icon class="icon" name="faCopyright" [style.fontSize.px]="16"/>{{series?.volume?.copyright}}</div>
-                    <button appearance="flat" size="m" tuiIconButton type="button" class="report-btn" [style.border-radius.%]="100">
+                    <button appearance="flat" size="m" tuiIconButton type="button" class="report-btn" [style.border-radius.%]="100" [tuiHint]="'report-dialog.title' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom">
                         <ng-icon class="icon" name="faFlag" [style.fontSize.px]="16"></ng-icon>
                     </button>
                 </div>
@@ -126,8 +126,67 @@
                     </div>
                 </ng-container>
             </div>
-            <div class="placeholder" style="height: 50px; width: 100%; display:block;"></div>
         </tui-elastic-container>
+        <div class="section-title" [class.hide]="checkingDescOverflow">{{ 'series.publishers' | translate }}</div>
+        <table tuiTable [size]="'s'" [style.width.%]="100" class="publisher-table" [class.hide]="checkingDescOverflow">
+            <thead>
+                <tr>
+                    <th tuiTh [style.width.px]="25"></th>
+                    <th tuiTh></th>
+                    <th tuiTh [style.textAlign]="'center'">Chapter</th>
+                    <th tuiTh [style.textAlign]="'center'">Volumes</th>
+                    <th tuiTh [style.textAlign]="'center'">Status</th>
+                </tr>
+            </thead>
+            <tbody tuiTbody>
+                <ng-container *ngFor="let publisher of series.publishers">
+                    <tr class="publisher" [class.origin]="publisher.origin === 1" [class.border]="publisher.editions?.length === 0 && publisher.origin === 0">
+                        <td tuiTd>
+                            <img [style.height.px]="15" [src]="`/img/flags/${langToLoc(publisher.language)}.png`">
+                        </td>
+                        <td tuiTd class="publisher-name">
+                            {{ publisher.name }}
+                            <span class="range">{{ `${publisher.start || '?'} - ${publisher.end || '?'}` }}</span>
+                        </td>
+                        <td tuiTd [style.textAlign]="'center'" class="chapter">
+                            <span class="badge">{{ publisher.chapter || '?' }}</span>
+                        </td>
+                        <td tuiTd [style.textAlign]="'center'" class="volumes">
+                            <span class="badge">{{ publisher.volumes || '?' }}</span>
+                        </td>
+                        <td tuiTd [style.textAlign]="'center'">
+                            {{ `tags.${publisher.status.toLowerCase()}` | translate }}
+                        </td>
+                    </tr>
+                    <tr *ngFor="let edition of publisher.editions" class="edition">
+                        <td tuiTd>
+                            <ng-icon name="heroArrowTurnDownRight" [style.fontSize.px]="20" class="icon"></ng-icon>
+                        </td>
+                        <td tuiTd class="publisher-name">
+                            {{ edition.name }}
+                            <span class="range">{{ `${edition.start || '?'} - ${edition.end || '?'}` }}</span>
+                        </td>
+                        <td tuiTd [style.textAlign]="'center'" class="chapter">
+                            <span class="badge">{{ edition.chapter || '?' }}</span>
+                        </td>
+                        <td tuiTd [style.textAlign]="'center'" class="volumes">
+                            <span class="badge">{{ edition.volumes || '?' }}</span>
+                        </td>
+                        <td tuiTd [style.textAlign]="'center'">
+                            {{ `tags.${edition.status.toLowerCase()}` | translate }}
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+        <div class="section-title" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.aliases' | translate }}</div>
+        <div class="alias-wrapper" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">
+            <div class="alias-item" *ngFor="let alias of series?.groupedAliases">
+                <div class="lang" *ngFor="let lang of alias.languages"  (click)="searchAmazon(alias, lang)"><img [src]="`/img/flags/${langToLoc(lang.name)}.png`"></div>
+                {{ alias.title }}
+            </div>
+        </div>
+        <div class="placeholder" style="height: 20px; width: 100%; display:block;"></div>
     </div>
 </div>
 
