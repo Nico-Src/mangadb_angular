@@ -1,5 +1,8 @@
 # MangaDB
 
+> [!IMPORTANT]  
+> This is a rewrite in Angular. I originally nearly completed this project in Vue.js but was unhappy with the code's overall quality. The project is still a work in progress, so you may come across bad practices for now (e.g., permission system). These will be addressed as development continues.
+
 MangaDB is an Angular-based application designed to provide a structured and interactive database for manga series. It allows users to explore manga metadata, including series details, volumes, and contributors such as authors, artists, and publishers. The app features authentication, multilingual support, and a clean UI powered by Taiga UI.
 
 ## Features
