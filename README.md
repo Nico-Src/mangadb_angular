@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="200" src="https://raw.githubusercontent.com/Nico-Src/mangadb_angular/refs/heads/main/public/favicon.ico">
+</p>
+
 # MangaDB
 
 > [!IMPORTANT]  
@@ -22,6 +26,11 @@ MangaDB is an Angular-based application designed to provide a structured and int
 ## Database
 
 Currently, my private database contains an extensive collection of manga metadata, including approximately **60,000 volumes**, **2,000 series**, and more. Sometimes in the future i want to release this as a website to the public. Right now, I don't have the funds or the patience to handle hosting and legal matters.
+
+![Volume Badge](https://img.shields.io/badge/Volumes-59215-45a349)
+![Series Badge](https://img.shields.io/badge/Series-1941-red)
+![Contributor Badge](https://img.shields.io/badge/Contributors-2006-bda73c)
+![Publisher Badge](https://img.shields.io/badge/Publishers-244-blue)
  
 ## Preview (3:55min)
 
