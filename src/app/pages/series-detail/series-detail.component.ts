@@ -3,18 +3,18 @@ import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { API_BASE, LANGS, localeToLang, langToLocale } from '../../../globals';
+import { API_BASE, CDN_BASE, LANGS, localeToLang, langToLocale, ago, REPORT_TYPES, successAlert, errorAlert } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
 import { NgIf, NgFor, NgForOf } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { faCopyright, faFlag, faBookmark, faStar } from '@ng-icons/font-awesome/regular';
 import { faSolidPlus } from '@ng-icons/font-awesome/solid';
-import { TuiButton, TuiAppearance, TuiHint } from '@taiga-ui/core';
+import { TuiButton, TuiAppearance, TuiHint, TuiAlertService } from '@taiga-ui/core';
 import { TuiFade } from '@taiga-ui/kit';
-import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiSelectModule, TuiTextfieldControllerModule, TuiTextareaModule } from '@taiga-ui/legacy';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { solarDoubleAltArrowDown, solarDoubleAltArrowUp } from '@ng-icons/solar-icons/outline';
+import { solarDoubleAltArrowDown, solarDoubleAltArrowUp, solarStar } from '@ng-icons/solar-icons/outline';
 import { LinkWarnDialog } from '../../link-warn-dialog/link-warn-dialog.component';
 import { TagDialog } from '../../tag-dialog/tag-dialog.component';
 import { TuiSegmented } from '@taiga-ui/kit';
@@ -23,23 +23,28 @@ import { MangaVolume } from '../../manga-volume/manga-volume.component';
 import { MangaSeriesListComponent } from '../../manga-series-list/manga-series-list.component';
 import { MangaSeriesColumnComponent } from '../../manga-series-column/manga-series-column.component';
 import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-grid.component';
-import { TuiElasticContainer } from '@taiga-ui/kit';
+import { TuiElasticContainer, TuiAccordion } from '@taiga-ui/kit';
 import { TuiPagination } from '@taiga-ui/kit';
 import { tablerList, tablerLayoutColumns, tablerLayoutGrid } from '@ng-icons/tabler-icons';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { heroArrowTurnDownRight } from '@ng-icons/heroicons/outline';
+import { TuiLoader } from '@taiga-ui/core';
+import { TuiArcChart } from '@taiga-ui/addon-charts';
+import { TuiRating } from '@taiga-ui/kit';
 
 @Component({
     selector: 'series-detail',
-    imports: [MangaCover, NgIf, NgFor, NgForOf, NgIcon, TuiTable, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
+    imports: [MangaCover, NgIf, NgFor, NgForOf, NgIcon, TuiRating, TuiTextareaModule, TuiArcChart, TuiTable, TuiAccordion, TuiLoader, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
     templateUrl: './series-detail.component.html',
     styleUrl: './series-detail.component.less',
-    viewProviders: [provideIcons({ faCopyright, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
+    viewProviders: [provideIcons({ faCopyright, solarStar, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
 })
 export class SeriesDetailComponent {
+    protected alerts = inject(TuiAlertService);
     private auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
+    readonly cdn_base = CDN_BASE;
     series: any = {};
     // Description
     availableDescLangs: any = [];
@@ -67,12 +72,32 @@ export class SeriesDetailComponent {
     max: number = 0;
     special_page: number = 0;
     special_max: number = 0;
+    // Report Dialog
+    showReportDialog: boolean = false;
+    showReportViewDialog: boolean = false;
+    reportsLoading: boolean = false;
+    reports: any = [];
+    reportTypes:any = REPORT_TYPES.filter((t:any)=>t.type === 'series');
+    selectedReportType: any = this.reportTypes[0];
+    reportDescription: string = "";
+    // Rating Dialog
+    showRatingDialog: boolean = false;
+    ratingLoading: boolean = false;
+    rating: number = 0;
+    ratingExists: boolean = false;
+    ratingChartValue: any = [];
+    ratingChartIndex: number = 0;
+    deletingRating: boolean = false;
+    updatingRating: boolean = false;
     @ViewChild('seriesTitle') seriesTitle: any;
     @ViewChild('seriesAlias') seriesAlias: any;
     @ViewChild('content') content: any;
     @ViewChild('desc') desc: any;
     @ViewChild('linkDialog') linkDialog: any;
     @ViewChild('tagDialog') tagDialog: any;
+    @ViewChild('reportDialog') reportDialog: any;
+    @ViewChild('reportViewDialog') reportViewDialog: any;
+    @ViewChild('ratingDialog') ratingDialog: any;
     constructor(private translate: TranslateService, private meta: Meta, private cookie: CookieService, private title: Title, private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
     
     ngOnInit() {
@@ -90,6 +115,7 @@ export class SeriesDetailComponent {
         this.viewIndex = parseInt(localStorage.getItem('viewMode') || '0');
 
         this.route.paramMap.subscribe(()=>{
+            if(!this.series?.id) return;
             this.tabIndex = 0;
             this.page = 0;
             this.special_page = 0;
@@ -131,6 +157,13 @@ export class SeriesDetailComponent {
             for(const publisher of this.series.publishers){
                 const editions = this.series.publisher_editions?.filter((e:any)=>e.publisher_id === publisher.id) || [];
                 publisher.editions = editions;
+            }
+
+            // create chart values for rating
+            this.ratingChartValue = [];
+            const totalRatings = this.series.rating_count;
+            for(let i = 1; i <= 5; i++){
+                this.ratingChartValue.push((((this.series.ratings.find((r:any)=>r.rating === i)?.count || 0) / totalRatings) * 100).toFixed(2));
             }
 
             // check if there is a alias with the given language
@@ -436,5 +469,182 @@ export class SeriesDetailComponent {
                 window.open('https://www.amazon.it/s?k='+alias.title,'_blank');
                 break;
         }
+    }
+
+    // show report dialog and load reports
+    openReportDialog(){
+        this.reportsLoading = true;
+        this.showReportDialog = true;
+        this.loadReports();
+    }
+
+    // show report view dialog
+    openReportViewDialog(){
+        this.showReportDialog = false;
+        this.showReportViewDialog = true;
+    }
+
+    openRatingDialog(){
+        if(!this.auth.isLoggedIn()) return;
+        this.showRatingDialog = true;
+        this.ratingLoading = true;
+        this.loadRatings();
+    }
+
+    loadRatings(){
+        // get session_id
+        const session_id = this.cookie.get('auth_session');
+        const header = "Bearer " + session_id;
+
+        this.http.get(`${API_BASE}/user/series-rating/id/${this.series.id}`,{headers: {Authorization: header}}).subscribe((res:any)=>{
+            this.rating = res?.rating || 0;
+            this.ratingExists = this.rating !== 0;
+            this.ratingLoading = false;
+        });
+    }
+
+    deleteRating(){
+        this.deletingRating = true;
+        // get session_id
+        const session_id = this.cookie.get('auth_session');
+        const header = "Bearer " + session_id;
+
+        this.http.delete(`${API_BASE}/user/series-rating/delete/${this.series.id}`,{headers: {Authorization: header}, responseType: 'text'}).subscribe((res)=>{
+            this.translate.get(_('rating-dialog.delete-success')).subscribe((res: any) => {
+                successAlert(this.alerts, res);
+                this.updateRatings();
+            });
+
+            setTimeout(()=>{
+                this.showRatingDialog = false;
+                this.deletingRating = false;
+            },250);
+        },(err)=>{
+            errorAlert(this.alerts, JSON.stringify(err));
+        });
+    }
+
+    saveRating(){
+        this.updatingRating = true;
+
+        // get session_id
+        const session_id = this.cookie.get('auth_session');
+        const header = "Bearer " + session_id;
+
+        if(this.ratingExists){
+            this.http.post(`${API_BASE}/user/series-rating/update/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe((res)=>{
+                this.translate.get(_('rating-dialog.save-success')).subscribe((res: any) => {
+                    successAlert(this.alerts, res);
+                    this.updateRatings();
+                });
+
+                setTimeout(()=>{
+                    this.showRatingDialog = false;
+                    this.updatingRating = false;
+                },250);
+            },(err)=>{
+                errorAlert(this.alerts, JSON.stringify(err));
+            });
+        } else {
+            this.http.post(`${API_BASE}/user/series-rating/add/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe((res)=>{
+                this.translate.get(_('rating-dialog.add-success')).subscribe((res: any) => {
+                    successAlert(this.alerts, res);
+                    this.updateRatings();
+                });
+
+                setTimeout(()=>{
+                    this.showRatingDialog = false;
+                    this.updatingRating = false;
+                },250);
+            }, (err)=>{
+                errorAlert(this.alerts, JSON.stringify(err));
+            });
+        }
+    }
+
+    updateRatings(){
+        this.http.get(`${API_BASE}/series/ratings/${this.series.slug}`).subscribe((res:any)=>{
+            this.series.rating = res.rating;
+            this.series.rating_count = res.rating_count;
+            this.series.ratings = res.ratings;
+            // create chart values for rating
+            for(let i = 1; i <= 5; i++){
+                this.ratingChartValue[i-1] = (((res.ratings.find((r:any)=>r.rating === i)?.count || 0) / res.rating_count) * 100).toFixed(2);
+            }
+        });
+    }
+
+    // load reports from api
+    loadReports(){
+        this.http.get(`${API_BASE}/reports/series/${this.series.id}`).subscribe((res)=>{
+            this.reports = res;
+            this.reportsLoading = false;
+        });
+    }
+
+    // if backdrop of dialog is clicked close it
+    reportDialogClick(event:any){
+        if (event.target === this.reportDialog.nativeElement) {
+            this.showReportDialog = false;
+        }
+    }
+
+    // if backdrop of dialog is clicked close it
+    reportViewDialogClick(event:any){
+        if (event.target === this.reportViewDialog.nativeElement) {
+            this.showReportViewDialog = false;
+        }
+    }
+
+    // if backdrop of dialog is clicked close it
+    ratingDialogClick(event:any){
+        if (event.target === this.ratingDialog.nativeElement) {
+            this.showRatingDialog = false;
+        }
+    }
+
+    agoTime(time:string){
+        return ago(time, this.translate.currentLang);
+    }
+
+    addReport(){
+        if(!this.auth.isLoggedIn()){
+            this.translate.get(_('report-dialog.login-required')).subscribe((res: any) => {
+                errorAlert(this.alerts, res);
+            });
+            return;
+        }
+
+        const user = this.auth.getUser();
+    
+        if(user.role !== 'Admin'){
+            this.translate.get(_('report-dialog.role-required')).subscribe((res: any) => {
+                errorAlert(this.alerts, res);
+            });
+            return;
+        }
+    
+        if(this.reportDescription.trim() === ''){
+            this.translate.get(_('report-dialog.empty-desc')).subscribe((res: any) => {
+                errorAlert(this.alerts, res);
+            });
+            return;
+        }
+
+        // get session_id
+        const session_id = this.cookie.get('auth_session');
+        const header = "Bearer " + session_id;
+
+        this.http.post(`${API_BASE}/reports/add/series`,
+            {item_id: this.series.id, type: this.selectedReportType.key, description: this.reportDescription},
+            {responseType: 'text', headers: {Authorization: header}}).subscribe((res)=>{
+            this.reportDescription = "";
+            this.loadReports();
+            this.translate.get(_('report-dialog.success')).subscribe((res: any) => {
+                successAlert(this.alerts, res);
+            });
+        },(err)=>{
+            errorAlert(this.alerts, JSON.stringify(err));
+        });
     }
 }
