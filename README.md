@@ -16,6 +16,16 @@ MangaDB is an Angular-based application designed to provide a structured and int
 - **State Management**
   - Authentication state is managed with a service.
  
+## Database
+
+Currently, my private database contains an extensive collection of manga metadata, including approximately **60,000 volumes**, **2,000 series**, and more. Sometimes in the future i want to release this as a website to the public. Right now, I don't have the funds or the patience to handle hosting and legal matters.
+ 
+## Preview (3:55min)
+
+[![Youtube Preview](https://img.youtube.com/vi/tdFozQr2bqM/0.jpg)](https://www.youtube.com/watch?v=tdFozQr2bqM)
+
+(Click on it to watch the preview)
+ 
 ## Screenshots
 
 <details>
