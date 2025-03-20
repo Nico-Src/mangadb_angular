@@ -88,29 +88,37 @@ Currently, my private database contains an extensive collection of manga metadat
 
 ```
 ├── src
-│   ├── app
-│   │   ├── components
-│   │   │   ├── sidebar
-│   │   │   ├── topbar
-│   │   │   ├── login
-│   │   │   ├── register
-│   │   ├── services
-│   │   │   ├── auth.service.ts
-│   │   ├── app.component.ts
-│   │   ├── app.routes.ts
-│   │   ├── app.config.ts
-│   ├── assets
-│   ├── styles
-│   ├── index.html
+│ ├── app
+│ │ ├── manga-cover
+│ │ ├── manga-series-column
+│ │ ├── manga-series-grid
+│ │ ├── manga-series-list
+│ │ ├── manga-volume
+│ │ ├── pages
+│ │ │ ├── admin
+│ │ │ ├── browse-series
+│ │ │ ├── collection
+│ │ │ ├── home
+│ │ │ ├── login
+│ │ │ ├── register
+│ │ │ ├── series-detail
+│ │ │ ├── settings
+│ │ ├── sidebar
+│ │ ├── tag-dialog
+│ │ ├── topbar
+│ │ ├── app.component.html
+│ │ ├── app.component.less
+│ │ ├── app.component.spec.ts
+│ │ ├── app.component.ts
+│ │ ├── app.config.ts
+│ │ ├── app.routes.ts
+│ ├── guards
+│ ├── libs
+│ ├── models
+│ ├── pipes
+│ ├── services
+...
 ```
-
-## Configuration
-
-Edit `app.config.ts` to modify:
-
-- API Base URL (`API_BASE`)
-- Default settings (`DEFAULT_SETTINGS`)
-- Available languages (`LANGS`)
 
 ## Running Tests
 
