@@ -10,6 +10,7 @@
 MangaDB is an Angular-based application designed to provide a structured and interactive database for manga series. It allows users to explore manga metadata, including series details, volumes, and contributors such as authors, artists, and publishers. The app features authentication, multilingual support, and a clean UI powered by Taiga UI.
 
 ![LOC Badge](https://tokei.rs/b1/github/Nico-Src/mangadb_angular)
+![License Badge](https://img.shields.io/github/license/Nico-Src/mangadb_angular)
 
 ## Features
 
