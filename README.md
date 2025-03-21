@@ -14,7 +14,7 @@ MangaDB is an Angular-based application designed to provide a structured and int
 
 ## Localization
 
-[![Crowdin](https://badges.crowdin.net/mangadb/localized.svg)](https://crowdin.com)
+[![Crowdin](https://badges.crowdin.net/mangadb/localized.svg)](https://crowdin.com/project/mangadb)
 
 Help localize the web app by translating the texts into your language.
 
