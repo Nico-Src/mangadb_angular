@@ -67,12 +67,33 @@ export const dateTimeFormats = [
     {locale: 'ja', format: 'LLL'},
 ];
 
-export const errorAlert = (alerts: TuiAlertService, message: string, label: string = 'Error'): void => {
-    alerts.open(message, {label: label, appearance: 'negative'}).subscribe();
+export const REPORT_TYPES = [
+    {key: 'wrong-info', name: 'Wrong Information', type: 'series'},
+    {key: 'missing-info', name: 'Missing Information', type: 'series'},
+    {key: 'missing-volumes', name: 'Missing Volumes', type: 'series'},
+    {key: 'other', name: 'Other', type: 'series'},
+    {key: 'broken-link', name: 'Broken Link', type: 'volume'},
+    {key: 'wrong-info', name: 'Wrong Information', type: 'volume'},
+    {key: 'missing-info', name: 'Missing Information', type: 'volume'},
+    {key: 'explicit-content', name: 'Explicit Content', type: 'volume'},
+    {key: 'other', name: 'Other', type: 'volume'},
+];
+
+export const reportStatuses = [
+    {key: 'open', name: 'Open'},
+    {key: 'under-review', name: 'Under Review'},
+    {key: 'resolved', name: 'Resolved'},
+    {key: 'refused', name: 'Refused'}
+];
+
+export const errorAlert = async (alerts: TuiAlertService, message: string, label: string = 'server.status.error', translate: any): Promise<void> => {
+    const translatedLabel = await getTranslation(translate, label);
+    alerts.open(message, {label: translatedLabel, appearance: 'negative'}).subscribe();
 }
 
-export const successAlert = (alerts: TuiAlertService, message: string, label: string = 'Success'): void => {
-    alerts.open(message, {label: label, appearance: 'positive'}).subscribe();
+export const successAlert = async (alerts: TuiAlertService, message: string, label: string = 'server.status.success', translate: any): Promise<void> => {
+    const translatedLabel = await getTranslation(translate, label);
+    alerts.open(message, {label: translatedLabel, appearance: 'positive'}).subscribe();
 }
 
 // Convert Hex Color to RGB
@@ -141,6 +162,35 @@ export const localeToLang = (locale:string) => {
     }
 }
 
-export const isDateInFuture = (date:string) => {
+export const isDateInFuture = (date: string) => {
     return moment(date).isAfter(moment(new Date));
+}
+
+// Converts a UTC date string to a human-readable "time ago" format based on the current locale.
+export const ago = (str: string,lang: string) => {
+    console.log(str)
+    // Get the current locale
+    const locale = toMomentLocale(lang);
+    // Parse the input string into a moment.js object (assuming the input string is in UTC format)
+    const parsed = moment.utc(str);
+    return parsed.locale(locale).fromNow();
+}
+
+export const toMomentLocale = (locale:string) => {
+    switch(locale){
+        case 'en':
+        case 'de':
+        case 'fr':
+        case 'es':
+        case 'it': return locale;
+        case 'kor': return 'koh';
+        case 'cn': return 'zh';
+        case 'jpn': return 'ja';
+        default: return 'en';
+    }
+}
+
+// async get translation function
+export const getTranslation = async (translate: any, key:string) => {
+    return await translate.get(key).toPromise();
 }
