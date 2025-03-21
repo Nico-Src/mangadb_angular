@@ -1,4 +1,6 @@
 {
+    "__SECTION__NAV & META-DATA__": "",
+
     "language": {
         "label": "Sprache",
         "interface": "Benutzeroberflächen-Sprache",
@@ -10,80 +12,32 @@
         "jpn": "Japanisch",
         "kor": "Koreanisch"
     },
+
     "date": {
         "unknown": "Unbekannt",
         "announced": "Angekündigt"
     },
-    "home": {
-        "trending-series": "Beliebte Serien",
-        "recently-added": "Neu hinzugefügt",
-        "next-releases": "Nächste Veröffentlichungen"
-    },
-    "browse-series":{
-        "search":{
-            "placeholder": "Suche..."
-        },
-        "filter": {
-            "label": "Filter",
-            "reset": "Zurücksetzen",
-            "apply": "Anwenden"
-        },
-        "order": {
-            "name": "Name",
-            "added": "Hinzugefügt"
-        },
-        "view": {
-            "list": "Liste",
-            "columns": "Spalten",
-            "grid": "Grid"
-        }
-    },
-    "settings":{
-        "default": "Standard",
-        "search": {
-            "placeholder": "Suche..."
-        },
-        "category":{
-            "all": "Alle",
-            "appearance": "Aussehen",
-            "account": "Konto",
-            "language": "Sprache",
-            "content": "Inhalt"
-        },
-        "appearance": {
-            "theme": {
-                "title": "Theme",
-                "desc": "Wähle aus verschiedenen Themes, um das Erscheinungsbild unserer Website anzupassen."
-            },
-            "theme_accent": {
-                "title": "Theme Akzent-Farbe",
-                "desc": "Wähle deine eigene Akzent-Farbe um das Erscheinungsbild unserer Website anzupassen."
-            }
-        },
-        "language": {
-            "content": {
-                "title": "Sprache des Inhalts (Serien, Bände, ...)",
-                "desc": "Passe die Sprache der Inhalte an. Wenn eine andere Option als <span class='option'>Benutzeroberflächen-Sprache</span> ausgewählt ist werden Inhalte stattdessen in dieser Sprache geladen wenn verfügbar."
-            }
-        },
-        "content": {
-            "nsfw_mode": {
-                "title": "Anzeige von nicht jugendfreien Inhalten",
-                "desc": "Entscheide welche Inhalte (Suggestiv, Explizit) du sehen können und welche nicht. Um 18+ Inhalte ansehen zu können musst du altersverifiziert sein."
-            }
-        },
-        "nsfw": {
-            "hide-nsfw": "Suggestive (16+) und Explizite (18+) Inhalte verstecken",
-            "show-nsfw": "Suggestive (16+) Inhalte anzeigen",
-            "show-nsfw-18": "Suggestive (16+) und Explizite (18+) Inhalte anzeigen"
-        }
-    },
+
     "theme": {
         "system": "System",
         "light": "Hell",
         "dark": "Dunkel",
         "crimson": "Karmesin"
     },
+
+    "auth": {
+        "username": "Benutzername",
+        "password": "Passwort",
+        "confirm-password": "Passwort bestätigen"
+    },
+
+    "server": {
+        "error": {
+            "connection": "Verbindung zum Server fehlgeschlagen...",
+            "session-expired": "Sitzung abgelaufen..."
+        }
+    },
+
     "title": {
         "home": "Startseite",
         "login": "Anmelden",
@@ -100,6 +54,7 @@
         "privacy": "Datenschutz",
         "imprint": "Impressum"
     },
+
     "sidebar": {
         "home": "Startseite",
         "personal": "Persönlich",
@@ -118,40 +73,7 @@
         "privacy": "Datenschutz",
         "imprint": "Impressum"
     },
-    "dialog": {
-        "confirm": "Bestätigen",
-        "cancel": "Abbrechen",
-        "logout-question": "Willst du dich wirklich abmelden?",
-        "logout-all": "Von allen Geräten abmelden",
-        "logout-success": "Abmeldung erfolgreich"
-    },
-    "auth": {
-        "username": "Benutzername",
-        "password": "Passwort",
-        "confirm-password": "Passwort bestätigen"
-    },
-    "login": {
-        "title": "Anmelden bei MangaDB",
-        "desc": "Melde dich an, um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
-        "with": "Anmelden mit",
-        "success": "Anmeldung erfolgreich",
-        "error": "Anmeldung fehlgeschlagen",
-        "no-account-question": "Noch keinen Account?",
-        "fields-required": "Bitte fülle alle Felder aus"
-    },
-    "register": {
-        "title": "Registrieren bei MangaDB",
-        "desc": "Registriere dich um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
-        "with": "Registrieren mit",
-        "success": "Registrierung erfolgreich",
-        "error": "Registrierung fehlgeschlagen",
-        "already-registered": "Schon registriert?",
-        "fields-required": "Bitte fülle alle Felder aus",
-        "password-mismatch": "Passwörter stimmen nicht überein",
-        "username-taken": "Benutzername bereits vergeben",
-        "invalid-username": "Ungültiger Benutzername ({{min}}-{{max}} Zeichen)",
-        "invalid-password": "Ungültiges Passwort ({{min}}-{{max}} Zeichen)"
-    },
+
     "topbar": {
         "notifications": "Benachrichtigungen",
         "search": {
@@ -168,12 +90,9 @@
             "admin-exit": "Normaler Modus"
         }
     },
-    "server": {
-        "error": {
-            "connection": "Verbindung zum Server fehlgeschlagen...",
-            "session-expired": "Sitzung abgelaufen..."
-        }
-    },
+
+    "__SECTION__CONTENT__": "",
+
     "volume": {
         "type": {
             "manga": "Manga",
@@ -188,6 +107,7 @@
         "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
         "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen."
     },
+
     "series": {
         "no-description": {
             "title": "Keine Beschreibung vorhanden",
@@ -208,16 +128,26 @@
             "Sequel": "Fortsetzungen",
             "Prequel": "Vorgänger",
             "Main-Story": "Hauptgeschichte"
+        },
+        "publishers": "Herausgeber",
+        "aliases": "Andere Titel"
+    },
+
+    "report": {
+        "type": {
+            "wrong-info": "Falsche Informationen",
+            "missing-info": "Fehlende Informationen",
+            "missing-volumes": "Fehlende Bände",
+            "other": "Sonstiges"
+        },
+        "status": {
+            "open": "Offen",
+            "under-review": "In Bearbeitung",
+            "resolved": "Bearbeitet",
+            "refused": "Abgelehnt"
         }
     },
-    "link-dialog": {
-        "title": "Warnung",
-        "desc": "Du wirst zu einer externen Seite weitergeleitet. Der Inhalt wurde zur Zeit des hinzufügens als unbedenklich eingestuft.",
-        "visit": "Besuchen"
-    },
-    "tag-dialog": {
-        "browse": "Durchsuchen..."
-    },
+
     "tags":{
         "category":{
             "genre": "Genre",
@@ -372,5 +302,131 @@
             "yuri": "Romantische Geschichten mit weiblichen Hauptfiguren in Liebesbeziehungen.",
             "zombies": "Geschichten über untote Wesen, Apokalypsen und den Kampf ums Überleben."
         }
+    },
+
+    "__SECTION__PAGES__": "",
+
+    "home": {
+        "trending-series": "Beliebte Serien",
+        "recently-added": "Neu hinzugefügt",
+        "next-releases": "Nächste Veröffentlichungen"
+    },
+
+    "browse-series":{
+        "search":{
+            "placeholder": "Suche..."
+        },
+        "filter": {
+            "label": "Filter",
+            "reset": "Zurücksetzen",
+            "apply": "Anwenden"
+        },
+        "order": {
+            "name": "Name",
+            "added": "Hinzugefügt"
+        },
+        "view": {
+            "list": "Liste",
+            "columns": "Spalten",
+            "grid": "Grid"
+        }
+    },
+
+    "settings":{
+        "default": "Standard",
+        "search": {
+            "placeholder": "Suche..."
+        },
+        "category":{
+            "all": "Alle",
+            "appearance": "Aussehen",
+            "account": "Konto",
+            "language": "Sprache",
+            "content": "Inhalt"
+        },
+        "appearance": {
+            "theme": {
+                "title": "Theme",
+                "desc": "Wähle aus verschiedenen Themes, um das Erscheinungsbild unserer Website anzupassen."
+            },
+            "theme_accent": {
+                "title": "Theme Akzent-Farbe",
+                "desc": "Wähle deine eigene Akzent-Farbe um das Erscheinungsbild unserer Website anzupassen."
+            }
+        },
+        "language": {
+            "content": {
+                "title": "Sprache des Inhalts (Serien, Bände, ...)",
+                "desc": "Passe die Sprache der Inhalte an. Wenn eine andere Option als <span class='option'>Benutzeroberflächen-Sprache</span> ausgewählt ist werden Inhalte stattdessen in dieser Sprache geladen wenn verfügbar."
+            }
+        },
+        "content": {
+            "nsfw_mode": {
+                "title": "Anzeige von nicht jugendfreien Inhalten",
+                "desc": "Entscheide welche Inhalte (Suggestiv, Explizit) du sehen können und welche nicht. Um 18+ Inhalte ansehen zu können musst du altersverifiziert sein."
+            }
+        },
+        "nsfw": {
+            "hide-nsfw": "Suggestive (16+) und Explizite (18+) Inhalte verstecken",
+            "show-nsfw": "Suggestive (16+) Inhalte anzeigen",
+            "show-nsfw-18": "Suggestive (16+) und Explizite (18+) Inhalte anzeigen"
+        }
+    },
+
+    "login": {
+        "title": "Anmelden bei MangaDB",
+        "desc": "Melde dich an, um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
+        "with": "Anmelden mit",
+        "success": "Anmeldung erfolgreich",
+        "error": "Anmeldung fehlgeschlagen",
+        "no-account-question": "Noch keinen Account?",
+        "fields-required": "Bitte fülle alle Felder aus"
+    },
+
+    "register": {
+        "title": "Registrieren bei MangaDB",
+        "desc": "Registriere dich um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
+        "with": "Registrieren mit",
+        "success": "Registrierung erfolgreich",
+        "error": "Registrierung fehlgeschlagen",
+        "already-registered": "Schon registriert?",
+        "fields-required": "Bitte fülle alle Felder aus",
+        "password-mismatch": "Passwörter stimmen nicht überein",
+        "username-taken": "Benutzername bereits vergeben",
+        "invalid-username": "Ungültiger Benutzername ({{min}}-{{max}} Zeichen)",
+        "invalid-password": "Ungültiges Passwort ({{min}}-{{max}} Zeichen)"
+    },
+
+    "__SECTION__DIALOGS__": "",
+    
+    "dialog": {
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen",
+        "logout-question": "Willst du dich wirklich abmelden?",
+        "logout-all": "Von allen Geräten abmelden",
+        "logout-success": "Abmeldung erfolgreich"
+    },
+    
+    "tag-dialog": {
+        "browse": "Durchsuchen..."
+    },
+
+    "report-dialog":{
+        "title": "Problem melden",
+        "view-title": "Gemeldete Probleme",
+        "show-reports": "Meldungen anzeigen",
+        "report": "Melden",
+        "type": "Kategorie",
+        "login-required": "Du musst angemeldet sein um Probleme melden zu können.",
+        "role-required": "Du hast nicht die Rechte um Probleme melden zu können.",
+        "empty-desc": "Die Beschreibung muss ausgefüllt sein.",
+        "success": "Meldung einreicht."
+    },
+
+    "rating-dialog": {
+        "title": "Bewertung",
+        "your": "Deine Bewertung",
+        "delete": "Löschen",
+        "save": "Speichern"
     }
 }

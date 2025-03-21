@@ -1,4 +1,6 @@
 {
+    "__SECTION__NAV & META-DATA__": "",
+
     "language": {
         "label": "Language",
         "interface": "User interface language",
@@ -10,80 +12,32 @@
         "jpn": "Japanese",
         "kor": "Korean"
     },
+
     "date": {
         "unknown": "Unknown",
         "announced": "Announced"
     },
-    "home": {
-        "trending-series": "Trending Series",
-        "recently-added": "Recently Added",
-        "next-releases": "Next Releases"
-    },
-    "browse-series":{
-        "search":{
-            "placeholder": "Search..."
-        },
-        "filter": {
-            "label": "Filter",
-            "reset": "Reset",
-            "apply": "Apply"
-        },
-        "order": {
-            "name": "Name",
-            "added": "Added"
-        },
-        "view": {
-            "list": "List",
-            "columns": "Columns",
-            "grid": "Grid"
-        }
-    },
-    "settings":{
-        "default": "Default",
-        "search": {
-            "placeholder": "Search..."
-        },
-        "category":{
-            "all": "All",
-            "appearance": "Appearance",
-            "account": "Account",
-            "language": "Language",
-            "content": "Content"
-        },
-        "appearance": {
-            "theme": {
-                "title": "Theme",
-                "desc": "Choose from different themes to customize the appearance of our website."
-            },
-            "theme_accent": {
-                "title": "Theme accent color",
-                "desc": "Choose your own accent color to customize the appearance of our website."
-            }
-        },
-        "language": {
-            "content": {
-                "title": "Language of the content (series, volumes, ...)",
-                "desc": "Customize the language of the content. If an option other than <span class='option'>User interface language</span> is selected, content will be loaded in this language instead if available."
-            }
-        },
-        "content": {
-            "nsfw_mode": {
-                "title": "Display of adult content",
-                "desc": "Decide which content (suggestive, explicit) you want to see and which not. To view 18+ content you must be age-verified."
-            }
-        },
-        "nsfw": {
-            "hide-nsfw": "Hide suggestive (16+) and explicit (18+) content",
-            "show-nsfw": "Show suggestive (16+) content",
-            "show-nsfw-18": "Show suggestive (16+) and explicit (18+) content"
-        }
-    },
+
     "theme": {
         "system": "System",
         "light": "Light",
         "dark": "Dark",
         "crimson": "Crimson"
     },
+
+    "auth": {
+        "username": "Username",
+        "password": "Password",
+        "confirm-password": "Confirm password"
+    },
+
+    "server": {
+        "error": {
+            "connection": "Connection to server failed...",
+            "session-expired": "Session expired..."
+        }
+    },
+
     "title": {
         "home": "Home",
         "login": "Login",
@@ -100,6 +54,7 @@
         "privacy": "Privacy",
         "imprint": "Imprint"
     },
+
     "sidebar": {
         "home": "Home",
         "personal": "Personal",
@@ -118,40 +73,7 @@
         "privacy": "Privacy",
         "imprint": "Imprint"
     },
-    "dialog": {
-        "confirm": "Confirm",
-        "cancel": "Cancel",
-        "logout-question": "Do you really want to logout?",
-        "logout-all": "Logout from all devices",
-        "logout-success": "Logout successful"
-    },
-    "auth": {
-        "username": "Username",
-        "password": "Password",
-        "confirm-password": "Confirm password"
-    },
-    "login": {
-        "title": "Login to MangaDB",
-        "desc": "Login to manage your collection, reading history and much more. Become a part of the community",
-        "with": "Login with",
-        "success": "Successfully logged in",
-        "error": "Login failed",
-        "no-account-question": "No account yet?",
-        "fields-required": "Please fill in all fields"
-    },
-    "register": {
-        "title": "Register to MangaDB",
-        "desc": "Register to manage your collection, reading history and much more. Become a part of the community",
-        "with": "Register with",
-        "success": "Successfully registered",
-        "error": "Registration failed",
-        "already-registered": "Already registered?",
-        "fields-required": "Please fill in all fields",
-        "password-mismatch": "Passwords do not match",
-        "username-taken": "Username already taken",
-        "invalid-username": "Invalid username ({{min}}-{{max}} characters)",
-        "invalid-password": "Invalid password ({{min}}-{{max}} characters)"
-    },
+
     "topbar": {
         "notifications": "Notifications",
         "search": {
@@ -168,12 +90,9 @@
             "admin-exit": "Normal mode"
         }
     },
-    "server": {
-        "error": {
-            "connection": "Connection to server failed...",
-            "session-expired": "Session expired..."
-        }
-    },
+
+    "__SECTION__CONTENT__": "",
+
     "volume": {
         "type": {
             "manga": "Manga",
@@ -188,6 +107,7 @@
         "nsfw-hint": "This cover has 16+ content. Enable it in settings to view.",
         "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view."
     },
+
     "series": {
         "no-description": {
             "title": "No description available",
@@ -208,16 +128,26 @@
             "Sequel": "Sequels",
             "Prequel": "Prequels",
             "Main-Story": "Main-Story"
+        },
+        "publishers": "Publishers",
+        "aliases": "Other Titles"
+    },
+
+    "report": {
+        "type": {
+            "wrong-info": "Wrong Information",
+            "missing-info": "Missing Information",
+            "missing-volumes": "Missing Volumes",
+            "other": "Other"
+        },
+        "status": {
+            "open": "Open",
+            "under-review": "Under Review",
+            "resolved": "Resolved",
+            "refused": "Refused"
         }
     },
-    "link-dialog": {
-        "title": "Warning",
-        "desc": "You will be redirected to an external site. The content may not be safe to view at this time.",
-        "visit": "Visit"
-    },
-    "tag-dialog": {
-        "browse": "Browse..."
-    },
+
     "tags":{
         "category":{
             "genre": "Genre",
@@ -372,5 +302,137 @@
             "yuri": "Romantic stories with female main characters in romantic relationships.",
             "zombies": "Stories about undead creatures, apocalypses and the fight for survival."
         }
+    },
+
+    "__SECTION__PAGES__": "",
+
+    "home": {
+        "trending-series": "Trending Series",
+        "recently-added": "Recently Added",
+        "next-releases": "Next Releases"
+    },
+
+    "browse-series":{
+        "search":{
+            "placeholder": "Search..."
+        },
+        "filter": {
+            "label": "Filter",
+            "reset": "Reset",
+            "apply": "Apply"
+        },
+        "order": {
+            "name": "Name",
+            "added": "Added"
+        },
+        "view": {
+            "list": "List",
+            "columns": "Columns",
+            "grid": "Grid"
+        }
+    },
+
+    "settings":{
+        "default": "Default",
+        "search": {
+            "placeholder": "Search..."
+        },
+        "category":{
+            "all": "All",
+            "appearance": "Appearance",
+            "account": "Account",
+            "language": "Language",
+            "content": "Content"
+        },
+        "appearance": {
+            "theme": {
+                "title": "Theme",
+                "desc": "Choose from different themes to customize the appearance of our website."
+            },
+            "theme_accent": {
+                "title": "Theme accent color",
+                "desc": "Choose your own accent color to customize the appearance of our website."
+            }
+        },
+        "language": {
+            "content": {
+                "title": "Language of the content (series, volumes, ...)",
+                "desc": "Customize the language of the content. If an option other than <span class='option'>User interface language</span> is selected, content will be loaded in this language instead if available."
+            }
+        },
+        "content": {
+            "nsfw_mode": {
+                "title": "Display of adult content",
+                "desc": "Decide which content (suggestive, explicit) you want to see and which not. To view 18+ content you must be age-verified."
+            }
+        },
+        "nsfw": {
+            "hide-nsfw": "Hide suggestive (16+) and explicit (18+) content",
+            "show-nsfw": "Show suggestive (16+) content",
+            "show-nsfw-18": "Show suggestive (16+) and explicit (18+) content"
+        }
+    },
+
+    "login": {
+        "title": "Login to MangaDB",
+        "desc": "Login to manage your collection, reading history and much more. Become a part of the community",
+        "with": "Login with",
+        "success": "Successfully logged in",
+        "error": "Login failed",
+        "no-account-question": "No account yet?",
+        "fields-required": "Please fill in all fields"
+    },
+
+    "register": {
+        "title": "Register to MangaDB",
+        "desc": "Register to manage your collection, reading history and much more. Become a part of the community",
+        "with": "Register with",
+        "success": "Successfully registered",
+        "error": "Registration failed",
+        "already-registered": "Already registered?",
+        "fields-required": "Please fill in all fields",
+        "password-mismatch": "Passwords do not match",
+        "username-taken": "Username already taken",
+        "invalid-username": "Invalid username ({{min}}-{{max}} characters)",
+        "invalid-password": "Invalid password ({{min}}-{{max}} characters)"
+    },
+
+    "__SECTION__DIALOGS__": "",
+
+    "dialog": {
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "logout-question": "Do you really want to logout?",
+        "logout-all": "Logout from all devices",
+        "logout-success": "Logout successful"
+    },
+    
+    "link-dialog": {
+        "title": "Warning",
+        "desc": "You will be redirected to an external site. The content may not be safe to view at this time.",
+        "visit": "Visit"
+    },
+
+    "tag-dialog": {
+        "browse": "Browse..."
+    },
+
+    "report-dialog":{
+        "title": "Report Problem",
+        "view-title": "Reported Problems",
+        "show-reports": "Show Reports",
+        "report": "Melden",
+        "type": "Type",
+        "login-required": "You must be logged in to report problems",
+        "role-required": "You don't have the permission to report problems.",
+        "empty-desc": "The description must not be empty.",
+        "success": "Report added."
+    },
+    
+    "rating-dialog": {
+        "title": "Rating",
+        "your": "Your Rating",
+        "delete": "Delete",
+        "save": "Save"
     }
 }
