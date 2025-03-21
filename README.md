@@ -12,6 +12,12 @@ MangaDB is an Angular-based application designed to provide a structured and int
 ![LOC Badge](https://tokei.rs/b1/github/Nico-Src/mangadb_angular)
 ![License Badge](https://img.shields.io/github/license/Nico-Src/mangadb_angular)
 
+## Localization
+
+[![Crowdin](https://badges.crowdin.net/mangadb/localized.svg)](https://crowdin.com/project/mangadb)
+
+Help localize the web app by translating the texts into your language.
+
 ## Features
 
 - **Authentication System**
