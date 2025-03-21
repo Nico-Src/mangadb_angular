@@ -32,6 +32,10 @@
     },
 
     "server": {
+        "status": {
+            "error": "Fehler",
+            "success": "Erfolg"
+        },
         "error": {
             "connection": "Verbindung zum Server fehlgeschlagen...",
             "session-expired": "Sitzung abgelaufen..."
@@ -62,7 +66,7 @@
         "reading-history": "Leseverlauf",
         "lists": "Listen",
         "settings": "Einstellungen",
-        "contents": "Inhalte",
+        "content": "Inhalte",
         "browse-series": "Serien durchsuchen...",
         "browse-publishers": "Verlage durchsuchen...",
         "random-series": "Zufällige Serie",
