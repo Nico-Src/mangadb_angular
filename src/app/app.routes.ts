@@ -4,12 +4,12 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { CollectionComponent } from './pages/collection/collection.component';
 import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
-import { AdminGuard } from '../guards/adminGuard';
+import { RoleGuard } from '../guards/roleGuard';
 import { AuthGuard } from '../guards/authGuard';
 import { BrowseSeriesComponent } from './pages/browse-series/browse-series.component';
 import { SeriesDetailComponent } from './pages/series-detail/series-detail.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { EmptyComponent } from './pages/empty/empty.component';
+import { UserRole } from '../models/user';
 
 export const routes: Routes = [
     {
@@ -50,7 +50,10 @@ export const routes: Routes = [
     {
         path: 'admin/dashboard',
         component: DashboardComponent,
-        canActivate: [AdminGuard],
+        canActivate: [RoleGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
     },
     // auto redirect
     { 
