@@ -90,14 +90,19 @@
             "login": "Login",
             "register": "Register",
             "logout": "Logout",
-            "admin-enter": "Admin mode",
-            "admin-exit": "Normal mode"
+            "admin-view": "Admin-View",
+            "user-view": "User-View"
         }
     },
 
     "__SECTION__CONTENT__": "",
 
     "volume": {
+        "nsfw-hint": "This cover has 16+ content. Enable it in settings to view.",
+        "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view."
+    },
+
+    "series": {
         "type": {
             "manga": "Manga",
             "novel": "Novel",
@@ -105,14 +110,6 @@
             "manhua": "Manhua",
             "other": "Other"
         },
-        "pages": {
-            "unknown": "Unknown"
-        },
-        "nsfw-hint": "This cover has 16+ content. Enable it in settings to view.",
-        "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view."
-    },
-
-    "series": {
         "no-description": {
             "title": "No description available",
             "desc": "There is no description for this series yet. Do you have an idea? Share your knowledge with the community and help us make MangaDB even better!"
@@ -128,13 +125,33 @@
         "special-editions": "Special Editions",
         "relations": "Related Series",
         "relation": {
-            "Spin-Off": "Spin-Offs",
-            "Sequel": "Sequels",
-            "Prequel": "Prequels",
-            "Main-Story": "Main-Story"
+            "spin-off": "Spin-Offs",
+            "sequel": "Sequels",
+            "prequel": "Prequels",
+            "main-story": "Main-Story",
+            "alternate-version": "Alternate-Version"
         },
         "publishers": "Publishers",
+        "contributors": "Contributors",
         "aliases": "Other Titles"
+    },
+
+    "contributor":{
+        "artist-female": "Artist",
+        "artist-male": "Artist",
+        "artist-unknown": "Artist",
+        "author-female": "Author",
+        "author-male": "Author",
+        "author-unknown": "Author",
+        "artist/author-female": "Artist & Author",
+        "artist/author-male": "Artist & Author",
+        "artist/author-unknown": "Artist & Author",
+        "character designer-female": "Character Designer",
+        "character designer-male": "Character Designer",
+        "character designer-unknown": "Character Designer",
+        "original creator-female": "Original Creator",
+        "original creator-male": "Original Creator",
+        "original creator-unknown": "Original Creator"
     },
 
     "report": {
@@ -148,7 +165,7 @@
             "open": "Open",
             "under-review": "Under Review",
             "resolved": "Resolved",
-            "refused": "Refused"
+            "refused": "Dismissed"
         }
     },
 
@@ -200,13 +217,13 @@
         "mafia": "Mafia",
         "magic": "Magic",
         "manga": "Manga",
-        "manwha": "Manwha",
+        "manwha": "Manhwa",
         "manhua": "Manhua",
         "novel": "Novel",
         "other": "Other",
         "military": "Military",
         "monster girls": "Monster Girls",
-        "monsters": "Monster",
+        "monsters": "Monsters",
         "music": "Music",
         "mystery": "Mystery",
         "ninja": "Ninja",
@@ -328,11 +345,6 @@
         "order": {
             "name": "Name",
             "added": "Added"
-        },
-        "view": {
-            "list": "List",
-            "columns": "Columns",
-            "grid": "Grid"
         }
     },
 

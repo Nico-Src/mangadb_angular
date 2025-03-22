@@ -90,14 +90,19 @@
             "login": "Anmelden",
             "register": "Registrieren",
             "logout": "Abmelden",
-            "admin-enter": "Admin-Modus",
-            "admin-exit": "Normaler Modus"
+            "admin-view": "Admin-Ansicht",
+            "user-view": "Nutzer-Ansicht"
         }
     },
 
     "__SECTION__CONTENT__": "",
 
     "volume": {
+        "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
+        "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen."
+    },
+
+    "series": {
         "type": {
             "manga": "Manga",
             "novel": "Roman",
@@ -105,14 +110,6 @@
             "manhua": "Manhua",
             "other": "Andere"
         },
-        "pages": {
-            "unknown": "Unbekannt"
-        },
-        "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
-        "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen."
-    },
-
-    "series": {
         "no-description": {
             "title": "Keine Beschreibung vorhanden",
             "desc": "Zu dieser Serie gibt es noch keine Beschreibung. Hast du eine Idee? Teile dein Wissen mit der Community und hilf uns, MangaDB noch besser zu machen!"
@@ -128,13 +125,33 @@
         "special-editions": "Spezialausgaben",
         "relations": "Verwandte Serien",
         "relation": {
-            "Spin-Off": "Spin-Offs",
-            "Sequel": "Fortsetzungen",
-            "Prequel": "Vorgänger",
-            "Main-Story": "Hauptgeschichte"
+            "spin-off": "Spin-Offs",
+            "sequel": "Fortsetzungen",
+            "prequel": "Vorgänger",
+            "main-Story": "Hauptgeschichte",
+            "alternate-version": "Alternative-Version"
         },
         "publishers": "Herausgeber",
+        "contributors": "Mitwirkende",
         "aliases": "Andere Titel"
+    },
+
+    "contributor":{
+        "artist-female": "Zeichnerin",
+        "artist-male": "Zeichner",
+        "artist-unknown": "Zeichner*in",
+        "author-female": "Autorin",
+        "author-male": "Autor",
+        "author-unknown": "Autor*in",
+        "artist/author-female": "Zeichnerin & Autorin",
+        "artist/author-male": "Zeichner & Autor",
+        "artist/author-unknown": "Zeichner*in & Autor*in",
+        "character designer-female": "Charakterdesignerin",
+        "character designer-male": "Charakterdesigner",
+        "character designer-unknown": "Charakterdesigner*in",
+        "original creator-female": "Originale Schöpferin",
+        "original creator-male": "Originaler Schöpfer",
+        "original creator-unknown": "Originale*r Schöpfer*in"
     },
 
     "report": {
@@ -200,7 +217,7 @@
         "mafia": "Mafia",
         "magic": "Magie",
         "manga": "Manga",
-        "manwha": "Manwha",
+        "manwha": "Manhwa",
         "manhua": "Manhua",
         "novel": "Roman",
         "other": "Andere",
@@ -328,11 +345,6 @@
         "order": {
             "name": "Name",
             "added": "Hinzugefügt"
-        },
-        "view": {
-            "list": "Liste",
-            "columns": "Spalten",
-            "grid": "Grid"
         }
     },
 
