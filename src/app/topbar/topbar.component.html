@@ -31,7 +31,7 @@
                 <ng-container *ngFor="let result of results; let i = index;">
                     <a class="search-result">
                         <div class="search-result-name" [innerHTML]="highlightSearch(result.name)"></div>
-                        <div class="search-result-type">{{ `volume.type.${result.type.toLowerCase()}` | translate }}</div>
+                        <div class="search-result-type">{{ `series.type.${result.type.toLowerCase()}` | translate }}</div>
                     </a>
                     <div class="search-result-divider" *ngIf="i < results.length - 1"></div>
                 </ng-container>
@@ -74,7 +74,7 @@
         </div>
         <div class="login-wrapper logged-in" *ngIf="loggedIn()">
             <button size="s" tuiButton type="button" class="logout" appearance="accent" (click)="showLogout = true;"><tui-icon icon="@tui.log-out" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ 'topbar.profile.logout' | translate }}</button>
-            <button *ngIf="user().role === 'Admin'" size="s" tuiButton type="button" class="switch-mode" appearance="accent" (click)="adminDashboard()"><tui-icon icon="@tui.key" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ sidebar.isInAdminArea() ? ('topbar.profile.admin-exit' | translate) : ('topbar.profile.admin-enter' | translate) }}</button>
+            <button *ngIf="user().role === UserRole.ADMIN" size="s" tuiButton type="button" class="switch-mode" appearance="accent" (click)="adminDashboard()"><tui-icon icon="@tui.key" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ sidebar.isInAdminArea() ? ('topbar.profile.admin-view' | translate) : ('topbar.profile.user-view' | translate) }}</button>
         </div>
     </div>
 </div>

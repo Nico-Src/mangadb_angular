@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, ViewChild } from '@angular/core';
-import { CONFIG, CDN_BASE, API_BASE, LANGS, errorAlert, successAlert } from '../../globals';
+import { CONFIG, CDN_BASE, API_BASE, LANGS, errorAlert, successAlert, getTranslation } from '../../globals';
 import { AuthService } from '../../services/auth.service';
 import { NgIf, NgForOf } from '@angular/common';
 import { TuiButton, TuiHint, TuiTextfield, TuiLoader, TUI_ALERT_POSITION, TuiAlertService, TuiDataList, TuiIcon, TuiIconPipe } from '@taiga-ui/core';
@@ -17,6 +17,7 @@ import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
 import { SideBarService } from '../../services/sidebar.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerLanguage } from '@ng-icons/tabler-icons';
+import { UserRole } from '../../models/user';
 
 @Component({
     selector: 'top-bar',
@@ -35,6 +36,7 @@ import { tablerLanguage } from '@ng-icons/tabler-icons';
 export class TopBar {
     private readonly alerts = inject(TuiAlertService);
     private readonly auth = inject(AuthService);
+    readonly UserRole = UserRole;
     readonly version = CONFIG.version;
     readonly cdn_base = CDN_BASE;
     readonly user = computed(() => this.auth.getUser());
@@ -155,10 +157,10 @@ export class TopBar {
             // process errors
             if(err.status === 0){ // connection error
                 this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Server Error (Code: ${err.status})`);
+                    errorAlert(this.alerts, res, undefined , this.translate);
                 });
             } else { // other error
-                errorAlert(this.alerts, JSON.stringify(err), `Server Error (Code: ${err.status})`);
+                errorAlert(this.alerts, JSON.stringify(err), undefined , this.translate);
             }
             // clear results and stop loading indicator
             this.searchLoading = false;
@@ -189,25 +191,23 @@ export class TopBar {
         this.showLogout = false;
 
         // send request to api
-        this.http.post(`${API_BASE}/auth/logout`, {fromAllDevices: this.logoutAll}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe((res: any) => {
+        this.http.post(`${API_BASE}/auth/logout`, {fromAllDevices: this.logoutAll}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe(async (res: any) => {
             // delete cookie
             this.cookieService.delete('auth_session','/');
             // clear auth state
             this.auth.setLoggedIn(false);
             this.auth.setUser(this.auth.nullUser);
-            this.translate.get(_('dialog.logout-success')).subscribe((res: any) => {
-                successAlert(this.alerts,res);
-            });
+            const msg = await getTranslation(this.translate,'dialog.logout-success');
+            successAlert(this.alerts,msg,undefined,this.translate);
             // redirect to login
             this.router.navigate(['/login']);
-        }, (err: any) => {
+        }, async (err: any) => {
             // process errors
             if(err.status === 0){ // connection error
-                this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate,'server.error.connection');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else { // other error
-                errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
             }
         });
     }
