@@ -8,7 +8,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerHome, tablerBrush, tablerUser, tablerLanguage, tablerWallpaper, tablerCheck } from '@ng-icons/tabler-icons';
 import { AuthService } from '../../../services/auth.service';
-import { API_BASE, DEFAULT_SETTINGS, THEMES, hexToRGB, LANGS, NSFW_SETTINGS } from '../../../globals';
+import { API_BASE, DEFAULT_SETTINGS, THEMES, hexToRGB, LANGS, NSFW_SETTINGS, getTranslation } from '../../../globals';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiInputColorModule, TuiInputModule, TuiTextfieldControllerModule, TuiSelectModule } from '@taiga-ui/legacy';
@@ -97,15 +97,10 @@ export class SettingsComponent {
     // check if setting is visible
     async checkSettingVisibility(key:string, sub_key:string){
         // get title and description (translated)
-        const title = await this.getTranslation(`settings.${key}.${sub_key}.title`);
-        const description = await this.getTranslation(`settings.${key}.${sub_key}.desc`);
+        const title = await getTranslation(this.translate,`settings.${key}.${sub_key}.title`);
+        const description = await getTranslation(this.translate,`settings.${key}.${sub_key}.desc`);
         // check if setting is visible (based on category and searched term)
         return (this.selectedCategory === "all" || this.selectedCategory === key) && (title.toLowerCase().includes(this.search.toLowerCase()) || description.toLowerCase().includes(this.search.toLowerCase()));
-    }
-
-    // async get translation function
-    async getTranslation(key:string){
-        return await this.translate.get(key).toPromise();
     }
 
     // select theme
