@@ -392,7 +392,6 @@
     "login": {
         "title": "Anmelden bei MangaDB",
         "desc": "Melde dich an, um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
-        "with": "Anmelden mit",
         "success": "Anmeldung erfolgreich",
         "error": "Anmeldung fehlgeschlagen",
         "no-account-question": "Noch keinen Account?",
@@ -402,7 +401,6 @@
     "register": {
         "title": "Registrieren bei MangaDB",
         "desc": "Registriere dich um deine Sammlung, deine Leseverlauf und noch vieles mehr zu verwalten. Werde ein Teil der Community",
-        "with": "Registrieren mit",
         "success": "Registrierung erfolgreich",
         "error": "Registrierung fehlgeschlagen",
         "already-registered": "Schon registriert?",

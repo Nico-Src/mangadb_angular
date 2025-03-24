@@ -392,7 +392,6 @@
     "login": {
         "title": "Login to MangaDB",
         "desc": "Login to manage your collection, reading history and much more. Become a part of the community",
-        "with": "Login with",
         "success": "Successfully logged in",
         "error": "Login failed",
         "no-account-question": "No account yet?",
@@ -402,7 +401,6 @@
     "register": {
         "title": "Register to MangaDB",
         "desc": "Register to manage your collection, reading history and much more. Become a part of the community",
-        "with": "Register with",
         "success": "Successfully registered",
         "error": "Registration failed",
         "already-registered": "Already registered?",
@@ -437,7 +435,7 @@
         "title": "Report Problem",
         "view-title": "Reported Problems",
         "show-reports": "Show Reports",
-        "report": "Melden",
+        "report": "Report",
         "type": "Type",
         "login-required": "You must be logged in to report problems",
         "role-required": "You don't have the permission to report problems.",
