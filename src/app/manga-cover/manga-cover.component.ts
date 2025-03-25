@@ -1,12 +1,12 @@
 import { Component, Input, signal } from '@angular/core';
-import { CDN_BASE, DEFAULT_SETTINGS } from '../../globals';
+import { CDN_BASE } from '../../globals';
 import { NgIf } from '@angular/common';
 import { TuiImgLazyLoading } from '@taiga-ui/kit';
 import { TuiSkeleton } from '@taiga-ui/kit';
 import { AuthService } from '../../services/auth.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerRating16Plus, tablerRating18Plus } from '@ng-icons/tabler-icons';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'manga-cover',
@@ -17,7 +17,7 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 })
 export class MangaCover {
     readonly cdn_base = CDN_BASE;
-    constructor(private auth: AuthService, private translate: TranslateService){}
+    constructor(private auth: AuthService){}
     loading = true;
     @Input() id: number = -1;
     @Input() fit: string = 'default';

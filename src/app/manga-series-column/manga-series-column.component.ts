@@ -1,19 +1,15 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { CDN_BASE, readableDate, langToLocale, ANNOUNCED_DATE, UNKNOWN_DATE, isDateInFuture } from '../../globals';
+import { Component, Input } from '@angular/core';
+import { CDN_BASE, langToLocale } from '../../globals';
 import { NgIf, NgFor } from '@angular/common';
-import { TuiImgLazyLoading, TuiFade } from '@taiga-ui/kit';
-import { TuiSkeleton } from '@taiga-ui/kit';
 import { MangaCover } from '../manga-cover/manga-cover.component';
-import { TuiIcon } from '@taiga-ui/core';
-import { NgIcon, provideIcons } from '@ng-icons/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TuiFade } from '@taiga-ui/kit';
 
 @Component({
     selector: 'manga-series-column',
     imports: [MangaCover, NgIf, NgFor, TranslatePipe, TuiFade],
     templateUrl: './manga-series-column.component.html',
     styleUrl: './manga-series-column.component.less',
-    viewProviders: [provideIcons({  })]
 })
 export class MangaSeriesColumnComponent {
     readonly cdn_base = CDN_BASE;
@@ -21,18 +17,12 @@ export class MangaSeriesColumnComponent {
     @Input() series:any = {};
     @Input() search:any = "";
 
-    constructor(private translate: TranslateService){}
-
     ngOnInit(){
         // seperate tags
         this.series.contentTypeTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-type');
         this.series.contentRatingTags = this.series.tags.filter((t: { type: string; name: string; }) => t.type == 'content-rating' && t.name != 'Safe' && t.name);
         this.series.contentWarningTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
         this.series.otherTags = this.series.tags.filter((t: { type: string; }) => t.type != 'publication-status' && t.type != 'origin-country' && t.type != 'language' && t.type != 'content-rating' && t.type != 'content-warning' && t.type != 'content-type');
-    }
-
-    ngOnChanges(){
-        
     }
 
     // highlight search term in given text

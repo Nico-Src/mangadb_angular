@@ -1,10 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { CDN_BASE, readableDate, langToLocale, ANNOUNCED_DATE, UNKNOWN_DATE, isDateInFuture } from '../../globals';
 import { NgIf } from '@angular/common';
-import { TuiImgLazyLoading } from '@taiga-ui/kit';
-import { TuiSkeleton } from '@taiga-ui/kit';
 import { MangaCover } from '../manga-cover/manga-cover.component';
-import { TuiIcon } from '@taiga-ui/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { solarNotebook, solarCalendar } from '@ng-icons/solar-icons/outline';
 import { lucideLibrary } from '@ng-icons/lucide';

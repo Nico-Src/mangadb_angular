@@ -1,19 +1,15 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { CDN_BASE, readableDate, langToLocale, ANNOUNCED_DATE, UNKNOWN_DATE, isDateInFuture } from '../../globals';
+import { Component, Input } from '@angular/core';
+import { CDN_BASE, langToLocale } from '../../globals';
 import { NgIf, NgFor } from '@angular/common';
-import { TuiImgLazyLoading, TuiFade } from '@taiga-ui/kit';
-import { TuiSkeleton } from '@taiga-ui/kit';
 import { MangaCover } from '../manga-cover/manga-cover.component';
-import { TuiIcon } from '@taiga-ui/core';
-import { NgIcon, provideIcons } from '@ng-icons/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TuiFade } from '@taiga-ui/kit';
 
 @Component({
     selector: 'manga-series-list',
     imports: [MangaCover, NgIf, NgFor, TranslatePipe, TuiFade],
     templateUrl: './manga-series-list.component.html',
     styleUrl: './manga-series-list.component.less',
-    viewProviders: [provideIcons({  })]
 })
 export class MangaSeriesListComponent {
     readonly cdn_base = CDN_BASE;

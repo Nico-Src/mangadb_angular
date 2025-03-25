@@ -1,5 +1,4 @@
-import { Component, ElementRef, HostListener, Input, signal, ViewChild } from '@angular/core';
-import { CDN_BASE, DEFAULT_SETTINGS } from '../../globals';
+import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { solarLinkBold } from '@ng-icons/solar-icons/bold';
@@ -17,22 +16,21 @@ export class LinkWarnDialog {
     constructor(private auth: AuthService, private translate: TranslateService, private el: ElementRef){}
     @Input() link: string = "";
     show = false;
-    @ViewChild('window') window: any
+    @ViewChild('window') window: any;
 
-    ngOnInit(){
-
-    }
-
+    // open dialog
     public showDialog(){
         this.show = true;
     }
 
     @HostListener('click', ['$event']) onDocumentClick(event: MouseEvent) {
+        // close dialog if target is backdrop of dialog
         if (event.target === this.el.nativeElement) {
             this.show = false;
         }
     }
 
+    // open current link
     openLink(){
         this.show = false;
         window.open(this.link, '_blank')?.focus();

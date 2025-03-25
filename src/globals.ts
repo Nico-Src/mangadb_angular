@@ -86,11 +86,13 @@ export const reportStatuses = [
     {key: 'refused', name: 'Refused'}
 ];
 
+// show error alert
 export const errorAlert = async (alerts: TuiAlertService, message: string, label: string = 'server.status.error', translate: any): Promise<void> => {
     const translatedLabel = await getTranslation(translate, label);
     alerts.open(message, {label: translatedLabel, appearance: 'negative'}).subscribe();
 }
 
+// show success alert
 export const successAlert = async (alerts: TuiAlertService, message: string, label: string = 'server.status.success', translate: any): Promise<void> => {
     const translatedLabel = await getTranslation(translate, label);
     alerts.open(message, {label: translatedLabel, appearance: 'positive'}).subscribe();
@@ -134,6 +136,7 @@ export const readableDatetime = (str: string,loc: string) => {
     return parsed.locale(locale).format(dateTimeFormats.find(f => f.locale === locale)?.format || 'en');
 }
 
+// convert language to locale
 export const langToLocale = (lang:string) => {
     switch(lang){
         case "German": return "de";
@@ -148,6 +151,7 @@ export const langToLocale = (lang:string) => {
     }
 }
 
+// convert locale to language
 export const localeToLang = (locale:string) => {
     switch(locale){
         case "de": return "German";
@@ -162,6 +166,7 @@ export const localeToLang = (locale:string) => {
     }
 }
 
+// check if date is in future
 export const isDateInFuture = (date: string) => {
     return moment(date).isAfter(moment(new Date));
 }
@@ -176,6 +181,7 @@ export const ago = (str: string,lang: string) => {
     return parsed.locale(locale).fromNow();
 }
 
+// convert locale to moment locale code
 export const toMomentLocale = (locale:string) => {
     switch(locale){
         case 'en':
