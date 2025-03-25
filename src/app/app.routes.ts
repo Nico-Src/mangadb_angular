@@ -21,21 +21,25 @@ export const routes: Routes = [
         path: 'login',
         component: LoginComponent,
         canActivate: [AuthGuard],
+        data: { loggedInRedirect: '/' }
     },
     {
         path: 'register',
         component: RegisterComponent,
         canActivate: [AuthGuard],
+        data: { loggedInRedirect: '/' }
     },
     {
         path: 'collection',
         component: CollectionComponent,
         canActivate: [AuthGuard],
+        data: { requiresLogin: true }
     },
     {
         path: 'settings',
         component: SettingsComponent,
         canActivate: [AuthGuard],
+        data: { requiresLogin: true }
     },
     {
         path: 'browse-series',

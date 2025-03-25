@@ -28,7 +28,11 @@
     "auth": {
         "username": "Username",
         "password": "Password",
-        "confirm-password": "Confirm password"
+        "confirm-password": "Confirm password",
+        "requires-login": {
+            "collection": "Managing your collection requires you be logged in.",
+            "settings": "Managing your settings requires you be logged in."
+        }
     },
 
     "server": {

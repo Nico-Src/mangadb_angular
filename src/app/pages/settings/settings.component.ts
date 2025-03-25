@@ -25,7 +25,8 @@ import { APIService, HttpMethod } from '../../../services/api.service';
 })
 export class SettingsComponent {
     private readonly api = inject(APIService);
-    private auth = inject(AuthService);
+    private readonly auth = inject(AuthService);
+    isLoggedIn = computed(() => this.auth.isLoggedIn);
     readonly availableThemes = THEMES;
     readonly colorMask = {mask: ['#', ...new Array(6).fill(/[0-9a-f]/i)]};
     readonly theme = computed(() => this.auth.theme());

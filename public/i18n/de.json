@@ -28,7 +28,11 @@
     "auth": {
         "username": "Benutzername",
         "password": "Passwort",
-        "confirm-password": "Passwort bestätigen"
+        "confirm-password": "Passwort bestätigen",
+        "requires-login": {
+            "collection": "Du musst angemeldet sein, um deine Sammlung zu verwalten.",
+            "settings": "Du musst angemeldet sein, um deine Einstellungen zu verwalten."
+        }
     },
 
     "server": {
