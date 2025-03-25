@@ -1,16 +1,17 @@
-import { TUI_ALERT_POSITION, TuiAlertContext, TuiAlertService, TuiRoot, TuiScrollbar } from "@taiga-ui/core";
-import { Component, computed, inject, signal, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { TUI_ALERT_POSITION, TuiAlertService, TuiRoot } from "@taiga-ui/core";
+import { Component, computed, inject, ViewChild } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { SideBar } from "./sidebar/sidebar.component";
 import { TopBar } from "./topbar/topbar.component";
-import { API_BASE, DEFAULT_SETTINGS, CONFIG, LANGS, errorAlert, hexToRGB } from "../globals";
-import { HttpClient } from "@angular/common/http";
+import { DEFAULT_SETTINGS, CONFIG, LANGS, errorAlert, hexToRGB, getTranslation } from "../globals";
 import { CookieService } from "ngx-cookie-service";
 import { AuthService } from "../services/auth.service";
 // @ts-ignore
 import { pSBC, Color, Solver } from '../libs/filterTint.js';
 import { TranslateService, _ } from "@ngx-translate/core";
 import { SideBarService } from "../services/sidebar.service";
+import { APIService, HttpMethod } from "../services/api.service";
+import { User } from "../models/user";
 
 @Component({
     standalone: true,
@@ -27,52 +28,48 @@ import { SideBarService } from "../services/sidebar.service";
 })
 
 export class AppComponent {
-    private readonly auth = inject(AuthService);
-    private readonly alerts = inject(TuiAlertService);
+    private readonly api:APIService = inject(APIService);
+    private readonly auth:AuthService = inject(AuthService);
+    private readonly alerts:TuiAlertService = inject(TuiAlertService);
 
     theme = computed(() => this.auth.theme());
     @ViewChild('main') main:any;
 
-    constructor(private http:HttpClient, private cookieService:CookieService, private translate: TranslateService, public sidebar: SideBarService) {
+    constructor(private cookie:CookieService, private translate: TranslateService, public sidebar: SideBarService) {
         // setup languages
         this.translate.addLangs(LANGS.map(l => l.value));
         // set default locale
         this.translate.setDefaultLang(CONFIG.default_locale);
         // set locale (based on cookie, if user already selected a language) or default
-        this.translate.use(this.cookieService.get('language') || CONFIG.default_locale);
+        this.translate.use(this.cookie.get('language') || CONFIG.default_locale);
     }
 
     ngOnInit(): void {
         // get session cookie
-        const session_id = this.cookieService.get('auth_session');
+        const session_id = this.auth.getSessionCookie();
         // return if there is no session
         if(!session_id){
             this.calcFilterTint();
             document.body.classList.add(DEFAULT_SETTINGS['theme']);
             return;
         }
-        // else send validation request with session token
-        const header = "Bearer " + session_id;
-        this.http.post(`${API_BASE}/auth/session`, {}, { headers: { 'Authorization': header } }).subscribe((res: any) => {
+        this.api.request<User>(HttpMethod.POST, 'auth/session', {}, 'json').subscribe((user:User)=>{
             // set auth state
-            this.auth.setUser(res);
+            this.auth.setUser(user);
             this.auth.setLoggedIn(true);
             // calc filter tint
             this.calcFilterTint();
-            document.body.classList.add(res.settings.theme);
-            this.auth.setTheme(res.settings.theme);
-        }, (err: any) => {
-            // process errors
+            document.body.classList.add(user.settings.theme);
+            this.auth.setTheme(user.settings.theme);
+        }, async (err:any)=>{
             if(err.status === 0){ // connection error
-                this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'server.error.connection');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else if(err.status === 440){ // session expired
-                this.translate.get(_('server.error.session-expired')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'server.error.connection');
+                errorAlert(this.alerts, msg, undefined, this.translate);
                 // delete cookie
-                this.cookieService.delete('auth_session','/');
+                this.auth.deleteSessionCookie();
                 // set auth state
                 this.auth.setUser(this.auth.nullUser);
                 this.auth.setLoggedIn(false);
@@ -139,6 +136,7 @@ export class AppComponent {
         document.body.style.setProperty('--accent-filters',result.filter.replace('filter: ','').replace(';','').trim());
     }
 
+    // scroll event on main content
     mainScroll(){
         this.sidebar.scrollTop.set(this.main.nativeElement.scrollTop);
     }

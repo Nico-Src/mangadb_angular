@@ -1,23 +1,24 @@
-import { Component, computed, effect, inject, ViewChild } from '@angular/core';
-import { CONFIG, CDN_BASE, API_BASE, LANGS, errorAlert, successAlert, getTranslation } from '../../globals';
+import { Component, computed, inject, ViewChild } from '@angular/core';
+import { CONFIG, CDN_BASE, LANGS, errorAlert, successAlert, getTranslation } from '../../globals';
 import { AuthService } from '../../services/auth.service';
 import { NgIf, NgForOf } from '@angular/common';
-import { TuiButton, TuiHint, TuiTextfield, TuiLoader, TUI_ALERT_POSITION, TuiAlertService, TuiDataList, TuiIcon, TuiIconPipe } from '@taiga-ui/core';
+import { TuiButton, TuiHint, TuiTextfield, TuiLoader, TUI_ALERT_POSITION, TuiAlertService, TuiDataList, TuiIcon } from '@taiga-ui/core';
 import { TuiAppearance, TuiScrollbar } from '@taiga-ui/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { TuiBadgedContent, TuiBadgeNotification, TuiDataListWrapper, TuiCheckbox } from '@taiga-ui/kit';
-import { HttpClient } from '@angular/common/http';
-import { TranslateService, TranslatePipe, TranslateDirective, _ } from "@ngx-translate/core";
+import { TranslateService, TranslatePipe, _ } from "@ngx-translate/core";
 import { TuiSelectModule } from '@taiga-ui/legacy';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy'; 
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
 import { SideBarService } from '../../services/sidebar.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerLanguage } from '@ng-icons/tabler-icons';
 import { UserRole } from '../../models/user';
+import { APIService, HttpMethod } from '../../services/api.service';
+import { Series } from '../../models/series';
 
 @Component({
     selector: 'top-bar',
@@ -34,6 +35,7 @@ import { UserRole } from '../../models/user';
 })
 
 export class TopBar {
+    private readonly api = inject(APIService);
     private readonly alerts = inject(TuiAlertService);
     private readonly auth = inject(AuthService);
     readonly UserRole = UserRole;
@@ -49,12 +51,14 @@ export class TopBar {
         { url: '/settings', state: 'solid' },
         { url: '/collection', state: 'solid' }
     ];
+
     routeTranslucent = () => {
         let isTranslucent = false;
         if(this.router.url === '/') isTranslucent = true;
         else isTranslucent = this.routeStates.find(r => this.router.url.startsWith(r.url))?.state === 'translucent';
         return isTranslucent;
     };
+
     @ViewChild('searchEl') searchEl: any
 
     protected search = '';
@@ -74,9 +78,7 @@ export class TopBar {
 
     languages = LANGS;
 
-    constructor(private http:HttpClient, private translate: TranslateService, private cookieService:CookieService, public router: Router, public sidebar: SideBarService, private route: ActivatedRoute) {
-        
-    }
+    constructor(private translate: TranslateService, private cookieService:CookieService, public router: Router, public sidebar: SideBarService, private route: ActivatedRoute) {}
 
     // toggle sidebar state
     toggleSidebar(){
@@ -131,12 +133,12 @@ export class TopBar {
     updateSearchResults(search: string) {
         const LIMIT = 10;
 
-        this.http.post(`${API_BASE}/series/search`,{ search, limit: LIMIT }).subscribe((res: any) => {
+        this.api.request<Series[]>(HttpMethod.POST, 'series/search', { search, limit: LIMIT}).subscribe((res)=>{
             // check if aliases were matched in backend
             let result = [];
             for(const item of res){
                 // if there are no aliases or name matches search add item
-                if(!item.aliases || item.name.toLowerCase().includes(search.toLowerCase())){
+                if(!item.aliases || item.name?.toLowerCase()?.includes(search.toLowerCase())){
                     result.push({id: item.id, name: item.name, type: item.type});
                     continue;
                 }
@@ -150,6 +152,7 @@ export class TopBar {
                     }
                 }
             }
+
             // set results and stop loading indicator
             this.results = result;
             this.searchLoading = false;
@@ -182,16 +185,11 @@ export class TopBar {
 
     // logout user
     logout(){
-        // get current session token
-        const session_id = this.cookieService.get('auth_session');
-        const header = "Bearer " + session_id;
-
         // hide profile and logout modals
         this.showProfile = false;
         this.showLogout = false;
 
-        // send request to api
-        this.http.post(`${API_BASE}/auth/logout`, {fromAllDevices: this.logoutAll}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe(async (res: any) => {
+        this.api.request<string>(HttpMethod.POST, 'auth/logout',{ fromAllDevices: this.logoutAll }, 'text').subscribe(async(res)=>{
             // delete cookie
             this.cookieService.delete('auth_session','/');
             // clear auth state

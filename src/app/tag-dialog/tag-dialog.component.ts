@@ -1,14 +1,12 @@
-import { Component, ElementRef, HostListener, Input, signal, ViewChild } from '@angular/core';
-import { API_BASE, CDN_BASE, DEFAULT_SETTINGS } from '../../globals';
-import { AuthService } from '../../services/auth.service';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { Component, ElementRef, HostListener, inject, Input, ViewChild } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TuiButton, TuiAppearance } from '@taiga-ui/core';
-import { PluralTranslatePipe } from '../pipes/pluralTranslate';
+import { PluralTranslatePipe } from '../../pipes/pluralTranslate';
 import { TuiLoader } from '@taiga-ui/core';
 import { NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { TuiElasticContainer } from '@taiga-ui/kit';
 import { Router } from '@angular/router';
+import { APIService, HttpMethod } from '../../services/api.service';
 
 @Component({
     selector: 'tag-dialog',
@@ -17,7 +15,8 @@ import { Router } from '@angular/router';
     styleUrl: './tag-dialog.component.less',
 })
 export class TagDialog {
-    constructor(private auth: AuthService, private translate: TranslateService, private el: ElementRef, private http: HttpClient, private router: Router){}
+    private readonly api = inject(APIService);
+    constructor(private el: ElementRef, private router: Router){}
     @Input() tag: any = null;
     show = false;
     tagDataLoading = false;
@@ -31,7 +30,7 @@ export class TagDialog {
     // load tag data (count of series that have this tag)
     loadTagData(){
         if(!this.tag?.id) return;
-        this.http.get(`${API_BASE}/tags/id/${this.tag.id}`).subscribe((res:any)=>{
+        this.api.request<any>(HttpMethod.GET, `tags/id/${this.tag.id}`, {}).subscribe((res:any)=>{
             this.seriesCount = res.count;
             setTimeout(()=>{
                 this.tagDataLoading = false;
@@ -39,12 +38,16 @@ export class TagDialog {
         });
     }
 
+    // open dialog
     public showDialog(tag:any){
         this.show = true;
+        // check if dialog was openened with the same tag agan
         const sameTag = this.tag === tag;
         this.tag = tag;
 
+        // if it is the same tag dont load again
         if(sameTag) this.tagDataLoading = false;
+        // else load data
         else {
             this.tagDataLoading = true;
             this.loadTagData();

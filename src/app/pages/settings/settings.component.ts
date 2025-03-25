@@ -1,21 +1,20 @@
-import { Component, computed, HostBinding, inject } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
+import { Component, computed, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TuiTextfield, TuiAppearance, TuiButton } from '@taiga-ui/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgAutoAnimateDirective } from 'ng-auto-animate';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerHome, tablerBrush, tablerUser, tablerLanguage, tablerWallpaper, tablerCheck } from '@ng-icons/tabler-icons';
 import { AuthService } from '../../../services/auth.service';
-import { API_BASE, DEFAULT_SETTINGS, THEMES, hexToRGB, LANGS, NSFW_SETTINGS, getTranslation } from '../../../globals';
-import { HttpClient } from '@angular/common/http';
+import { DEFAULT_SETTINGS, THEMES, hexToRGB, LANGS, NSFW_SETTINGS, getTranslation } from '../../../globals';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiInputColorModule, TuiInputModule, TuiTextfieldControllerModule, TuiSelectModule } from '@taiga-ui/legacy';
-import { MaskitoDirective } from '@maskito/angular';
 // @ts-ignore
 import { pSBC, Color, Solver } from '../../../libs/filterTint.js';
 import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
+import { APIService, HttpMethod } from '../../../services/api.service';
 
 @Component({
     selector: 'app-settings',
@@ -25,6 +24,7 @@ import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
     viewProviders: [provideIcons({ tablerHome, tablerBrush, tablerUser, tablerLanguage, tablerWallpaper, tablerCheck })]
 })
 export class SettingsComponent {
+    private readonly api = inject(APIService);
     private auth = inject(AuthService);
     readonly availableThemes = THEMES;
     readonly colorMask = {mask: ['#', ...new Array(6).fill(/[0-9a-f]/i)]};
@@ -50,7 +50,7 @@ export class SettingsComponent {
     availableContentLanguages = JSON.parse(JSON.stringify(LANGS));
     selectedNSFWOption = DEFAULT_SETTINGS['nsfw-mode'];
     nsfwSettings:any = NSFW_SETTINGS;
-    constructor(private translate: TranslateService, private meta: Meta, private title: Title, private http: HttpClient, private cookie: CookieService) { }
+    constructor(private translate: TranslateService, private title: Title, private cookie: CookieService) { }
     
     ngOnInit() {
         // set title
@@ -143,11 +143,8 @@ export class SettingsComponent {
         settings['theme-accent-color'] = this.selectedAccentColor;
         settings['prefered-content-language'] = this.selectedContentLanguage.value;
         settings['nsfw-mode'] = this.selectedNSFWOption.key;
-        // get session id
-        const session_id = this.cookie.get('auth_session');
-        const header = "Bearer " + session_id;
         // send api request
-        this.http.post(`${API_BASE}/users/${user.id}/save-settings`, {settings: settings}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe();
+        this.api.request<string>(HttpMethod.POST, `users/${user.id}/save-settings`, { settings }, 'text').subscribe();
     }
 
     // calculate filter tint (reset if default button is pressed and saved color is the default)
