@@ -129,8 +129,10 @@
             "sequel": "Sequels",
             "prequel": "Prequels",
             "main-story": "Main-Story",
-            "alternate-version": "Alternate-Version"
+            "alternate version": "Alternate-Version"
         },
+        "chapter":"Chapter",
+        "status":"Status",
         "publishers": "Publishers",
         "contributors": "Contributors",
         "aliases": "Other Titles"
@@ -437,7 +439,7 @@
         "show-reports": "Show Reports",
         "report": "Report",
         "type": "Type",
-        "login-required": "You must be logged in to report problems",
+        "login-required": "You must be logged in to report problems.",
         "role-required": "You don't have the permission to report problems.",
         "empty-desc": "The description must not be empty.",
         "success": "Report added."

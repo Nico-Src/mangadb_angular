@@ -127,10 +127,12 @@
         "relation": {
             "spin-off": "Spin-Offs",
             "sequel": "Fortsetzungen",
-            "prequel": "Vorgänger",
-            "main-Story": "Hauptgeschichte",
-            "alternate-version": "Alternative-Version"
+            "prequel": "Vorgeschichten",
+            "main-story": "Hauptgeschichte",
+            "alternate version": "Alternative-Version"
         },
+        "chapter":"Kapitel",
+        "status":"Status",
         "publishers": "Herausgeber",
         "contributors": "Mitwirkende",
         "aliases": "Andere Titel"
@@ -373,7 +375,7 @@
         "language": {
             "content": {
                 "title": "Sprache des Inhalts (Serien, Bände, ...)",
-                "desc": "Passe die Sprache der Inhalte an. Wenn eine andere Option als <span class='option'>Benutzeroberflächen-Sprache</span> ausgewählt ist werden Inhalte stattdessen in dieser Sprache geladen wenn verfügbar."
+                "desc": "Passe die Sprache der Inhalte an. Wenn eine andere Option als <span class='option'>Benutzeroberflächen-Sprache</span> ausgewählt ist, werden Inhalte stattdessen in dieser Sprache geladen wenn verfügbar."
             }
         },
         "content": {
@@ -419,6 +421,12 @@
         "logout-question": "Willst du dich wirklich abmelden?",
         "logout-all": "Von allen Geräten abmelden",
         "logout-success": "Abmeldung erfolgreich"
+    },
+
+    "link-dialog": {
+        "title": "Warnung",
+        "desc": "Sie werden zu einer externen Website weitergeleitet. Der Inhalt ist zu diesem Zeitpunkt möglicherweise nicht sicher zu betrachten.",
+        "visit": "Besuchen"
     },
     
     "tag-dialog": {
