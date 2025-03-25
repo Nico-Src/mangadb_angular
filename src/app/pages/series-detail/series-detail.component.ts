@@ -91,6 +91,9 @@ export class SeriesDetailComponent {
     ratingChartIndex: number = 0;
     deletingRating: boolean = false;
     updatingRating: boolean = false;
+    // Contributors
+    hasManyContributors: boolean = false;
+    showMoreContributors: boolean = false;
     // 404
     show404: boolean = false;
     @ViewChild('seriesTitle') seriesTitle: any;
@@ -131,6 +134,9 @@ export class SeriesDetailComponent {
             // check overflow for new description
             this.checkingDescOverflow = true;
 
+            this.hasManyContributors = false;
+            this.showMoreContributors = false;
+
             this.content.nativeElement.classList.remove('fits');
 
             const slug = this.route.snapshot.paramMap.get('slug');
@@ -146,7 +152,6 @@ export class SeriesDetailComponent {
 
         this.api.request<any>(HttpMethod.GET, `series/slug/${slug}?lang=${lang}`, {}).subscribe((res)=>{
             this.series = res;
-            console.log(res)
             console.log(this.series)
             this.series['relation_keys'] = Object.keys(this.series.relations);
             this.title.setTitle(this.series.name || 'No Name');
@@ -195,6 +200,12 @@ export class SeriesDetailComponent {
             }
             this.series['groupedAliases'] = groupedAliases;
 
+            // check if contributors should be collapsed
+            if(this.series.contributors.length > 8){
+                this.series.contributors_collapsed = this.series.contributors.slice(0,8);
+                this.hasManyContributors = true;
+            }
+
             // check if there is a description with the given language
             let description = this.series.descriptions.find((d: { language: string; }) => d.language === langName);
             if(!description && this.series.descriptions.length > 0) description = this.series.descriptions[0];
@@ -226,6 +237,11 @@ export class SeriesDetailComponent {
         }, (err)=>{
             this.show404 = true;
         });
+    }
+
+    // toggle contributors collapsed state (show more, less)
+    toggleContributors(){
+        this.showMoreContributors = !this.showMoreContributors;
     }
 
     // view mode changed

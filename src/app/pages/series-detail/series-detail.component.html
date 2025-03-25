@@ -191,15 +191,29 @@
             </tbody>
         </table>
         <div class="section-title" *ngIf="series.contributors?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.contributors' | translate }}</div>
-        <div class="contributor-wrapper" *ngIf="series.contributors?.length > 0" [class.hide]="checkingDescOverflow">
-            <div class="contributor" *ngFor="let contributor of series.contributors">
-                <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${contributor.id}/scaled`">
-                <div class="details">
-                    <div class="name">{{ contributor.last_name?.toUpperCase() }} {{contributor.first_name}}</div>
-                    <div class="type">{{ `contributor.${contributor.type.toLowerCase()}-${contributor.gender}` | translate }}</div>
+        <tui-elastic-container [class.hide]="checkingDescOverflow">
+            <div class="contributor-wrapper" *ngIf="series.contributors?.length > 0 && !hasManyContributors" [class.hide]="checkingDescOverflow">
+                <div class="contributor" *ngFor="let contributor of series.contributors">
+                    <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${contributor.id}/scaled`">
+                    <div class="details">
+                        <div class="name">{{ contributor.last_name?.toUpperCase() }} {{contributor.first_name}}</div>
+                        <div class="type">{{ `contributor.${contributor.type.toLowerCase()}-${contributor.gender}` | translate }}</div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="contributor-wrapper" *ngIf="series.contributors?.length > 0 && hasManyContributors" [class.hide]="checkingDescOverflow">
+                <div class="contributor" *ngFor="let contributor of (showMoreContributors ? series.contributors : series.contributors_collapsed)">
+                    <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${contributor.id}/scaled`">
+                    <div class="details">
+                        <div class="name">{{ contributor.last_name?.toUpperCase() }} {{contributor.first_name}}</div>
+                        <div class="type">{{ `contributor.${contributor.type.toLowerCase()}-${contributor.gender}` | translate }}</div>
+                    </div>
+                </div>
+                <div class="contributor toggle" (click)="toggleContributors()">
+                    {{ (showMoreContributors ? 'series.show-less-contributors' : 'series.show-more-contributors') | translate }} ({{ series.contributors.length - series.contributors_collapsed.length }})
+                </div>
+            </div>
+        </tui-elastic-container>
         <div class="section-title" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.aliases' | translate }}</div>
         <div class="alias-wrapper" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">
             <div class="alias-item" *ngFor="let alias of series?.groupedAliases">
