@@ -2,7 +2,7 @@ import { Component, computed, HostListener, inject, signal, ViewChild, ViewChild
 import { NgFor, NgIf } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { API_BASE, CDN_BASE } from '../../../globals';
+import { CDN_BASE } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
 import { TuiButton, TuiAppearance, TuiLoader } from '@taiga-ui/core';
 import { MangaCover } from '../../manga-cover/manga-cover.component'; 
@@ -10,10 +10,11 @@ import { MangaVolume } from '../../manga-volume/manga-volume.component';
 import { TuiLineClamp, TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { APIService, HttpMethod } from '../../../services/api.service';
 import { Router } from '@angular/router';
+import { TagDialog } from '../../tag-dialog/tag-dialog.component';
 
 @Component({
     selector: 'app-home',
-    imports: [NgFor, TuiButton, TuiAppearance, MangaCover, MangaVolume, TuiLineClamp, TranslatePipe, TuiCarousel, TuiPagination, TuiLoader, NgIf],
+    imports: [NgFor, TuiButton, TuiAppearance, MangaCover, MangaVolume, TuiLineClamp, TranslatePipe, TuiCarousel, TuiPagination, TuiLoader, NgIf, TagDialog],
     templateUrl: './home.component.html',
     styleUrl: './home.component.less'
 })
@@ -31,11 +32,15 @@ export class HomeComponent {
     nextReleasesVolumes:any = [];
     nextReleasesIndex = 0;
     nextReleasesShownItems = 0;
+    // Slider
     @ViewChild('slider') slider: any;
     @ViewChild('sliderTrack') sliderTrack: any;
     @ViewChildren('slide') slides: any;
     showSlider = false;
     slideIndex = 0;
+    // Tag Dialog
+    @ViewChild('tagDialog') tagDialog: any;
+    tagDialogTag: string = "";
     constructor(private translate: TranslateService, private title: Title, private router: Router) {}
     
     ngOnInit() {
@@ -60,6 +65,11 @@ export class HomeComponent {
             // fetch recently added volumes
             this.fetchNextReleases();
         }, 1000);
+    }
+
+    // open tag dialog for given tag
+    openTagDialog(tag:any){
+        this.tagDialog.showDialog(tag);
     }
 
     // increment slide index

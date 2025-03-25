@@ -1,5 +1,7 @@
 <div class="theme" [class]="theme()"></div>
 
+<tag-dialog [tag]="tagDialogTag" #tagDialog></tag-dialog>
+
 <div class="slider" #slider [class.show]="showSlider">
     <div class="slider-track" #sliderTrack>
         <div class="slider-title">{{ 'home.trending-series' | translate }}</div>
@@ -16,10 +18,10 @@
                         <tui-line-clamp [linesLimit]="2" class="alias" [content]="ser.alias"></tui-line-clamp>
                         <div class="description" [innerHTML]="ser.description"></div>
                         <div class="tag-wrapper">
-                            <div *ngFor="let tag of ser.contentTypeTags" class="tag type">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
-                            <div *ngFor="let tag of ser.contentRatingTags" class="tag content-rating">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
-                            <div *ngFor="let tag of ser.contentWarningTags" class="tag content-warning">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
-                            <div *ngFor="let tag of ser.otherTags" class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.contentTypeTags" class="tag type" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.contentRatingTags" class="tag content-rating" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.contentWarningTags" class="tag content-warning" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
+                            <div *ngFor="let tag of ser.otherTags" class="tag" (click)="openTagDialog(tag)">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
                         </div>
                     </div>
                 </div>
