@@ -1,6 +1,6 @@
 import { Component, computed, inject, ViewChild } from '@angular/core';
 import { API_BASE } from '../../../globals';
-import { Meta, Title } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TuiTextfield, TuiAppearance, TuiButton, TuiLoader, TuiDataList } from '@taiga-ui/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -8,13 +8,13 @@ import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy'
 import { TuiDataListWrapper, TuiSegmented, TuiPagination, TuiBadgedContent } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerSortAscendingLetters, tablerSortDescendingLetters, tablerSortAscending, tablerSortDescending, tablerList, tablerLayoutColumns, tablerLayoutGrid, tablerFilter } from '@ng-icons/tabler-icons';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { NgFor, NgIf } from '@angular/common';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MangaSeriesListComponent } from '../../manga-series-list/manga-series-list.component';
 import { MangaSeriesColumnComponent } from '../../manga-series-column/manga-series-column.component';
 import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-grid.component';
+import { APIService, HttpMethod } from '../../../services/api.service';
 
 @Component({
     selector: 'app-browse-series',
@@ -24,7 +24,8 @@ import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-g
     viewProviders: [provideIcons({ tablerSortAscendingLetters, tablerSortDescendingLetters, tablerSortAscending, tablerSortDescending, tablerList, tablerLayoutColumns, tablerLayoutGrid, tablerFilter })],
 })
 export class BrowseSeriesComponent {
-    private auth = inject(AuthService);
+    private readonly api = inject(APIService);
+    private readonly auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
     search:string = "";
     currentSearch:string = "";
@@ -47,7 +48,7 @@ export class BrowseSeriesComponent {
     selectedOrder: any = this.orders[0];
     series:any = [];
     @ViewChild('filterDialog') filterDialog:any;
-    constructor(private translate: TranslateService, private meta: Meta, private title: Title, private http:HttpClient, private router: Router, private route: ActivatedRoute) { }
+    constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute) { }
     
     ngOnInit() {
         // set title
@@ -148,9 +149,8 @@ export class BrowseSeriesComponent {
 
     // load tags
     loadTags(){
-        this.http.get(`${API_BASE}/tags`).subscribe((res:any) => {
+        this.api.request<any>(HttpMethod.GET, `tags`, {}).subscribe((res:any)=>{
             this.tags = res;
-
             // group tags
             const groupedTags:any = {};
             const parsedSavedFilters = this.filters.split(';');
@@ -183,16 +183,10 @@ export class BrowseSeriesComponent {
         const contentLang = this.auth.getUserSetting('prefered-content-language');
         const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
 
-        this.http.post(`${API_BASE}/series`,{order: this.selectedOrder.value, limit: PAGE_LIMIT, offset: PAGE_LIMIT * this.currentPage, search: this.search.trim(), lang: lang, filters: this.filters}).subscribe((res:any) => {
-            setTimeout(()=>
-                this.series = res.series
-            , 300);
-
+        this.api.request<any>(HttpMethod.POST, `series`, {order: this.selectedOrder.value, limit: PAGE_LIMIT, offset: PAGE_LIMIT * this.currentPage, search: this.search.trim(), lang: lang, filters: this.filters}).subscribe((res:any)=>{
+            setTimeout(()=>this.series = res.series,300);
             this.maxPages = res.max;
-            
-            setTimeout(() => 
-                this.loading = false
-            , 600);
+            setTimeout(()=>this.loading = false,600);
         });
     }
 

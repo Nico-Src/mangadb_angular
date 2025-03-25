@@ -1,12 +1,10 @@
-import { HttpClient } from "@angular/common/http";
-import { API_BASE, DEFAULT_SETTINGS } from "../globals";
+import { DEFAULT_SETTINGS } from "../globals";
 import { signal, Injectable, computed, WritableSignal, inject } from "@angular/core";
 import { CookieService } from "ngx-cookie-service";
 import { APIService, HttpMethod } from "./api.service";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private http:HttpClient = inject(HttpClient);
     private cookie:CookieService = inject(CookieService);
     private api:APIService = inject(APIService);
 
@@ -62,8 +60,7 @@ export class AuthService {
     // update settings for user with given id
     public updateSettings = async (id: number, settings: any) => {
         if(!id || id < 0) return;
-        const header = "Bearer " + this.cookie.get('auth_session');
-        this.http.post(`${API_BASE}/users/${id}/save-settings`,{settings: settings}, { headers: { 'Authorization': header }, responseType: 'text' }).subscribe((res: any) => {});
+        this.api.request<string>(HttpMethod.POST, `users/${id}/save-settings`, { settings: settings }, 'text').subscribe((res:any)=>{});
     }
 
     // get user setting with given key
