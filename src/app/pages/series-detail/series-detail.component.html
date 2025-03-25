@@ -1,19 +1,18 @@
-<div class="not-found" *ngIf="show404">
-    <ng-icon name="heroDocumentMagnifyingGlass" class="icon" [style.fontSize.px]="80"></ng-icon>
-    <div class="text">{{ 'series.not-found' | translate }}</div>
-</div>
-
 <div class="banner-wrapper">
     <div class="banner">
         <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" fit="cover" [blur]="true" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
         <div class="banner-overlay"></div>
+    </div>
+    <div class="not-found" *ngIf="show404">
+        <ng-icon name="heroDocumentMagnifyingGlass" class="icon" [style.fontSize.px]="80"></ng-icon>
+        <div class="text">{{ 'series.not-found' | translate }}</div>
     </div>
     <div class="content" #content>
         <div class="cover-wrapper">
             <manga-cover *ngIf="series.volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
         </div>
         <div class="detail-wrapper">
-            <div class="top" *ngIf="series">
+            <div class="top" *ngIf="series?.id">
                 <div class="title" #seriesTitle>
                     {{series.name}}
                 </div>
@@ -27,7 +26,7 @@
                     </button>
                 </div>
             </div>
-            <div class="bottom">
+            <div class="bottom" *ngIf="series?.id">
                 <div class="actions">
                     <button appearance="accent" size="m" tuiButton type="button" class="list-btn">
                         <ng-icon class="icon" name="faSolidPlus" [style.fontSize.px]="20"></ng-icon>{{ 'series.add-to-list' | translate }}
