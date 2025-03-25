@@ -27,6 +27,7 @@ export class MangaCover {
     @Input() nsfw18: boolean = false;
     @Input() forceSkeleton: boolean = false;
     @Input() res: string = 'scaled';
+    @Input() hasTransparentBg: boolean = false;
     needsNSFWPlaceholder = signal(false);
     needsNSFW18Placeholder = signal(false);
     needsSkeleton = signal(false);

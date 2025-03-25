@@ -10,7 +10,7 @@
     </div>
     <div class="content" #content>
         <div class="cover-wrapper">
-            <manga-cover *ngIf="series.volume?.id" [res]="'high'" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+            <manga-cover *ngIf="series.volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
         </div>
         <div class="detail-wrapper">
             <div class="top" *ngIf="series">
