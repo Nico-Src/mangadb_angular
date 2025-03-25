@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { TuiHint } from '@taiga-ui/core';
@@ -13,6 +13,7 @@ import { solarLibrary, solarHistory, solarBillList, solarSettings, solarUsersGro
 import { solarBuildingsLinear } from '@ng-icons/solar-icons/linear';
 import { lucideDices } from '@ng-icons/lucide';
 import { matPrivacyTipOutline } from '@ng-icons/material-icons/outline';
+import { APIService, HttpMethod } from '../../services/api.service';
 
 @Component({
     selector: 'side-bar',
@@ -22,7 +23,9 @@ import { matPrivacyTipOutline } from '@ng-icons/material-icons/outline';
     viewProviders: [provideIcons({ tablerHome, solarLibrary, solarHistory, solarBillList, solarSettings, tablerListSearch, solarBuildingsLinear, lucideDices, solarUsersGroupRounded, solarCart4, tablerQuote, matPrivacyTipOutline, solarFileText })]
 })
 export class SideBar {
+    private readonly api = inject(APIService);
     inAdminArea = false;
+    randomLoading = false;
     constructor(public router: Router, public sidebar: SideBarService) {
         // listen to navigationEnd events to update the inAdminArea variable
         this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => {
@@ -34,5 +37,17 @@ export class SideBar {
 
     ngOnInit() {
         
+    }
+
+    randomSeries(){
+        if(this.randomLoading) return;
+        this.randomLoading = true;
+        this.api.request<string>(HttpMethod.GET, `series/random`, {}, 'text').subscribe((res:string)=>{
+            this.router.navigate(['series', res]);
+
+            setTimeout(()=>{
+                this.randomLoading = false;
+            },500);
+        });
     }
 }

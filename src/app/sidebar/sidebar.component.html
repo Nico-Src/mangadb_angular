@@ -32,7 +32,7 @@
     <ng-icon name="solarBuildingsLinear" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.browse-publishers' | translate }}</span>
 </div>
-<div class="item" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.random-series' | translate) ">
+<div class="item" *ngIf="!inAdminArea" (click)="randomSeries()" [class.disabled]="randomLoading" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.random-series' | translate) ">
     <ng-icon name="lucideDices" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.random-series' | translate }}</span>
 </div>
