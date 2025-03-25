@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import { CONFIG, API_BASE, errorAlert, successAlert } from '../../../globals';
+import { CONFIG, API_BASE, errorAlert, successAlert, getTranslation } from '../../../globals';
 
 @Component({
     selector: 'register',
@@ -48,7 +48,7 @@ export class RegisterComponent {
     }
 
     // register user
-    register(){
+    async register(){
         // if already registering, return
         if(this.registering) return;
 
@@ -59,70 +59,59 @@ export class RegisterComponent {
 
         // check if all fields are filled
         if(!this.username.trim() || !this.password.trim() || !this.confirmPassword.trim()){
-            this.translate.get(_('register.fields-required')).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'register.fields-required');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
         // check if passwords match
         if(this.password !== this.confirmPassword){
-            this.translate.get(_('register.password-mismatch')).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'register.password-mismatch');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
         // check if username is valid (length)
         if(this.username.length < CONFIG.auth.min_username_length || this.username.length > CONFIG.auth.max_username_length){
-            this.translate.get(_('register.invalid-username'),{ min: CONFIG.auth.min_username_length, max: CONFIG.auth.max_username_length }).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'register.invalid-username');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
         // check if password is valid (length)
         if(this.password.length < CONFIG.auth.min_password_length || this.password.length > CONFIG.auth.max_password_length){
-            this.translate.get(_('register.invalid-password'),{ min: CONFIG.auth.min_password_length, max: CONFIG.auth.max_password_length }).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'register.invalid-password');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
         // send request to api
-        // TODO
         this.registering = true;
         this.http.post(`${API_BASE}/auth/register`, { username: this.username, password: this.password }, { responseType: 'text' }).subscribe((res: any) => {
-            console.log(res);
             // show success alert and redirect to login
-            setTimeout(() => {
+            setTimeout(async () => {
                 this.registering = false;
-                this.translate.get(_('register.success')).subscribe((res: any) => {
-                    successAlert(this.alerts, res);
-                    this.router.navigate(['/login']);
-                });
+                const msg = await getTranslation(this.translate, 'register.success');
+                successAlert(this.alerts, msg, undefined, this.translate);
+                this.router.navigate(['/login']);
             },500);
-        }, (err: any) => {
+        }, async (err: any) => {
             this.registering = false;
             // process errors
             if(err.status === 0){ // connection error
-                this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'server.error.connection');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else if(err.status === 402){ // invalid username
-                this.translate.get(_('register.invalid-username'),{ min: CONFIG.auth.min_username_length, max: CONFIG.auth.max_username_length }).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'register.invalid-username');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else if(err.status === 403){ // invalid password
-                this.translate.get(_('register.invalid-password'),{ min: CONFIG.auth.min_password_length, max: CONFIG.auth.max_password_length }).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'register.invalid-password');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else if(err.status === 409) { // username already exists
-                this.translate.get(_('register.username-taken')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'register.username-taken');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else { // other error
-                errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
             }
         });
     }

@@ -10,7 +10,7 @@
 </div>
 <div class="details" [class.release-hidden]="!showRelease">
     <div class="name">{{ volume.name }}</div>
-    <div class="pages"><span>{{ volume.pages || ('volume.pages.unknown' | translate) }}</span>&nbsp;<ng-icon class="icon" name="solarNotebook"/></div>
+    <div class="pages"><span>{{ volume.pages || 0 }}</span>&nbsp;<ng-icon class="icon" name="solarNotebook"/></div>
 </div>
 <div class="release" [class.preorder]="preOrder(volume.release_date)" *ngIf="showRelease">
     <div *ngIf="volume?.release_date_text"><ng-icon class="icon" name="solarCalendar"/>&nbsp;{{ volume?.release_date_readable | translate }}</div>

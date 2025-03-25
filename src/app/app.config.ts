@@ -1,13 +1,12 @@
 import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, provideRouter, RouterState, RouterStateSnapshot, withViewTransitions } from '@angular/router';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withFetch, HttpClient } from "@angular/common/http";
 import { CookieService } from 'ngx-cookie-service';
 import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AdminGuard } from '../guards/adminGuard';
-
+import { RoleGuard } from '../guards/roleGuard';
 import { routes } from './app.routes';
 import { AuthGuard } from "../guards/authGuard";
 
@@ -19,7 +18,7 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withFetch()), 
         CookieService, 
         provideZoneChangeDetection({ eventCoalescing: true }), 
-        provideRouter(routes, withViewTransitions()), 
+        provideRouter(routes, withViewTransitions()),
         NG_EVENT_PLUGINS,
         provideTranslateService({
             defaultLanguage: 'en',
@@ -29,7 +28,7 @@ export const appConfig: ApplicationConfig = {
                 deps: [HttpClient],
             },
         }),
-        AdminGuard,
+        RoleGuard,
         AuthGuard
     ]
 };

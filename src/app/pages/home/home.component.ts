@@ -3,7 +3,7 @@ import { Component, computed, effect, HostListener, inject, signal, ViewChild, V
 import { NgFor, NgIf } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { API_BASE, DEFAULT_SETTINGS, CDN_BASE } from '../../../globals';
+import { API_BASE, CDN_BASE } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
 import { TuiButton, TuiAppearance, TuiLoader } from '@taiga-ui/core';
 import { MangaCover } from '../../manga-cover/manga-cover.component'; 

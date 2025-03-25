@@ -1,7 +1,7 @@
 import { Component, computed, effect, HostListener, inject } from '@angular/core';
 import { TranslateService, TranslatePipe, TranslateDirective, _ } from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
-import { API_BASE, CDN_BASE, errorAlert, successAlert } from "../../../globals";
+import { API_BASE, CDN_BASE, errorAlert, getTranslation, successAlert } from "../../../globals";
 import { NgForOf } from '@angular/common';
 import { Meta, Title } from "@angular/platform-browser";
 import { TuiIcon, TuiTextfield, TuiButton, TuiLoader, TuiHint } from '@taiga-ui/core';
@@ -51,7 +51,7 @@ export class LoginComponent {
     }
 
     // login user
-    login(){
+    async login(){
         // if already logging in do nothing
         if(this.loggingIn) return;
         // if user is already logged in, redirect to home
@@ -64,9 +64,8 @@ export class LoginComponent {
         // if username or password is empty show error
         if(this.username.trim() === "" || this.password.trim() === ""){
             // show alert
-            this.translate.get(_('login.fields-required')).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'login.fields-required');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             this.loggingIn = false;
             return;
         }
@@ -79,27 +78,24 @@ export class LoginComponent {
             this.auth.setUser(res.user);
             this.auth.setLoggedIn(true);
             // show success alert
-            setTimeout(() => {
+            setTimeout(async () => {
                 this.loggingIn = false;
-                this.translate.get(_('login.success')).subscribe((res: any) => {
-                    successAlert(this.alerts, res);
-                    // redirect to home
-                    this.router.navigate(['/']);
-                });
+                const msg = await getTranslation(this.translate, 'login.success');
+                successAlert(this.alerts, msg, undefined, this.translate);
+                // redirect to home
+                this.router.navigate(['/']);
             },500);
-        }, (err: any) => {
+        }, async (err: any) => {
             this.loggingIn = false;
             // process errors
             if(err.status === 0){ // connection error
-                this.translate.get(_('server.error.connection')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res, `Error (Code: ${err.status})`);
-                });
+                const msg = await getTranslation(this.translate, 'server.error.connection');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else if(err.status === 401){ // invalid credentials
-                this.translate.get(_('login.error')).subscribe((res: any) => {
-                    errorAlert(this.alerts, res);
-                });
+                const msg = await getTranslation(this.translate, 'login.error');
+                errorAlert(this.alerts, msg, undefined, this.translate);
             } else { // other error
-                errorAlert(this.alerts, JSON.stringify(err), `Error (Code: ${err.status})`);
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
             }
         });
     }

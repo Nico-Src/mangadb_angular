@@ -1,8 +1,7 @@
 import { HttpClient } from "@angular/common/http";
-import { API_BASE, DEFAULT_SETTINGS } from "../globals";
+import { API_BASE } from "../globals";
 import { Injectable, inject } from "@angular/core";
 import { CookieService } from "ngx-cookie-service";
-import { AuthService } from "./auth.service";
 
 @Injectable({ providedIn: 'root' })
 export class APIService {

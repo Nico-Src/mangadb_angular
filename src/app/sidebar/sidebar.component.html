@@ -22,7 +22,7 @@
     <span class="name" tuiFade>{{ 'sidebar.settings' | translate }}</span>
 </div>
 <div class="header-item" *ngIf="!inAdminArea">
-    <span class="name" tuiFade>{{ 'sidebar.contents' | translate }}</span>
+    <span class="name" tuiFade>{{ 'sidebar.content' | translate }}</span>
 </div>
 <div class="item" [routerLink]="['/browse-series']" [class.active]="router.url.startsWith('/browse-series')" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.browse-series' | translate) ">
     <ng-icon name="tablerListSearch" class="icon" [style.fontSize.px]="18"></ng-icon>
