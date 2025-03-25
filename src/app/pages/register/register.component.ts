@@ -27,12 +27,7 @@ export class RegisterComponent {
     confirmPassword = "";
     registering = false;
 
-    constructor(private translate: TranslateService, private title: Title, private router: Router) {
-        // if user is already logged in, redirect to home
-        if(this.loggedIn()){
-            this.router.navigate(['/']);
-        }
-    }
+    constructor(private translate: TranslateService, private title: Title, private router: Router) {}
     
     ngOnInit() {
         // set title

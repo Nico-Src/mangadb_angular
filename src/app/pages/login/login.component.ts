@@ -29,12 +29,7 @@ export class LoginComponent {
     passwordVisible = false;
     loggingIn = false;
 
-    constructor(private translate: TranslateService, private title: Title, private cookieService:CookieService, private router: Router) {
-        // if user is already logged in, redirect to home
-        if(this.loggedIn()){
-            this.router.navigate(['/']);
-        }
-    }
+    constructor(private translate: TranslateService, private title: Title, private cookieService:CookieService, private router: Router) {}
 
     ngOnInit() {
         // set title
