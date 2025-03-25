@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { API_BASE, CDN_BASE, LANGS, localeToLang, langToLocale, ago, REPORT_TYPES, successAlert, errorAlert } from '../../../globals';
+import { API_BASE, CDN_BASE, LANGS, localeToLang, langToLocale, ago, REPORT_TYPES, successAlert, errorAlert, getTranslation } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
 import { NgIf, NgFor, NgForOf } from '@angular/common';
@@ -132,6 +132,8 @@ export class SeriesDetailComponent {
             const slug = this.route.snapshot.paramMap.get('slug');
             this.loadSeries(slug);
         });
+
+        console.log(this.reportTypes)
     }
 
     // load series by slug
@@ -212,7 +214,11 @@ export class SeriesDetailComponent {
                 // fit title and alias to container and check overflow for current description
                 this.fitToParent(this.seriesTitle?.nativeElement,{max: 50, height: 120});
                 if(this.series.alias) this.fitToParent(this.seriesAlias?.nativeElement,{max: 25, height: 70});
-                this.checkDescriptionOverflow(description?.description);
+                if(description) this.checkDescriptionOverflow(description?.description);
+                else {
+                    this.desc.nativeElement.classList.add('loaded');
+                    this.checkingDescOverflow = false;
+                }
             },500);
         });
     }
@@ -509,18 +515,17 @@ export class SeriesDetailComponent {
         const session_id = this.cookie.get('auth_session');
         const header = "Bearer " + session_id;
 
-        this.http.delete(`${API_BASE}/user/series-rating/delete/${this.series.id}`,{headers: {Authorization: header}, responseType: 'text'}).subscribe((res)=>{
-            this.translate.get(_('rating-dialog.delete-success')).subscribe((res: any) => {
-                successAlert(this.alerts, res);
-                this.updateRatings();
-            });
+        this.http.delete(`${API_BASE}/user/series-rating/delete/${this.series.id}`,{headers: {Authorization: header}, responseType: 'text'}).subscribe(async (res)=>{
+            const msg = await getTranslation(this.translate, 'rating-dialog.delete-success');
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.updateRatings();
 
             setTimeout(()=>{
                 this.showRatingDialog = false;
                 this.deletingRating = false;
             },250);
         },(err)=>{
-            errorAlert(this.alerts, JSON.stringify(err));
+            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
         });
     }
 
@@ -532,32 +537,30 @@ export class SeriesDetailComponent {
         const header = "Bearer " + session_id;
 
         if(this.ratingExists){
-            this.http.post(`${API_BASE}/user/series-rating/update/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe((res)=>{
-                this.translate.get(_('rating-dialog.save-success')).subscribe((res: any) => {
-                    successAlert(this.alerts, res);
-                    this.updateRatings();
-                });
+            this.http.post(`${API_BASE}/user/series-rating/update/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe(async (res)=>{
+                const msg = await getTranslation(this.translate, 'rating-dialog.save-success');
+                successAlert(this.alerts, msg, undefined, this.translate);
+                this.updateRatings();
 
                 setTimeout(()=>{
                     this.showRatingDialog = false;
                     this.updatingRating = false;
                 },250);
             },(err)=>{
-                errorAlert(this.alerts, JSON.stringify(err));
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
             });
         } else {
-            this.http.post(`${API_BASE}/user/series-rating/add/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe((res)=>{
-                this.translate.get(_('rating-dialog.add-success')).subscribe((res: any) => {
-                    successAlert(this.alerts, res);
-                    this.updateRatings();
-                });
+            this.http.post(`${API_BASE}/user/series-rating/add/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe(async (res)=>{
+                const msg = await getTranslation(this.translate, 'rating-dialog.add-success');
+                successAlert(this.alerts, msg, undefined, this.translate);
+                this.updateRatings();
 
                 setTimeout(()=>{
                     this.showRatingDialog = false;
                     this.updatingRating = false;
                 },250);
             }, (err)=>{
-                errorAlert(this.alerts, JSON.stringify(err));
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
             });
         }
     }
@@ -607,27 +610,24 @@ export class SeriesDetailComponent {
         return ago(time, this.translate.currentLang);
     }
 
-    addReport(){
+    async addReport(){
         if(!this.auth.isLoggedIn()){
-            this.translate.get(_('report-dialog.login-required')).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'report-dialog.login-required');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
         const user = this.auth.getUser();
     
         if(user.role !== 'Admin'){
-            this.translate.get(_('report-dialog.role-required')).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'report-dialog.role-required');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
     
         if(this.reportDescription.trim() === ''){
-            this.translate.get(_('report-dialog.empty-desc')).subscribe((res: any) => {
-                errorAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'report-dialog.empty-desc');
+            errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
@@ -637,14 +637,13 @@ export class SeriesDetailComponent {
 
         this.http.post(`${API_BASE}/reports/add/series`,
             {item_id: this.series.id, type: this.selectedReportType.key, description: this.reportDescription},
-            {responseType: 'text', headers: {Authorization: header}}).subscribe((res)=>{
+            {responseType: 'text', headers: {Authorization: header}}).subscribe(async (res)=>{
             this.reportDescription = "";
             this.loadReports();
-            this.translate.get(_('report-dialog.success')).subscribe((res: any) => {
-                successAlert(this.alerts, res);
-            });
+            const msg = await getTranslation(this.translate, 'report-dialog.success');
+            successAlert(this.alerts, msg, undefined, this.translate);
         },(err)=>{
-            errorAlert(this.alerts, JSON.stringify(err));
+            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
         });
     }
 }

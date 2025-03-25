@@ -305,6 +305,45 @@
                     transition: max-height var(--transition-duration) ease, opacity var(--transition-duration) ease;
                     opacity: 0;
 
+                    .no-desc{
+                        background-color: rgba(212, 104, 104,.2);
+                        width: 100%;
+                        height: fit-content;
+                        font-size: 12px;
+                        margin: 2px 0px;
+                        color: rgb(163, 78, 78);
+                        position: relative;
+                        display:flex;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        flex-direction: column;
+                        padding-left: 5px;
+                        border-radius: 4px;
+                        overflow: hidden;
+        
+                        .title{
+                            width: 100%;
+                            font-weight: bold;
+                            background-color: rgba(212, 104, 104,.2);
+                            padding: 2px 5px;
+                        }
+        
+                        .desc{
+                            padding: 5px 5px;
+                            line-height: 15px;
+                        }
+        
+                        &::before{
+                            content: '';
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            bottom: 0;
+                            background-color: rgba(212, 104, 104,1);
+                            width: 5px;
+                        }
+                    }
+
                     &.loaded{
                         opacity: 1;
                     }
@@ -655,6 +694,60 @@
                 }
             }
 
+            .contributor-wrapper{
+                width: 100%;
+                height: fit-content;
+                display:grid;
+                row-gap: 1rem;
+                column-gap: 1rem;
+                grid-template-columns: repeat(auto-fill,minmax(min(20.375rem,100%),1fr));
+                position: relative;
+                margin-top: 10px;
+
+                .contributor{
+                    background-color: rgba(0,0,0,.05);
+                    border-radius: 6px;
+                    height: 70px;
+                    display:flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    padding: 10px;
+                    cursor: pointer;
+
+                    &:hover{
+                        .name{
+                            text-decoration: underline;
+                        }
+                    }
+
+                    .image{
+                        height: 50px;
+                        aspect-ratio: 1;
+                        border-radius: 50%;
+                        flex-shrink: 0;
+                    }
+
+                    .details{
+                        flex: 1;
+                        display:flex;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        height: fit-content;
+                        flex-direction: column;
+                        margin-left: 10px;
+
+                        .name{
+                            font-weight: bold;
+                            font-size: 18px;
+                        }
+
+                        .type{
+                            color: #777;
+                        }
+                    }
+                }
+            }
+
             .alias-wrapper{
                 width: 100%;
                 height: fit-content;
@@ -719,6 +812,12 @@
     pointer-events: none;
     z-index: 5;
     transition: opacity var(--transition-duration) ease;
+
+    &:not(:has(.show)){
+        ::ng-deep *{
+            pointer-events: none !important;
+        }
+    }
 
     ::ng-deep .t-loader{
         stroke: rgb(var(--mid-accent));

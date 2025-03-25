@@ -49,7 +49,13 @@
             <div class="header">
                 <span>{{ 'series.description' | translate }}</span>
             </div>
-            <div class="description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="series?.description?.description"></div>
+            <div class="description" *ngIf="series.description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="series?.description?.description"></div>
+            <div class="description" *ngIf="!series.description" #desc>
+                <div class="no-desc">
+                    <div class="title">{{ 'series.no-description.title' | translate }}</div>
+                    <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
+                </div>
+            </div>
             <div class="show-more-wrapper" [class.hide-description]="checkingDescOverflow" [class.show]="descOverflowing">
                 <div class="show-more-btn" (click)="toggleDesc()">
                     <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
@@ -65,7 +71,7 @@
                 <tui-data-list-wrapper *tuiDataList [itemContent]="editionContent" [items]="editions"></tui-data-list-wrapper>
             </tui-select>
             <div class="source-wrapper" *ngIf="series?.description?.source">{{ 'series.source' | translate }}:&nbsp;<span class="source" (click)="openLinkDialog(series?.description?.source.split('|')[1])">{{ series?.description?.source.split('|')[0] }}</span></div>
-            <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedDescLang" tuiTextfieldSize="s" (ngModelChange)="descSelected($event)" [valueContent]="languageContent">
+            <tui-select *ngIf="series?.description" tuiTextfieldSize="s" [(ngModel)]="selectedDescLang" tuiTextfieldSize="s" (ngModelChange)="descSelected($event)" [valueContent]="languageContent">
                 <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableDescLangs"></tui-data-list-wrapper>
             </tui-select>
         </div>
@@ -104,7 +110,7 @@
             </div>
             <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 0">
                 <ng-container *ngFor="let key of series.relation_keys">
-                    <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
+                    <div class="series-section-title">{{ `series.relation.${key.toLowerCase()}` | translate }}</div>
                     <div class="series-section list">
                         <manga-series-list class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-list>
                     </div>
@@ -112,7 +118,7 @@
             </div>
             <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 1">
                 <ng-container *ngFor="let key of series.relation_keys">
-                    <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
+                    <div class="series-section-title">{{ `series.relation.${key.toLowerCase()}` | translate }}</div>
                     <div class="series-section column">
                         <manga-series-column (click)="seriesClick(ser)" class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-column>
                     </div>
@@ -120,7 +126,7 @@
             </div>
             <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 2">
                 <ng-container *ngFor="let key of series.relation_keys">
-                    <div class="series-section-title">{{ `series.relation.${key}` | translate }}</div>
+                    <div class="series-section-title">{{ `series.relation.${key.toLowerCase()}` | translate }}</div>
                     <div class="series-section grid">
                         <manga-series-grid class="series" [class]="theme()" [series]="ser" *ngFor="let ser of series.relations[key]"></manga-series-grid>
                     </div>
@@ -179,6 +185,16 @@
                 </ng-container>
             </tbody>
         </table>
+        <div class="section-title" *ngIf="series.contributors?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.contributors' | translate }}</div>
+        <div class="contributor-wrapper" *ngIf="series.contributors?.length > 0" [class.hide]="checkingDescOverflow">
+            <div class="contributor" *ngFor="let contributor of series.contributors">
+                <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${contributor.id}/scaled`">
+                <div class="details">
+                    <div class="name">{{ contributor.last_name?.toUpperCase() }} {{contributor.first_name}}</div>
+                    <div class="type">{{ `contributor.${contributor.type.toLowerCase()}-${contributor.gender}` | translate }}</div>
+                </div>
+            </div>
+        </div>
         <div class="section-title" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.aliases' | translate }}</div>
         <div class="alias-wrapper" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">
             <div class="alias-item" *ngFor="let alias of series?.groupedAliases">
