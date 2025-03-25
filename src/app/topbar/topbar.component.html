@@ -29,7 +29,7 @@
         <tui-scrollbar>
             <div class="search-results-list" *ngIf="!searchLoading && results.length > 0 && search.trim() !== ''">
                 <ng-container *ngFor="let result of results; let i = index;">
-                    <a class="search-result">
+                    <a class="search-result" (click)="seriesClick(result)">
                         <div class="search-result-name" [innerHTML]="highlightSearch(result.name)"></div>
                         <div class="search-result-type">{{ `series.type.${result.type.toLowerCase()}` | translate }}</div>
                     </a>

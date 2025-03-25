@@ -138,7 +138,7 @@ export class TopBar {
             for(const item of res){
                 // if there are no aliases or name matches search add item
                 if(!item.aliases || item.name?.toLowerCase()?.includes(search.toLowerCase())){
-                    result.push({id: item.id, name: item.name, type: item.type});
+                    result.push({id: item.id, name: item.name, type: item.type, slug: item.slug});
                     continue;
                 }
 
@@ -146,7 +146,7 @@ export class TopBar {
                 const aliases = (item.aliases as string).split(',');
                 for(const alias of aliases){
                     if(alias.toLowerCase().includes(search.toLowerCase())){
-                        result.push({id: item.id, name: this.highlightSearch(alias), type: item.type});
+                        result.push({id: item.id, name: this.highlightSearch(alias), type: item.type, slug: item.slug});
                         break;
                     }
                 }
@@ -180,6 +180,13 @@ export class TopBar {
     languageSelected(lang: { value: string, key: string }) {
         this.translate.use(lang.value);
         this.cookieService.set('language', lang.value);
+    }
+
+    // navigate to series detail page
+    seriesClick(ser: { slug: any; }){
+        this.searchEl.nativeElement.blur();
+        this.searchFocused = false;
+        this.router.navigate(['series', ser.slug]);
     }
 
     // logout user

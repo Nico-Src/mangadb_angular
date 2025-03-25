@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, computed, effect, HostListener, inject, signal, ViewChild, ViewChildren } from '@angular/core';
+import { Component, computed, HostListener, inject, signal, ViewChild, ViewChildren } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { Meta, Title } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { API_BASE, CDN_BASE } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
@@ -9,6 +8,8 @@ import { TuiButton, TuiAppearance, TuiLoader } from '@taiga-ui/core';
 import { MangaCover } from '../../manga-cover/manga-cover.component'; 
 import { MangaVolume } from '../../manga-volume/manga-volume.component';
 import { TuiLineClamp, TuiCarousel, TuiPagination } from '@taiga-ui/kit';
+import { APIService, HttpMethod } from '../../../services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
@@ -17,7 +18,8 @@ import { TuiLineClamp, TuiCarousel, TuiPagination } from '@taiga-ui/kit';
     styleUrl: './home.component.less'
 })
 export class HomeComponent {
-    private auth = inject(AuthService);
+    private readonly api = inject(APIService);
+    private readonly auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
     readonly cdn_base = CDN_BASE;
     trendingSeries:any = [];
@@ -34,9 +36,7 @@ export class HomeComponent {
     @ViewChildren('slide') slides: any;
     showSlider = false;
     slideIndex = 0;
-    constructor(private translate: TranslateService, private meta: Meta, private title: Title, private http:HttpClient) {
-        
-    }
+    constructor(private translate: TranslateService, private title: Title, private router: Router) {}
     
     ngOnInit() {
         // set title
@@ -81,7 +81,7 @@ export class HomeComponent {
         const contentLang = this.auth.getUserSetting('prefered-content-language');
         const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
         // send request
-        this.http.get(`${API_BASE}/series/trending/${LIMIT}/${lang}`).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.GET, `series/trending/${LIMIT}/${lang}`, {}).subscribe((res:any)=>{
             // check each descriptions overflow status
             this.slides.changes.subscribe(() => {
                 for(const slide of this.slides._results){
@@ -110,7 +110,7 @@ export class HomeComponent {
         const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
 
         // send request
-        this.http.get(`${API_BASE}/volumes/recently-added/${LIMIT}/${lang}`).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.GET, `volumes/recently-added/${LIMIT}/${lang}`, {}).subscribe((res:any)=>{
             this.recentlyAddedVolumes = res;
             setTimeout(() => this.recentlyAddedLoading.set(false), 250);
         });
@@ -125,10 +125,15 @@ export class HomeComponent {
         const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
 
         // send request
-        this.http.get(`${API_BASE}/volumes/next-releases/${LIMIT}/${lang}`).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.GET, `volumes/next-releases/${LIMIT}/${lang}`, {}).subscribe((res:any)=>{
             this.nextReleasesVolumes = res;
             setTimeout(() => this.nextReleasesLoading.set(false), 250);
         });
+    }
+
+    // navigate to series detail page
+    seriesClick(ser: { slug: any; }){
+        this.router.navigate(['series', ser.slug]);
     }
 
     // check overflow status of given element

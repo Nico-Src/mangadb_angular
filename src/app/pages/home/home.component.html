@@ -10,7 +10,7 @@
                     <manga-cover [id]="ser.volume.id" [nsfw]="ser.volume.nsfw === 1" [nsfw18]="ser.volume.nsfw18 === 1" [blur]="true" fit="cover"></manga-cover>
                 </div>
                 <div class="slide">
-                    <manga-cover [id]="ser.volume.id" [aspectRatio]="ser.volume.aspect_ratio"></manga-cover>
+                    <manga-cover (click)="seriesClick(ser)" [id]="ser.volume.id" [aspectRatio]="ser.volume.aspect_ratio"></manga-cover>
                     <div class="details">
                         <tui-line-clamp [linesLimit]="2" class="name" [content]="ser.name"></tui-line-clamp>
                         <tui-line-clamp [linesLimit]="2" class="alias" [content]="ser.alias"></tui-line-clamp>
