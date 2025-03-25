@@ -107,6 +107,7 @@
     },
 
     "series": {
+        "not-found": "Series could not be found...",
         "type": {
             "manga": "Manga",
             "novel": "Novel",

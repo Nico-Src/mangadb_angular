@@ -27,7 +27,7 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { tablerList, tablerLayoutColumns, tablerLayoutGrid } from '@ng-icons/tabler-icons';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiTable } from '@taiga-ui/addon-table';
-import { heroArrowTurnDownRight } from '@ng-icons/heroicons/outline';
+import { heroArrowTurnDownRight, heroDocumentMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TuiLoader } from '@taiga-ui/core';
 import { TuiArcChart } from '@taiga-ui/addon-charts';
 import { TuiRating } from '@taiga-ui/kit';
@@ -39,7 +39,7 @@ import { UserRole } from '../../../models/user';
     imports: [MangaCover, NgIf, NgFor, NgForOf, NgIcon, TuiRating, TuiTextareaModule, TuiArcChart, TuiTable, TuiAccordion, TuiLoader, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
     templateUrl: './series-detail.component.html',
     styleUrl: './series-detail.component.less',
-    viewProviders: [provideIcons({ faCopyright, solarStar, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
+    viewProviders: [provideIcons({ faCopyright, heroDocumentMagnifyingGlass, solarStar, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
 })
 export class SeriesDetailComponent {
     private readonly api = inject(APIService);
@@ -91,6 +91,8 @@ export class SeriesDetailComponent {
     ratingChartIndex: number = 0;
     deletingRating: boolean = false;
     updatingRating: boolean = false;
+    // 404
+    show404: boolean = false;
     @ViewChild('seriesTitle') seriesTitle: any;
     @ViewChild('seriesAlias') seriesAlias: any;
     @ViewChild('content') content: any;
@@ -144,6 +146,7 @@ export class SeriesDetailComponent {
 
         this.api.request<any>(HttpMethod.GET, `series/slug/${slug}?lang=${lang}`, {}).subscribe((res)=>{
             this.series = res;
+            console.log(res)
             console.log(this.series)
             this.series['relation_keys'] = Object.keys(this.series.relations);
             this.title.setTitle(this.series.name || 'No Name');
@@ -220,6 +223,8 @@ export class SeriesDetailComponent {
                     this.checkingDescOverflow = false;
                 }
             },500);
+        }, (err)=>{
+            this.show404 = true;
         });
     }
 

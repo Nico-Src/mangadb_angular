@@ -1,3 +1,8 @@
+<div class="not-found" *ngIf="show404">
+    <ng-icon name="heroDocumentMagnifyingGlass" class="icon" [style.fontSize.px]="80"></ng-icon>
+    <div class="text">{{ 'series.not-found' | translate }}</div>
+</div>
+
 <div class="banner-wrapper">
     <div class="banner">
         <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" fit="cover" [blur]="true" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
