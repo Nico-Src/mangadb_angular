@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, ViewChild } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { API_BASE, CDN_BASE, LANGS, localeToLang, langToLocale, ago, REPORT_TYPES, successAlert, errorAlert, getTranslation } from '../../../globals';
@@ -32,6 +31,8 @@ import { heroArrowTurnDownRight } from '@ng-icons/heroicons/outline';
 import { TuiLoader } from '@taiga-ui/core';
 import { TuiArcChart } from '@taiga-ui/addon-charts';
 import { TuiRating } from '@taiga-ui/kit';
+import { APIService, HttpMethod } from '../../../services/api.service';
+import { UserRole } from '../../../models/user';
 
 @Component({
     selector: 'series-detail',
@@ -41,8 +42,9 @@ import { TuiRating } from '@taiga-ui/kit';
     viewProviders: [provideIcons({ faCopyright, solarStar, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
 })
 export class SeriesDetailComponent {
-    protected alerts = inject(TuiAlertService);
-    private auth = inject(AuthService);
+    private readonly api = inject(APIService);
+    private readonly alerts = inject(TuiAlertService);
+    private readonly auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
     readonly cdn_base = CDN_BASE;
     series: any = {};
@@ -98,7 +100,7 @@ export class SeriesDetailComponent {
     @ViewChild('reportDialog') reportDialog: any;
     @ViewChild('reportViewDialog') reportViewDialog: any;
     @ViewChild('ratingDialog') ratingDialog: any;
-    constructor(private translate: TranslateService, private meta: Meta, private cookie: CookieService, private title: Title, private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
+    constructor(private translate: TranslateService, private cookie: CookieService, private title: Title, private route: ActivatedRoute, private router: Router) { }
     
     ngOnInit() {
         this.title.setTitle(`Series | MangaDB`);
@@ -132,8 +134,6 @@ export class SeriesDetailComponent {
             const slug = this.route.snapshot.paramMap.get('slug');
             this.loadSeries(slug);
         });
-
-        console.log(this.reportTypes)
     }
 
     // load series by slug
@@ -142,11 +142,11 @@ export class SeriesDetailComponent {
         const contentLang = this.auth.getUserSetting('prefered-content-language');
         const lang = contentLang === 'interface' ? this.translate.currentLang || 'en' : contentLang;
 
-        this.http.get(`${API_BASE}/series/slug/${slug}?lang=${lang}`).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.GET, `series/slug/${slug}?lang=${lang}`, {}).subscribe((res)=>{
             this.series = res;
             console.log(this.series)
-            this.series.relation_keys = Object.keys(this.series.relations);
-            this.title.setTitle(this.series.name);
+            this.series['relation_keys'] = Object.keys(this.series.relations);
+            this.title.setTitle(this.series.name || 'No Name');
 
             // get count of relations
             this.relation_count = 0;
@@ -156,9 +156,9 @@ export class SeriesDetailComponent {
             if(this.relation_count === 0 && this.tabIndex === 2) this.tabIndex = 0; 
 
             // put editions in publisher
-            for(const publisher of this.series.publishers){
+            for(const publisher of this.series.publishers || []){
                 const editions = this.series.publisher_editions?.filter((e:any)=>e.publisher_id === publisher.id) || [];
-                publisher.editions = editions;
+                publisher['editions'] = editions;
             }
 
             // create chart values for rating
@@ -170,9 +170,9 @@ export class SeriesDetailComponent {
 
             // check if there is a alias with the given language
             const langName = localeToLang(lang);
-            let alias = this.series.aliases.find((a: { language: string; title: any; }) => a.language === langName && a.title !== this.series.name);
-            if(!alias) alias = this.series.aliases.find((a: { title: any; }) => a.title !== this.series.name);
-            if(alias) this.series.alias = alias.title;
+            let alias = this.series.aliases.find((a: { language: string; title: any; }) => a.language === langName && a.title !== this.series?.name);
+            if(!alias) alias = this.series.aliases.find((a: { title: any; }) => a.title !== this.series?.name);
+            if(alias) this.series['alias'] = alias.title;
 
             // group aliases
             const groupedAliases:any = [];
@@ -190,22 +190,22 @@ export class SeriesDetailComponent {
                     });
                 }
             }
-            this.series.groupedAliases = groupedAliases;
+            this.series['groupedAliases'] = groupedAliases;
 
             // check if there is a description with the given language
             let description = this.series.descriptions.find((d: { language: string; }) => d.language === langName);
-            if(!description) description = this.series.descriptions[0];
-            if(description) this.series.description = description;
+            if(!description && this.series.descriptions.length > 0) description = this.series.descriptions[0];
+            if(description) this.series['description'] = description;
 
             // seperate tags
-            this.series.contentTypeTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-type');
-            this.series.contentRatingTags = this.series.tags.filter((t: { type: string; name: string; }) => t.type == 'content-rating' && t.name != 'Safe' && t.name);
-            this.series.contentWarningTags = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
-            this.series.otherTags = this.series.tags.filter((t: { type: string; }) => t.type != 'publication-status' && t.type != 'origin-country' && t.type != 'language' && t.type != 'content-rating' && t.type != 'content-warning' && t.type != 'content-type');
+            this.series['contentTypeTags'] = this.series.tags.filter((t: { type: string; }) => t.type == 'content-type');
+            this.series['contentRatingTags'] = this.series.tags.filter((t: { type: string; name: string; }) => t.type == 'content-rating' && t.name != 'Safe' && t.name);
+            this.series['contentWarningTags'] = this.series.tags.filter((t: { type: string; }) => t.type == 'content-warning');
+            this.series['otherTags'] = this.series.tags.filter((t: { type: string; }) => t.type != 'publication-status' && t.type != 'origin-country' && t.type != 'language' && t.type != 'content-rating' && t.type != 'content-warning' && t.type != 'content-type');
 
             // set selected description
-            this.availableDescLangs = LANGS.filter(l => this.series.descriptions.find((d: { language: string; }) => this.langToLoc(d.language) === l.value));
-            this.selectedDescLang = this.availableDescLangs.find((l: { value: string; }) => l.value === this.langToLoc(description.language));
+            this.availableDescLangs = LANGS.filter(l => this.series?.descriptions.find((d: { language: string; }) => this.langToLoc(d.language) === l.value));
+            this.selectedDescLang = this.availableDescLangs.find((l: { value: string; }) => l.value === this.langToLoc(description?.language || 'English'));
 
             // load editions
             this.loadEditions();
@@ -213,7 +213,7 @@ export class SeriesDetailComponent {
             setTimeout(()=>{
                 // fit title and alias to container and check overflow for current description
                 this.fitToParent(this.seriesTitle?.nativeElement,{max: 50, height: 120});
-                if(this.series.alias) this.fitToParent(this.seriesAlias?.nativeElement,{max: 25, height: 70});
+                if(this.series && this.series['alias']) this.fitToParent(this.seriesAlias?.nativeElement,{max: 25, height: 70});
                 if(description) this.checkDescriptionOverflow(description?.description);
                 else {
                     this.desc.nativeElement.classList.add('loaded');
@@ -236,7 +236,7 @@ export class SeriesDetailComponent {
 
     // load editions of seris
     loadEditions(){
-        this.http.get(`${API_BASE}/series/volume-editions/${this.series.id}`).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.GET, `series/volume-editions/${this.series?.id}`, {}).subscribe((res:any)=>{
             this.editions = res;
 
             // get users prefered content language
@@ -285,10 +285,10 @@ export class SeriesDetailComponent {
 
         // based on which volumes to fetch add requests to promises array
         if(include_special === true){
-            if(exclude_default === false) promises.push(this.http.get(`${API_BASE}/series/volumes/${this.series.id}?edition=${edition}&limit=${VOLUME_LIMIT}&offset=${offset}`,{headers: {'Authorization': header}}).toPromise());
-            promises.push(this.http.get(`${API_BASE}/series/volumes/${this.series.id}?edition=${edition}&special=true&limit=${VOLUME_LIMIT}&offset=${specialOffset}`,{headers: {'Authorization': header}}).toPromise());
+            if(exclude_default === false) promises.push(this.api.request<any>(HttpMethod.GET, `series/volumes/${this.series?.id}?edition=${edition}&limit=${VOLUME_LIMIT}&offset=${offset}`,{}).toPromise());
+            promises.push(this.api.request<any>(HttpMethod.GET, `series/volumes/${this.series?.id}?edition=${edition}&special=true&limit=${VOLUME_LIMIT}&offset=${specialOffset}`,{}).toPromise());
         } else {
-            promises.push(this.http.get(`${API_BASE}/series/volumes/${this.series.id}?edition=${edition}&limit=${VOLUME_LIMIT}&offset=${offset}`,{headers: {'Authorization': header}}).toPromise());
+            promises.push(this.api.request<any>(HttpMethod.GET, `series/volumes/${this.series?.id}?edition=${edition}&limit=${VOLUME_LIMIT}&offset=${offset}`,{}).toPromise());
         }
 
         // execute all promises
@@ -335,7 +335,7 @@ export class SeriesDetailComponent {
 
     // round rating
     roundRating(){
-        return (Math.round(this.series?.rating * 100) / 100).toFixed(2)
+        return (Math.round((this.series?.rating || 0) * 100) / 100).toFixed(2)
     }
 
     // convert language to locale code
@@ -350,16 +350,17 @@ export class SeriesDetailComponent {
 
     // description changed event
     descSelected(e:any){
+        if(!this.series) return;
         // find description
         const desc = this.series.descriptions.find((d: { language: string; }) => this.langToLoc(d.language) === e.value);
-        this.series.description = desc;
+        this.series['description'] = desc || null;
         // reset description state (not expanded, max height and remove clamp)
         this.expandDesc = false;
         this.desc.nativeElement.style.maxHeight = '120px';
         this.desc.nativeElement.classList.remove('clamp');
         // check overflow for new description
         this.checkingDescOverflow = true;
-        this.checkDescriptionOverflow(desc.description);
+        this.checkDescriptionOverflow(desc?.description || '');
     }
 
     // edition changed event
@@ -490,32 +491,41 @@ export class SeriesDetailComponent {
         this.showReportViewDialog = true;
     }
 
+    // show rating dialog
     openRatingDialog(){
-        if(!this.auth.isLoggedIn()) return;
+        // if not logged in show error
+        if(!this.auth.isLoggedIn()){
+            // TODO translate
+            errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
+            return;
+        }
+        // load ratings
         this.showRatingDialog = true;
         this.ratingLoading = true;
         this.loadRatings();
     }
 
+    // load series ratings from api
     loadRatings(){
-        // get session_id
-        const session_id = this.cookie.get('auth_session');
-        const header = "Bearer " + session_id;
-
-        this.http.get(`${API_BASE}/user/series-rating/id/${this.series.id}`,{headers: {Authorization: header}}).subscribe((res:any)=>{
+        this.api.request<any>(HttpMethod.GET, `user/series-rating/id/${this.series?.id}`, {}).subscribe((res:any)=>{
             this.rating = res?.rating || 0;
             this.ratingExists = this.rating !== 0;
             this.ratingLoading = false;
         });
     }
 
+    // delete user rating
     deleteRating(){
-        this.deletingRating = true;
-        // get session_id
-        const session_id = this.cookie.get('auth_session');
-        const header = "Bearer " + session_id;
+        // if user isnt logged in show error message
+        if(!this.auth.isLoggedIn()){
+            // TODO translate
+            errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
+            return;
+        }
 
-        this.http.delete(`${API_BASE}/user/series-rating/delete/${this.series.id}`,{headers: {Authorization: header}, responseType: 'text'}).subscribe(async (res)=>{
+        this.deletingRating = true;
+        this.api.request<string>(HttpMethod.DELETE, `user/series-rating/delete/${this.series?.id}`, {}, 'text').subscribe(async(res)=>{
+            // show success message
             const msg = await getTranslation(this.translate, 'rating-dialog.delete-success');
             successAlert(this.alerts, msg, undefined, this.translate);
             this.updateRatings();
@@ -524,20 +534,26 @@ export class SeriesDetailComponent {
                 this.showRatingDialog = false;
                 this.deletingRating = false;
             },250);
-        },(err)=>{
+        }, (err)=>{
             errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
         });
     }
 
+    // update or add rating
     saveRating(){
+        // if user isnt logged in show error message
+        if(!this.auth.isLoggedIn()){
+            // TODO translate
+            errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
+            return;
+        }
+
         this.updatingRating = true;
 
-        // get session_id
-        const session_id = this.cookie.get('auth_session');
-        const header = "Bearer " + session_id;
-
+        // if rating exists update it
         if(this.ratingExists){
-            this.http.post(`${API_BASE}/user/series-rating/update/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe(async (res)=>{
+            this.api.request<string>(HttpMethod.POST, `user/series-rating/update/${this.series?.id}`, { rating: this.rating }, 'text').subscribe(async (res)=>{
+                // show success message
                 const msg = await getTranslation(this.translate, 'rating-dialog.save-success');
                 successAlert(this.alerts, msg, undefined, this.translate);
                 this.updateRatings();
@@ -549,8 +565,10 @@ export class SeriesDetailComponent {
             },(err)=>{
                 errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
             });
+        // if not add rating
         } else {
-            this.http.post(`${API_BASE}/user/series-rating/add/${this.series.id}`,{rating: this.rating},{headers:{Authorization:header},responseType: 'text'}).subscribe(async (res)=>{
+            this.api.request<string>(HttpMethod.POST, `user/series-rating/add/${this.series?.id}`, { rating: this.rating }, 'text').subscribe(async (res)=>{
+                // show success message
                 const msg = await getTranslation(this.translate, 'rating-dialog.add-success');
                 successAlert(this.alerts, msg, undefined, this.translate);
                 this.updateRatings();
@@ -565,8 +583,11 @@ export class SeriesDetailComponent {
         }
     }
 
+    // fetch updated ratings
     updateRatings(){
-        this.http.get(`${API_BASE}/series/ratings/${this.series.slug}`).subscribe((res:any)=>{
+        if(!this.series) return;
+        this.api.request<any>(HttpMethod.GET, `series/ratings/${this.series?.slug}`, {}).subscribe((res:any)=>{
+            if(!this.series) return;
             this.series.rating = res.rating;
             this.series.rating_count = res.rating_count;
             this.series.ratings = res.ratings;
@@ -579,8 +600,9 @@ export class SeriesDetailComponent {
 
     // load reports from api
     loadReports(){
-        this.http.get(`${API_BASE}/reports/series/${this.series.id}`).subscribe((res)=>{
+        this.api.request<any>(HttpMethod.GET, `reports/series/${this.series?.id}`, {}).subscribe((res)=>{
             this.reports = res;
+            console.log(this.reports)
             this.reportsLoading = false;
         });
     }
@@ -606,11 +628,14 @@ export class SeriesDetailComponent {
         }
     }
 
+    // return time that has passed since given datetime
     agoTime(time:string){
         return ago(time, this.translate.currentLang);
     }
 
+    // add report to series
     async addReport(){
+        // if user isnt logged in show error
         if(!this.auth.isLoggedIn()){
             const msg = await getTranslation(this.translate, 'report-dialog.login-required');
             errorAlert(this.alerts, msg, undefined, this.translate);
@@ -619,27 +644,28 @@ export class SeriesDetailComponent {
 
         const user = this.auth.getUser();
     
-        if(user.role !== 'Admin'){
+        // if user is not admin he doesnt have the permissions to add a report => show error
+        if(user.role !== UserRole.ADMIN){
             const msg = await getTranslation(this.translate, 'report-dialog.role-required');
             errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
     
+        // check if description is set if not show error
         if(this.reportDescription.trim() === ''){
             const msg = await getTranslation(this.translate, 'report-dialog.empty-desc');
             errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
 
-        // get session_id
-        const session_id = this.cookie.get('auth_session');
-        const header = "Bearer " + session_id;
-
-        this.http.post(`${API_BASE}/reports/add/series`,
-            {item_id: this.series.id, type: this.selectedReportType.key, description: this.reportDescription},
-            {responseType: 'text', headers: {Authorization: header}}).subscribe(async (res)=>{
+        this.api.request<any>(HttpMethod.POST, `reports/add/series`, 
+            {item_id: this.series?.id, type: this.selectedReportType.key, description: this.reportDescription},
+            'text'
+        ).subscribe(async (res)=>{
             this.reportDescription = "";
+            // reload reports
             this.loadReports();
+            // show success message
             const msg = await getTranslation(this.translate, 'report-dialog.success');
             successAlert(this.alerts, msg, undefined, this.translate);
         },(err)=>{

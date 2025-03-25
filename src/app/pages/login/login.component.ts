@@ -1,17 +1,16 @@
-import { Component, computed, effect, HostListener, inject } from '@angular/core';
-import { TranslateService, TranslatePipe, TranslateDirective, _ } from "@ngx-translate/core";
+import { Component, computed, inject } from '@angular/core';
+import { TranslateService, TranslatePipe, _ } from "@ngx-translate/core";
 import { HttpClient } from "@angular/common/http";
-import { API_BASE, CDN_BASE, errorAlert, getTranslation, successAlert } from "../../../globals";
-import { NgForOf } from '@angular/common';
+import { errorAlert, getTranslation, successAlert } from "../../../globals";
 import { Meta, Title } from "@angular/platform-browser";
 import { TuiIcon, TuiTextfield, TuiButton, TuiLoader, TuiHint } from '@taiga-ui/core';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy'; 
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { AuthService } from '../../../services/auth.service';
-import { TuiPassword } from '@taiga-ui/kit';
+import { APIService, HttpMethod } from '../../../services/api.service';
 
 @Component({
     selector: 'login',
@@ -21,15 +20,16 @@ import { TuiPassword } from '@taiga-ui/kit';
 })
 
 export class LoginComponent {
-    protected alerts = inject(TuiAlertService);
-    protected auth = inject(AuthService);
+    private readonly api = inject(APIService);
+    private readonly alerts = inject(TuiAlertService);
+    private readonly auth = inject(AuthService);
     readonly loggedIn = computed(() => this.auth.isLoggedIn());
     username = "";
     password = "";
     passwordVisible = false;
     loggingIn = false;
 
-    constructor(private http:HttpClient, private translate: TranslateService, private meta: Meta, private title: Title, private cookieService:CookieService, private router: Router) {
+    constructor(private translate: TranslateService, private title: Title, private cookieService:CookieService, private router: Router) {
         // if user is already logged in, redirect to home
         if(this.loggedIn()){
             this.router.navigate(['/']);
@@ -71,7 +71,7 @@ export class LoginComponent {
         }
 
         // send request to api
-        this.http.post(`${API_BASE}/auth/login`, { username: this.username.trim(), password: this.password.trim() }).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.POST, `auth/login`, { username: this.username.trim(), password: this.password.trim() }).subscribe((res:any)=>{
             // set cookie
             this.cookieService.set('auth_session', res.session.id, 31, '/');
             // set auth state

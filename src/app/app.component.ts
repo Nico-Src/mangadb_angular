@@ -11,7 +11,6 @@ import { pSBC, Color, Solver } from '../libs/filterTint.js';
 import { TranslateService, _ } from "@ngx-translate/core";
 import { SideBarService } from "../services/sidebar.service";
 import { APIService, HttpMethod } from "../services/api.service";
-import { User } from "../models/user";
 
 @Component({
     standalone: true,
@@ -53,7 +52,7 @@ export class AppComponent {
             document.body.classList.add(DEFAULT_SETTINGS['theme']);
             return;
         }
-        this.api.request<User>(HttpMethod.POST, 'auth/session', {}, 'json').subscribe((user:User)=>{
+        this.api.request<any>(HttpMethod.POST, 'auth/session', {}, 'json').subscribe((user:any)=>{
             // set auth state
             this.auth.setUser(user);
             this.auth.setLoggedIn(true);

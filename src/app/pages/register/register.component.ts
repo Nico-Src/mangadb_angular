@@ -1,14 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
-import { TranslateService, TranslatePipe, TranslateDirective, _ } from "@ngx-translate/core";
-import { Meta, Title } from "@angular/platform-browser";
-import { HttpClient } from '@angular/common/http';
+import { TranslateService, TranslatePipe, _ } from "@ngx-translate/core";
+import { Title } from "@angular/platform-browser";
 import { TuiAlertService, TuiIcon, TuiTextfield, TuiButton, TuiLoader } from '@taiga-ui/core';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import { CONFIG, API_BASE, errorAlert, successAlert, getTranslation } from '../../../globals';
+import { CONFIG, errorAlert, successAlert, getTranslation } from '../../../globals';
+import { APIService, HttpMethod } from '../../../services/api.service';
 
 @Component({
     selector: 'register',
@@ -17,8 +17,9 @@ import { CONFIG, API_BASE, errorAlert, successAlert, getTranslation } from '../.
     styleUrl: './register.component.less'
 })
 export class RegisterComponent {
-    protected alerts = inject(TuiAlertService);
-    protected auth = inject(AuthService);
+    private readonly api = inject(APIService);
+    private readonly alerts = inject(TuiAlertService);
+    private readonly auth = inject(AuthService);
     readonly loggedIn = computed(() => this.auth.isLoggedIn());
     username = "";
     password = "";
@@ -26,7 +27,7 @@ export class RegisterComponent {
     confirmPassword = "";
     registering = false;
 
-    constructor(private http:HttpClient, private translate: TranslateService, private meta: Meta, private title: Title, private router: Router) {
+    constructor(private translate: TranslateService, private title: Title, private router: Router) {
         // if user is already logged in, redirect to home
         if(this.loggedIn()){
             this.router.navigate(['/']);
@@ -87,7 +88,7 @@ export class RegisterComponent {
 
         // send request to api
         this.registering = true;
-        this.http.post(`${API_BASE}/auth/register`, { username: this.username, password: this.password }, { responseType: 'text' }).subscribe((res: any) => {
+        this.api.request<any>(HttpMethod.POST, `auth/register`, { username: this.username.trim(), password: this.password.trim() }, 'text').subscribe((res:any)=>{
             // show success alert and redirect to login
             setTimeout(async () => {
                 this.registering = false;

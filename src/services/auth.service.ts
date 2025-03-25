@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { API_BASE, DEFAULT_SETTINGS } from "../globals";
 import { signal, Injectable, computed, WritableSignal, inject } from "@angular/core";
 import { CookieService } from "ngx-cookie-service";
-import { User } from "../models/user";
 import { APIService, HttpMethod } from "./api.service";
 
 @Injectable({ providedIn: 'root' })
@@ -12,10 +11,10 @@ export class AuthService {
     private api:APIService = inject(APIService);
 
     // null user (for when the user is not logged in)
-    readonly nullUser: User = { id: null, slug: null, username: null, profile_image: null, role: null, age_verified: null, settings: null };
+    readonly nullUser: any = { id: null, slug: null, username: null, profile_image: null, role: null, age_verified: null, settings: null };
 
     // current user data
-    private user:WritableSignal<User> = signal<User>(this.nullUser);
+    private user:WritableSignal<any> = signal<any>(this.nullUser);
 
     // current theme
     theme:WritableSignal<string> = signal<string>("light");
@@ -25,7 +24,7 @@ export class AuthService {
 
     // getters and setters for both user data and logged in status
     public getUser = computed(() => this.user());
-    public setUser = (data: User) => this.user.set(data);
+    public setUser = (data: any) => this.user.set(data);
     public setUserField = (field: string, value: any) => this.user.update(user => ({ ...user, [field]: value }));
 
     public isLoggedIn = computed(() => this.loggedIn());
@@ -44,7 +43,7 @@ export class AuthService {
             // else send validation request with session token
             const session_id = this.cookie.get('auth_session');
             if(!session_id) resolve(this.nullUser);
-            this.api.request<User>(HttpMethod.POST, 'auth/session', {}, 'json').subscribe((user:User)=>{
+            this.api.request<any>(HttpMethod.POST, 'auth/session', {}, 'json').subscribe((user:any)=>{
                 if(!user.settings || Object.keys(user.settings).length === 0){
                     this.updateSettings(user.id || -1, DEFAULT_SETTINGS);
                     user.settings = DEFAULT_SETTINGS;

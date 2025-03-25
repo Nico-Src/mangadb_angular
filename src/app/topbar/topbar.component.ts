@@ -18,7 +18,6 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerLanguage } from '@ng-icons/tabler-icons';
 import { UserRole } from '../../models/user';
 import { APIService, HttpMethod } from '../../services/api.service';
-import { Series } from '../../models/series';
 
 @Component({
     selector: 'top-bar',
@@ -133,7 +132,7 @@ export class TopBar {
     updateSearchResults(search: string) {
         const LIMIT = 10;
 
-        this.api.request<Series[]>(HttpMethod.POST, 'series/search', { search, limit: LIMIT}).subscribe((res)=>{
+        this.api.request<any>(HttpMethod.POST, 'series/search', { search, limit: LIMIT}).subscribe((res)=>{
             // check if aliases were matched in backend
             let result = [];
             for(const item of res){
@@ -144,7 +143,7 @@ export class TopBar {
                 }
 
                 // else check aliases and add with found alias as name
-                const aliases = item.aliases.split(',');
+                const aliases = (item.aliases as string).split(',');
                 for(const alias of aliases){
                     if(alias.toLowerCase().includes(search.toLowerCase())){
                         result.push({id: item.id, name: this.highlightSearch(alias), type: item.type});
