@@ -1,0 +1,28 @@
+<div class="window" [class.show]="show" #window>
+    <div class="title">{{ 'rating-dialog.title' | translate }}</div>
+    <tui-elastic-container>
+        <div class="chart-wrapper" *ngIf="!loading">
+            <tui-arc-chart [max]="100" size="xl" class="tui-space_right-4" [value]="chartValue" [(activeItemIndex)]="chartIndex">
+                <div class="rating-count" *ngIf="chartIndex > 0">
+                    <div class="row">
+                        {{chartIndex+1}} <ng-icon name="solarStar" class="icon" [style.fontSize.px]="20"></ng-icon>
+                    </div>
+                    <div class="row">{{ chartValue[chartIndex] }}%</div>
+                </div>
+            </tui-arc-chart>
+        </div>
+        <div class="your-rating" *ngIf="!loading">{{ 'rating-dialog.your' | translate }}</div>
+        <div class="rate-wrapper" *ngIf="!loading">
+            <tui-rating [max]="5" [(ngModel)]="rating" *ngIf="!loading"/>
+        </div>
+        <div class="button-wrapper" *ngIf="!loading">
+            <tui-loader class="loader error" [overlay]="true" [showLoader]="deleting">
+                <button size="s" tuiButton type="button" class="cancel" appearance="accent" [disabled]="!ratingExists" (click)="deleteRating()">{{ 'rating-dialog.delete' | translate }}</button>
+            </tui-loader>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="updating">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="saveRating()">{{ 'rating-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div *ngIf="loading"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+    </tui-elastic-container>
+</div>
