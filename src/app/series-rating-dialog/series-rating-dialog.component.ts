@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TuiButton, TuiAppearance, TuiLoader, TuiAlertService } from '@taiga-ui/core';
 import { TuiElasticContainer, TuiRating } from '@taiga-ui/kit';
@@ -16,7 +16,6 @@ import { errorAlert, successAlert, getTranslation } from '../../globals';
     imports: [ TranslatePipe, TuiButton, TuiAppearance, TuiElasticContainer, TuiArcChart, NgIf, NgIcon, TuiLoader, TuiRating, ReactiveFormsModule, FormsModule],
     templateUrl: './series-rating-dialog.component.html',
     styleUrl: './series-rating-dialog.component.less',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [provideIcons({solarStar})]
 })
 export class SeriesRatingDialog {
@@ -36,7 +35,6 @@ export class SeriesRatingDialog {
     updating: boolean = false;
     show = false;
     @ViewChild('window') window: any;
-
     
     ngOnChanges(){
         // create chart values for rating
@@ -105,6 +103,7 @@ export class SeriesRatingDialog {
                 this.updating = false;
             },(err)=>{
                 errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+                this.updating = false;
             });
         // if not add rating
         } else {
@@ -119,6 +118,7 @@ export class SeriesRatingDialog {
                 this.updating = false;
             }, (err)=>{
                 errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+                this.updating = false;
             });
         }
     }
@@ -144,6 +144,7 @@ export class SeriesRatingDialog {
             this.deleting = false;
         }, (err)=>{
             errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            this.deleting = false;
         });
     }
 }
