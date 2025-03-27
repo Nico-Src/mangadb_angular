@@ -79,11 +79,28 @@ export const REPORT_TYPES = [
     {key: 'other', name: 'Other', type: 'volume'},
 ];
 
-export const reportStatuses = [
+export const REPORT_STATUSES = [
     {key: 'open', name: 'Open'},
     {key: 'under-review', name: 'Under Review'},
     {key: 'resolved', name: 'Resolved'},
     {key: 'refused', name: 'Refused'}
+];
+
+export const READ_STATUSES = [
+    {key: 'started'},{key: 'completed'},{key: 'paused'},
+    {key: 'dropped'}
+];
+
+export const READ_STATUS_VISIBILITY_OPTIONS = [
+    {label: 'public', value: 'public'},{label: 'private', value: 'private'}
+];
+
+export const READ_STATUS_PROGRESS_TYPE_OPTIONS = [
+    {key: 'chapters'},{key: 'volumes'}
+];
+
+export const READ_STATUS_PRIORITY_OPTIONS = [
+    {key: 'low'},{key: 'mid'},{key: 'high'}
 ];
 
 // show error alert
