@@ -1,0 +1,80 @@
+<div class="banner-wrapper">
+    <div class="banner">
+        <img *ngIf="publisher?.id" [src]="`${cdn_base}/publisher/image/${publisher?.id}/scaled`" [tuiSkeleton]="imgLoading" tuiLoading="lazy" (load)="imgLoading = false;">
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="not-found" *ngIf="show404">
+        <ng-icon name="heroDocumentMagnifyingGlass" class="icon" [style.fontSize.px]="80"></ng-icon>
+        <div class="text">{{ 'publisher.not-found' | translate }}</div>
+    </div>
+    <div class="content" #content>
+        <div class="cover-wrapper" *ngIf="!show404">
+            <div class="flag">
+                <img *ngIf="publisher?.headquarter" [class.light]="headquarterToLocale(publisher?.headquarter) === 'jpn'" [src]="`/img/flags/${headquarterToLocale(publisher?.headquarter)}.png`">
+            </div>
+            <img *ngIf="publisher?.id" [src]="`${cdn_base}/publisher/image/${publisher?.id}/high`" [tuiSkeleton]="imgLoading" tuiLoading="lazy" (load)="imgLoading = false;">
+        </div>
+        <div class="detail-wrapper">
+            <div class="top" *ngIf="publisher?.id">
+                <div class="title" #publisherTitle>
+                    {{publisher.name}}
+                </div>
+                <div class="aliases" *ngIf="publisher?.aliases?.length > 0" tuiFade>
+                    <span class="alias">{{ 'publisher.also-known-as' | translate }}</span>
+                    <div class="alias-item" *ngFor="let alias of publisher?.aliases">{{alias.name}}</div>
+                </div>
+            </div>
+            <div class="bottom" *ngIf="publisher?.id">
+                <div class="item">
+                    <div class="label"><span>{{ 'publisher.founded' | translate }}</span><ng-icon class="icon" name="matHistoryOutline" [style.fontSize.px]="18"></ng-icon></div>
+                    <div class="value">
+                        <span>{{ publisher?.translate_founded ? (publisher?.founding_text | translate) : publisher?.founding_text }}</span>
+                    </div>
+                </div>
+                <div class="item website">
+                    <div class="label"><span>{{ 'publisher.website' | translate }}</span><ng-icon class="icon" name="solarLink" [style.fontSize.px]="18"></ng-icon></div>
+                    <div class="value">
+                        <span class="link" (click)="openLinkDialog(publisher?.website)">{{ publisher?.domain || '-' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="description-wrapper" [class.hide]="checkingDescOverflow">
+            <div class="header">
+                <span>{{ 'series.description' | translate }}</span>
+            </div>
+            <div class="description" *ngIf="publisher.description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="publisher?.description?.description"></div>
+            <div class="description" *ngIf="!publisher.description" #desc>
+                <div class="no-desc">
+                    <div class="title">{{ 'series.no-description.title' | translate }}</div>
+                    <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
+                </div>
+            </div>
+            <div class="show-more-wrapper" [class.hide-description]="checkingDescOverflow" [class.show]="descOverflowing">
+                <div class="show-more-btn" (click)="toggleDesc()">
+                    <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
+                    <ng-icon name="solarDoubleAltArrowUp" class="icon" [style.fontSize.px]="16" *ngIf="expandDesc"></ng-icon>
+                    {{ (expandDesc ? 'series.show-less' : 'series.show-more') | translate }}
+                    <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
+                    <ng-icon name="solarDoubleAltArrowUp" class="icon" [style.fontSize.px]="16" *ngIf="expandDesc"></ng-icon>
+                </div>
+            </div>
+        </div>
+        <div class="description-select" [class.overflowing]="descOverflowing" [class.hide]="checkingDescOverflow">
+            <div class="source-wrapper" *ngIf="publisher?.description?.source">{{ 'publisher.source' | translate }}:&nbsp;<span class="source" (click)="openLinkDialog(publisher?.description?.source.split('|')[1])">{{ publisher?.description?.source.split('|')[0] }}</span></div>
+            <tui-select *ngIf="publisher?.description" tuiTextfieldSize="s" [(ngModel)]="selectedDescLang" tuiTextfieldSize="s" (ngModelChange)="descSelected($event)" [valueContent]="languageContent">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableDescLangs"></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <div class="section-title" [class.hide]="checkingDescOverflow">{{ 'publisher.works' | translate }}</div>
+    </div>
+</div>
+
+<link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
