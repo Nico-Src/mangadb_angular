@@ -153,7 +153,7 @@ export class SeriesDetailComponent {
             this.series = res;
             console.log(this.series)
             this.series['relation_keys'] = Object.keys(this.series.relations);
-            this.title.setTitle(this.series.name || 'No Name');
+            this.title.setTitle(`${(this.series.name || 'No Name')} | MangaDB`);
 
             // get count of relations
             this.relation_count = 0;
@@ -556,7 +556,6 @@ export class SeriesDetailComponent {
     loadReports(){
         this.api.request<any>(HttpMethod.GET, `reports/series/${this.series?.id}`, {}).subscribe((res)=>{
             this.reports = res;
-            console.log(this.reports)
             this.reportsLoading = false;
         });
     }
@@ -618,5 +617,10 @@ export class SeriesDetailComponent {
         },(err)=>{
             errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
         });
+    }
+
+    // redirect to publisher
+    publisherClick(publisher:any){
+        this.router.navigate(['publisher',publisher.slug]);
     }
 }

@@ -10,6 +10,7 @@ import { BrowseSeriesComponent } from './pages/browse-series/browse-series.compo
 import { SeriesDetailComponent } from './pages/series-detail/series-detail.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { UserRole } from '../models/user';
+import { PublisherDetailComponent } from './pages/publisher-detail/publisher-detail.component';
 
 export const routes: Routes = [
     {
@@ -50,6 +51,11 @@ export const routes: Routes = [
         path: 'series/:slug',
         component: SeriesDetailComponent,
         canActivate: [AuthGuard],
+    },
+    {
+        path: 'publisher/:slug',
+        component: PublisherDetailComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'admin/dashboard',

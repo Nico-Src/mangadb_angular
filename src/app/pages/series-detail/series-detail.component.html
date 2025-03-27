@@ -150,7 +150,7 @@
             </thead>
             <tbody tuiTbody>
                 <ng-container *ngFor="let publisher of series.publishers">
-                    <tr class="publisher" [class.origin]="publisher.origin === 1" [class.border]="publisher.editions?.length === 0 && publisher.origin === 0">
+                    <tr class="publisher" [class.origin]="publisher.origin === 1" [class.border]="publisher.editions?.length === 0 && publisher.origin === 0" (click)="publisherClick(publisher)">
                         <td tuiTd>
                             <img [style.height.px]="15" [src]="`/img/flags/${langToLoc(publisher.language)}.png`">
                         </td>
@@ -168,7 +168,7 @@
                             {{ `tags.${publisher.status.toLowerCase()}` | translate }}
                         </td>
                     </tr>
-                    <tr *ngFor="let edition of publisher.editions" class="edition">
+                    <tr *ngFor="let edition of publisher.editions" class="edition" (click)="publisherClick(publisher)">
                         <td tuiTd>
                             <ng-icon name="heroArrowTurnDownRight" [style.fontSize.px]="20" class="icon"></ng-icon>
                         </td>
