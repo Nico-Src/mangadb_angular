@@ -28,10 +28,10 @@
             </div>
             <div class="bottom" *ngIf="series?.id">
                 <div class="actions">
-                    <button appearance="accent" size="m" tuiButton type="button" class="list-btn">
+                    <button appearance="accent" size="m" tuiButton (click)="openListDialog()" type="button" class="list-btn">
                         <ng-icon class="icon" name="faSolidPlus" [style.fontSize.px]="20"></ng-icon>{{ 'series.add-to-list' | translate }}
                     </button>
-                    <button appearance="accent" size="m" tuiButton type="button" [tuiHint]="'series.reading-history' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom" class="reading-history-btn">
+                    <button appearance="accent" size="m" tuiButton (click)="openReadingDialog()" type="button" [tuiHint]="'series.reading-history' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom" class="reading-history-btn">
                         <ng-icon class="icon" name="faBookmark" [style.fontSize.px]="20"></ng-icon>
                     </button>
                     <button appearance="accent" size="m" tuiButton (click)="openRatingDialog()" type="button" [tuiHint]="'series.rating' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom" class="rating-btn">
@@ -226,6 +226,9 @@
 
 <link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
 <tag-dialog [tag]="tagDialogTag" #tagDialog></tag-dialog>
+<series-rating-dialog [series]="series" (triggerUpdate)="updateRatings()" #ratingDialog></series-rating-dialog>
+<reading-status-dialog [series]="series" #readingDialog></reading-status-dialog>
+<series-list-dialog [series]="series" #listDialog></series-list-dialog>
 <div class="report-dialog" (click)="reportDialogClick($event)" #reportDialog>
     <div class="window" [class.show]="showReportDialog">
         <div class="title">{{ 'report-dialog.title' | translate }}</div>
@@ -269,36 +272,6 @@
                 </ng-template>
             </tui-accordion-item>
         </tui-accordion>
-    </div>
-</div>
-<div class="rating-dialog" (click)="ratingDialogClick($event)" #ratingDialog>
-    <div class="window" [class.show]="showRatingDialog">
-        <div class="title">{{ 'rating-dialog.title' | translate }}</div>
-        <tui-elastic-container>
-            <div class="chart-wrapper" *ngIf="!ratingLoading">
-                <tui-arc-chart [max]="100" size="xl" class="tui-space_right-4" [value]="ratingChartValue" [(activeItemIndex)]="ratingChartIndex">
-                    <div class="rating-count" *ngIf="ratingChartIndex > 0">
-                        <div class="row">
-                            {{ratingChartIndex+1}} <ng-icon name="solarStar" class="icon" [style.fontSize.px]="20"></ng-icon>
-                        </div>
-                        <div class="row">{{ ratingChartValue[ratingChartIndex] }}%</div>
-                    </div>
-                </tui-arc-chart>
-            </div>
-            <div class="your-rating" *ngIf="!ratingLoading">{{ 'rating-dialog.your' | translate }}</div>
-            <div class="rate-wrapper" *ngIf="!ratingLoading">
-                <tui-rating [max]="5" [(ngModel)]="rating" *ngIf="!ratingLoading"/>
-            </div>
-            <div class="button-wrapper" *ngIf="!ratingLoading">
-                <tui-loader class="loader error" [overlay]="true" [showLoader]="deletingRating">
-                    <button size="s" tuiButton type="button" class="cancel" appearance="accent" [disabled]="!ratingExists" (click)="deleteRating()">{{ 'rating-dialog.delete' | translate }}</button>
-                </tui-loader>
-                <tui-loader class="loader" [overlay]="true" [showLoader]="updatingRating">
-                    <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="saveRating()">{{ 'rating-dialog.save' | translate }}</button>
-                </tui-loader>
-            </div>
-            <div *ngIf="ratingLoading"><tui-loader class="loader" size="l" [showLoader]="ratingLoading"></tui-loader></div>
-        </tui-elastic-container>
     </div>
 </div>
 

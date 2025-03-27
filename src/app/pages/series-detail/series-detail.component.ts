@@ -2,16 +2,16 @@ import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { _, TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { API_BASE, CDN_BASE, LANGS, localeToLang, langToLocale, ago, REPORT_TYPES, successAlert, errorAlert, getTranslation } from '../../../globals';
+import { CDN_BASE, LANGS, localeToLang, langToLocale, ago, REPORT_TYPES, successAlert, errorAlert, getTranslation } from '../../../globals';
 import { AuthService } from '../../../services/auth.service';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
 import { NgIf, NgFor, NgForOf } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { faCopyright, faFlag, faBookmark, faStar } from '@ng-icons/font-awesome/regular';
 import { faSolidPlus } from '@ng-icons/font-awesome/solid';
-import { TuiButton, TuiAppearance, TuiHint, TuiAlertService } from '@taiga-ui/core';
+import { TuiButton, TuiAppearance, TuiHint, TuiAlertService, TuiTextfield } from '@taiga-ui/core';
 import { TuiFade } from '@taiga-ui/kit';
-import { TuiSelectModule, TuiTextfieldControllerModule, TuiTextareaModule } from '@taiga-ui/legacy';
+import { TuiSelectModule, TuiInputModule, TuiTextfieldControllerModule, TuiTextareaModule, TuiInputDateModule } from '@taiga-ui/legacy';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { solarDoubleAltArrowDown, solarDoubleAltArrowUp, solarStar } from '@ng-icons/solar-icons/outline';
 import { LinkWarnDialog } from '../../link-warn-dialog/link-warn-dialog.component';
@@ -29,14 +29,16 @@ import { CookieService } from 'ngx-cookie-service';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { heroArrowTurnDownRight, heroDocumentMagnifyingGlass } from '@ng-icons/heroicons/outline';
 import { TuiLoader } from '@taiga-ui/core';
-import { TuiArcChart } from '@taiga-ui/addon-charts';
-import { TuiRating } from '@taiga-ui/kit';
+import { TuiInputNumber } from '@taiga-ui/kit';
 import { APIService, HttpMethod } from '../../../services/api.service';
 import { UserRole } from '../../../models/user';
+import { SeriesRatingDialog } from '../../series-rating-dialog/series-rating-dialog.component';
+import { ReadingStatusDialog } from '../../reading-status-dialog/reading-status-dialog.component';
+import { SeriesListDialog } from '../../series-list-dialog/series-list-dialog.component';
 
 @Component({
     selector: 'series-detail',
-    imports: [MangaCover, NgIf, NgFor, NgForOf, NgIcon, TuiRating, TuiTextareaModule, TuiArcChart, TuiTable, TuiAccordion, TuiLoader, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
+    imports: [MangaCover, SeriesRatingDialog, ReadingStatusDialog, SeriesListDialog, NgIf, NgFor, NgForOf, NgIcon, TuiInputNumber, TuiInputDateModule, TuiInputModule, TuiTextfield, TuiTextareaModule, TuiTable, TuiAccordion, TuiLoader, MangaVolume, MangaSeriesListComponent, TagDialog, MangaSeriesColumnComponent, MangaSeriesGridComponent, TuiButton, TuiPagination, TuiAppearance, TuiElasticContainer, TuiBadge, TranslatePipe, TuiSegmented, TuiHint, TuiFade, TuiSelectModule,TuiTextfieldControllerModule,ReactiveFormsModule,FormsModule, LinkWarnDialog],
     templateUrl: './series-detail.component.html',
     styleUrl: './series-detail.component.less',
     viewProviders: [provideIcons({ faCopyright, heroDocumentMagnifyingGlass, solarStar, heroArrowTurnDownRight, faFlag, faSolidPlus, faBookmark, faStar, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerList, tablerLayoutColumns, tablerLayoutGrid })],
@@ -82,15 +84,6 @@ export class SeriesDetailComponent {
     reportTypes:any = REPORT_TYPES.filter((t:any)=>t.type === 'series');
     selectedReportType: any = this.reportTypes[0];
     reportDescription: string = "";
-    // Rating Dialog
-    showRatingDialog: boolean = false;
-    ratingLoading: boolean = false;
-    rating: number = 0;
-    ratingExists: boolean = false;
-    ratingChartValue: any = [];
-    ratingChartIndex: number = 0;
-    deletingRating: boolean = false;
-    updatingRating: boolean = false;
     // Contributors
     hasManyContributors: boolean = false;
     showMoreContributors: boolean = false;
@@ -105,9 +98,11 @@ export class SeriesDetailComponent {
     @ViewChild('reportDialog') reportDialog: any;
     @ViewChild('reportViewDialog') reportViewDialog: any;
     @ViewChild('ratingDialog') ratingDialog: any;
+    @ViewChild('readingDialog') readingDialog: any;
+    @ViewChild('listDialog') listDialog: any;
     constructor(private translate: TranslateService, private cookie: CookieService, private title: Title, private route: ActivatedRoute, private router: Router) { }
-    
-    ngOnInit() {
+
+    async ngOnInit() {
         this.title.setTitle(`Series | MangaDB`);
         // get route param (slug)
         const slug = this.route.snapshot.paramMap.get('slug');
@@ -167,13 +162,6 @@ export class SeriesDetailComponent {
             for(const publisher of this.series.publishers || []){
                 const editions = this.series.publisher_editions?.filter((e:any)=>e.publisher_id === publisher.id) || [];
                 publisher['editions'] = editions;
-            }
-
-            // create chart values for rating
-            this.ratingChartValue = [];
-            const totalRatings = this.series.rating_count;
-            for(let i = 1; i <= 5; i++){
-                this.ratingChartValue.push((((this.series.ratings.find((r:any)=>r.rating === i)?.count || 0) / totalRatings) * 100).toFixed(2));
             }
 
             // check if there is a alias with the given language
@@ -521,87 +509,31 @@ export class SeriesDetailComponent {
             return;
         }
         // load ratings
-        this.showRatingDialog = true;
-        this.ratingLoading = true;
-        this.loadRatings();
+        this.ratingDialog.showDialog();
     }
 
-    // load series ratings from api
-    loadRatings(){
-        this.api.request<any>(HttpMethod.GET, `user/series-rating/id/${this.series?.id}`, {}).subscribe((res:any)=>{
-            this.rating = res?.rating || 0;
-            this.ratingExists = this.rating !== 0;
-            this.ratingLoading = false;
-        });
-    }
-
-    // delete user rating
-    deleteRating(){
-        // if user isnt logged in show error message
+    // show rating dialog
+    openReadingDialog(){
+        // if not logged in show error
         if(!this.auth.isLoggedIn()){
             // TODO translate
             errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
             return;
         }
-
-        this.deletingRating = true;
-        this.api.request<string>(HttpMethod.DELETE, `user/series-rating/delete/${this.series?.id}`, {}, 'text').subscribe(async(res)=>{
-            // show success message
-            const msg = await getTranslation(this.translate, 'rating-dialog.delete-success');
-            successAlert(this.alerts, msg, undefined, this.translate);
-            this.updateRatings();
-
-            setTimeout(()=>{
-                this.showRatingDialog = false;
-                this.deletingRating = false;
-            },250);
-        }, (err)=>{
-            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
-        });
+        // load reading status
+        this.readingDialog.showDialog();
     }
 
-    // update or add rating
-    saveRating(){
-        // if user isnt logged in show error message
+    // show rating dialog
+    openListDialog(){
+        // if not logged in show error
         if(!this.auth.isLoggedIn()){
             // TODO translate
             errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
             return;
         }
-
-        this.updatingRating = true;
-
-        // if rating exists update it
-        if(this.ratingExists){
-            this.api.request<string>(HttpMethod.POST, `user/series-rating/update/${this.series?.id}`, { rating: this.rating }, 'text').subscribe(async (res)=>{
-                // show success message
-                const msg = await getTranslation(this.translate, 'rating-dialog.save-success');
-                successAlert(this.alerts, msg, undefined, this.translate);
-                this.updateRatings();
-
-                setTimeout(()=>{
-                    this.showRatingDialog = false;
-                    this.updatingRating = false;
-                },250);
-            },(err)=>{
-                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
-            });
-        // if not add rating
-        } else {
-            this.api.request<string>(HttpMethod.POST, `user/series-rating/add/${this.series?.id}`, { rating: this.rating }, 'text').subscribe(async (res)=>{
-                // show success message
-                const msg = await getTranslation(this.translate, 'rating-dialog.add-success');
-                successAlert(this.alerts, msg, undefined, this.translate);
-                this.updateRatings();
-
-                setTimeout(()=>{
-                    this.showRatingDialog = false;
-                    this.updatingRating = false;
-                },250);
-            }, (err)=>{
-                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
-            });
-        }
+        // load reading status
+        this.listDialog.showDialog();
     }
 
     // fetch updated ratings
@@ -612,10 +544,7 @@ export class SeriesDetailComponent {
             this.series.rating = res.rating;
             this.series.rating_count = res.rating_count;
             this.series.ratings = res.ratings;
-            // create chart values for rating
-            for(let i = 1; i <= 5; i++){
-                this.ratingChartValue[i-1] = (((res.ratings.find((r:any)=>r.rating === i)?.count || 0) / res.rating_count) * 100).toFixed(2);
-            }
+            this.ratingDialog.updateChart();
         });
     }
 
@@ -639,13 +568,6 @@ export class SeriesDetailComponent {
     reportViewDialogClick(event:any){
         if (event.target === this.reportViewDialog.nativeElement) {
             this.showReportViewDialog = false;
-        }
-    }
-
-    // if backdrop of dialog is clicked close it
-    ratingDialogClick(event:any){
-        if (event.target === this.ratingDialog.nativeElement) {
-            this.showRatingDialog = false;
         }
     }
 
