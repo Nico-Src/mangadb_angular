@@ -334,6 +334,50 @@
         }
     },
 
+    "reading-status": {
+        "visibility": {
+            "label": "Visibility",
+            "private": "Private",
+            "public": "Public"
+        },
+        "status": {
+            "label": "Status",
+            "started": "Started",
+            "completed": "Completed",
+            "paused": "Paused",
+            "dropped": "Dropped"
+        },
+        "progress-type": {
+            "label": "Type",
+            "progress": "Progress",
+            "chapters": "Chapter",
+            "volumes": "Volumes"
+        },
+        "reread": {
+            "label": "Reread",
+            "postfix": "-Times"
+        },
+        "priority": {
+            "label": "Priority",
+            "low": "Low",
+            "mid": "Mid",
+            "high": "High"
+        },
+        "score": "Score",
+        "start": "Start",
+        "end": "End"
+    },
+
+    "publisher": {
+        "also-known-as": "Also known as:",
+        "headquarter": "Headquarter",
+        "founded": "Founded",
+        "website": "Website",
+        "not-found": "Publisher not found...",
+        "source": "Source",
+        "works": "Published Works"
+    },
+
     "__SECTION__PAGES__": "",
 
     "home": {
@@ -456,6 +500,28 @@
         "title": "Rating",
         "your": "Your Rating",
         "delete": "Delete",
-        "save": "Save"
+        "save": "Save",
+        "add-success": "Rating added successfully.",
+        "save-success": "Rating updated successfully.",
+        "delete-success": "Rating deleted successfully."
+    },
+
+    "reading-dialog": {
+        "title": "Reading History",
+        "delete": "Delete",
+        "save": "Save",
+        "add-success": "Reading status added successfully.",
+        "save-success": "Reading status updated successfully.",
+        "delete-success": "Reading status deleted successfully."
+    },
+
+    "list-dialog": {
+        "title": "Lists",
+        "no-lists": "You haven't created any lists for series yet.",
+        "add": "Add",
+        "not-selected": "You have to select a list first.",
+        "add-success": "Series added to list.",
+        "already-in-list": "Series already in list.",
+        "in-list": "Already in list"
     }
 }
