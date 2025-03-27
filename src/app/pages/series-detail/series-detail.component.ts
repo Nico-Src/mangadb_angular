@@ -134,6 +134,10 @@ export class SeriesDetailComponent {
 
             this.content.nativeElement.classList.remove('fits');
 
+            [this.readingDialog, this.listDialog, this.ratingDialog].forEach((dialog)=>{
+                dialog.reset();
+            });
+
             const slug = this.route.snapshot.paramMap.get('slug');
             this.loadSeries(slug);
         });

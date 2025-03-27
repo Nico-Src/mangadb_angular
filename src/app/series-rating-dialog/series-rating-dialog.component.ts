@@ -62,6 +62,17 @@ export class SeriesRatingDialog {
         }
     }
 
+    // reset dialog
+    public reset(){
+        this.loading = false;
+        this.dataLoaded = false;
+        this.rating = 0;
+        this.ratingExists = false;
+        this.show = false;
+        this.chartValue = [];
+        this.chartIndex = 0;
+    }
+
     // load user rating
     loadRating(){
         this.api.request<any>(HttpMethod.GET, `user/series-rating/id/${this.series?.id}`, {}).subscribe((res:any)=>{

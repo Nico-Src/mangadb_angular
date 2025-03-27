@@ -47,6 +47,15 @@ export class ReadingStatusDialog {
         }
     }
 
+    // reset dialog
+    public reset(){
+        this.loading = false;
+        this.dataLoaded = false;
+        this.status = null;
+        this.statusExists = false;
+        this.show = false;
+    }
+
     // load user rating
     loadStatus(){
         this.api.request<any>(HttpMethod.GET, `user/reading-status/id/${this.series.id}`, {}).subscribe((res:any)=>{

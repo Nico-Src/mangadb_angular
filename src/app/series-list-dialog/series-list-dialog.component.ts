@@ -41,6 +41,15 @@ export class SeriesListDialog {
         }
     }
 
+    // reset dialog
+    public reset(){
+        this.loading = false;
+        this.dataLoaded = false;
+        this.lists = [];
+        this.selectedList = null;
+        this.show = false;
+    }
+
     // load user rating
     loadLists(){
         this.api.request<any>(HttpMethod.GET, `lists/type/series/${this.series.id}`, {}).subscribe((res:any)=>{
