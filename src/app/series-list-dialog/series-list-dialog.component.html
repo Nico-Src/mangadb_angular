@@ -1,0 +1,22 @@
+<div class="window" [class.show]="show" #window>
+    <div class="title">{{ 'list-dialog.title' | translate }}</div>
+    <tui-elastic-container>
+        <tui-select *ngIf="!loading" class="list-select" [style.flex]="1" tuiTextfieldSize="s" [(ngModel)]="selectedList" [disabled]="lists.length === 0" tuiTextfieldSize="s" [valueContent]="list">
+            <tui-data-list-wrapper [disabledItemHandler]="disabledListHandler" *tuiDataList [itemContent]="list" [items]="lists"></tui-data-list-wrapper>
+        </tui-select>
+        <div class="no-lists" *ngIf="!loading && lists.length === 0">{{ `list-dialog.no-lists` | translate }}</div>
+        <div class="button-wrapper" *ngIf="!loading">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="adding">
+                <button [disabled]="!selectedList" size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="addToList()">{{ 'list-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div *ngIf="loading"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+    </tui-elastic-container>
+</div>
+
+<ng-template #list let-item>
+    <div class="list-item">
+        <span>{{ item.name }}</span>
+        <span class="in-list" *ngIf="item.in_list">{{ `list-dialog.in-list` | translate }}</span>
+    </div>
+</ng-template>
