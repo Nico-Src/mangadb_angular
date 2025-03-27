@@ -1,0 +1,76 @@
+<div class="window" [class.show]="show" #window>
+    <div class="title">{{ 'reading-dialog.title' | translate }}</div>
+    <tui-elastic-container>
+        <div class="input-label" *ngIf="!loading && status">{{ `reading-status.visibility.label` | translate }}</div>
+        <tui-radio-list *ngIf="!loading && status" size="s" [itemContent]="radio" [items]="visibilityOptions" [style.flex-direction]="'row'" [style.width]="'max-content'" [(ngModel)]="status.visibility"/>
+        <div class="input-label" *ngIf="!loading && status">{{ `reading-status.status.label` | translate }}</div>
+        <tui-select *ngIf="!loading && status" class="status-select" tuiTextfieldSize="s" [(ngModel)]="status.status" tuiTextfieldSize="s" [valueContent]="statusContent">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="statusContent" [items]="statuses"></tui-data-list-wrapper>
+        </tui-select>
+        <div class="input-label" *ngIf="!loading && status">
+            <span>{{ `reading-status.progress-type.label` | translate }}</span>
+            <span>{{ `reading-status.progress-type.progress` | translate }}</span>
+        </div>
+        <div class="input-wrapper" *ngIf="!loading && status">
+            <tui-select class="status-select" [style.flex]="6" tuiTextfieldSize="s" [(ngModel)]="status.progressType" tuiTextfieldSize="s" [valueContent]="progressContent">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="progressContent" [items]="progressTypes"></tui-data-list-wrapper>
+            </tui-select>
+            <tui-input tuiTextfieldSize="s" [style.flex]="9" [(ngModel)]="status.progress" (ngModelChange)="readingStatusProgressChange($event)">
+                <input inputmode="numeric" tuiTextfieldLegacy/>
+            </tui-input>
+        </div>
+        <div class="input-label" *ngIf="!loading && status">
+            <span>{{ `reading-status.reread.label` | translate }}</span>
+            <span>{{ `reading-status.priority.label` | translate }}</span>
+        </div>
+        <div class="input-wrapper" *ngIf="!loading && status">
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldCleaner]="false" [style.flex]="1">
+                <input [postfix]="`reading-status.reread.postfix` | translate" tuiInputNumber [max]="1000" [min]="0" [step]="1" [(ngModel)]="status.reread"/>
+            </tui-textfield>
+            <tui-select class="priority-select" [style.flex]="1" tuiTextfieldSize="s" [(ngModel)]="status.priority" tuiTextfieldSize="s" [valueContent]="priorityContent">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="priorityContent" [items]="priorityOptions"></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <div class="input-label" *ngIf="!loading && status">{{ `reading-status.score` | translate }}</div>
+        <tui-rating [max]="10" [style.fontSize.px]="10" [(ngModel)]="status.score" *ngIf="!loading && status"/>
+        <div class="input-label" *ngIf="!loading && status">
+            <span>{{ `reading-status.start` | translate }}</span>
+            <span>{{ `reading-status.end` | translate }}</span>
+        </div>
+        <div class="input-wrapper" *ngIf="!loading && status">
+            <tui-input-date [style.flex]="1" [tuiTextfieldCleaner]="true" [(ngModel)]="status.start" tuiTextfieldSize="s"></tui-input-date>
+            <tui-input-date [style.flex]="1" [tuiTextfieldCleaner]="true" [(ngModel)]="status.end" tuiTextfieldSize="s"></tui-input-date>
+        </div>
+        <div class="button-wrapper" *ngIf="!loading && status">
+            <tui-loader class="loader error" [overlay]="true" [showLoader]="deleting">
+                <button size="s" tuiButton type="button" class="cancel" appearance="accent" [disabled]="!statusExists" (click)="deleteStatus()">{{ 'reading-dialog.delete' | translate }}</button>
+            </tui-loader>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="updating">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="saveStatus()">{{ 'reading-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div *ngIf="loading"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+    </tui-elastic-container>
+</div>
+
+<ng-template #radio let-item>
+    {{ `reading-status.visibility.${item}` | translate }}
+</ng-template>
+
+<ng-template #statusContent let-item>
+    <div class="language-item">
+        <span class="language-name">{{ `reading-status.status.${item.key}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #priorityContent let-item>
+    <div class="language-item">
+        <span class="language-name">{{ `reading-status.priority.${item.key}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #progressContent let-item>
+    <div class="language-item">
+        <span class="language-name">{{ `reading-status.progress-type.${item.key}` | translate }}</span>
+    </div>
+</ng-template>
