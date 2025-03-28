@@ -192,7 +192,7 @@
         <div class="section-title" *ngIf="series.contributors?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.contributors' | translate }}</div>
         <tui-elastic-container [class.hide]="checkingDescOverflow">
             <div class="contributor-wrapper" *ngIf="series.contributors?.length > 0 && !hasManyContributors" [class.hide]="checkingDescOverflow">
-                <div class="contributor" *ngFor="let contributor of series.contributors">
+                <div class="contributor" *ngFor="let contributor of series.contributors" (click)="contributorClick(contributor)">
                     <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${contributor.id}/scaled`">
                     <div class="details">
                         <div class="name">{{ contributor.last_name?.toUpperCase() }} {{contributor.first_name}}</div>
@@ -201,7 +201,7 @@
                 </div>
             </div>
             <div class="contributor-wrapper" *ngIf="series.contributors?.length > 0 && hasManyContributors" [class.hide]="checkingDescOverflow">
-                <div class="contributor" *ngFor="let contributor of (showMoreContributors ? series.contributors : series.contributors_collapsed)">
+                <div class="contributor" *ngFor="let contributor of (showMoreContributors ? series.contributors : series.contributors_collapsed)" (click)="contributorClick(contributor)">
                     <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${contributor.id}/scaled`">
                     <div class="details">
                         <div class="name">{{ contributor.last_name?.toUpperCase() }} {{contributor.first_name}}</div>

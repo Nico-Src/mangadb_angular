@@ -48,6 +48,7 @@ export class TopBar {
         { url: '/register', state: 'translucent' },
         { url: '/series/', state: 'translucent' },
         { url: '/publisher', state: 'translucent' },
+        { url: '/contributor', state: 'translucent' },
         { url: '/settings', state: 'solid' },
         { url: '/collection', state: 'solid' }
     ];

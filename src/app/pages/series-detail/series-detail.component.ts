@@ -623,4 +623,9 @@ export class SeriesDetailComponent {
     publisherClick(publisher:any){
         this.router.navigate(['publisher',publisher.slug]);
     }
+
+    // redirect to contributor
+    contributorClick(contributor: any){
+        this.router.navigate(['contributor',contributor.slug]);
+    }
 }

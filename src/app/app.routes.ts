@@ -11,6 +11,7 @@ import { SeriesDetailComponent } from './pages/series-detail/series-detail.compo
 import { SettingsComponent } from './pages/settings/settings.component';
 import { UserRole } from '../models/user';
 import { PublisherDetailComponent } from './pages/publisher-detail/publisher-detail.component';
+import { ContributorDetailComponent } from './pages/contributor-detail/contributor-detail.component';
 
 export const routes: Routes = [
     {
@@ -55,6 +56,11 @@ export const routes: Routes = [
     {
         path: 'publisher/:slug',
         component: PublisherDetailComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'contributor/:slug',
+        component: ContributorDetailComponent,
         canActivate: [AuthGuard]
     },
     {

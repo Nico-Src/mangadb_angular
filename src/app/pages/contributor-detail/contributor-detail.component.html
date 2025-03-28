@@ -1,0 +1,121 @@
+<div class="banner-wrapper">
+    <div class="banner">
+        <img *ngIf="contributor?.id" [src]="`${cdn_base}/contributor/image/${contributor?.id}/scaled`" [tuiSkeleton]="imgLoading" tuiLoading="lazy" (load)="imgLoading = false;">
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="not-found" *ngIf="show404">
+        <ng-icon name="heroDocumentMagnifyingGlass" class="icon" [style.fontSize.px]="80"></ng-icon>
+        <div class="text">{{ 'contributor.not-found' | translate }}</div>
+    </div>
+    <div class="content" #content>
+        <div class="cover-wrapper" *ngIf="!show404">
+            <img *ngIf="contributor?.id" [src]="`${cdn_base}/contributor/image/${contributor?.id}/high`" [tuiSkeleton]="imgLoading" tuiLoading="lazy" (load)="imgLoading = false;">
+        </div>
+        <div class="detail-wrapper">
+            <div class="top" *ngIf="contributor?.id">
+                <div class="title" #contributorTitle>
+                    {{ (`${contributor.last_name?.toUpperCase()} ${contributor.first_name}`).trim() }}
+                </div>
+                <div class="aliases" *ngIf="contributor?.aliases?.length > 0" tuiFade>
+                    <span class="alias">{{ 'contributor.also-known-as' | translate }}</span>
+                    <div class="alias-item" *ngFor="let alias of contributor?.aliases">{{ (`${alias.last_name?.toUpperCase()} ${alias.first_name}`).trim() }}</div>
+                </div>
+            </div>
+            <div class="bottom" *ngIf="contributor?.id">
+                
+            </div>
+        </div>
+        <div class="description-wrapper" [class.hide]="checkingDescOverflow">
+            <div class="header">
+                <span>{{ 'series.description' | translate }}</span>
+            </div>
+            <div class="description" *ngIf="contributor.description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="contributor?.description?.description"></div>
+            <div class="description" *ngIf="!contributor.description" #desc>
+                <div class="no-desc">
+                    <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
+                </div>
+            </div>
+            <div class="show-more-wrapper" [class.hide-description]="checkingDescOverflow" [class.show]="descOverflowing">
+                <div class="show-more-btn" (click)="toggleDesc()">
+                    <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
+                    <ng-icon name="solarDoubleAltArrowUp" class="icon" [style.fontSize.px]="16" *ngIf="expandDesc"></ng-icon>
+                    {{ (expandDesc ? 'series.show-less' : 'series.show-more') | translate }}
+                    <ng-icon name="solarDoubleAltArrowDown" class="icon" [style.fontSize.px]="16" *ngIf="!expandDesc"></ng-icon>
+                    <ng-icon name="solarDoubleAltArrowUp" class="icon" [style.fontSize.px]="16" *ngIf="expandDesc"></ng-icon>
+                </div>
+            </div>
+        </div>
+        <div class="description-select" [class.overflowing]="descOverflowing" [class.hide]="checkingDescOverflow">
+            <div class="source-wrapper" *ngIf="contributor?.description?.source">{{ 'publisher.source' | translate }}:&nbsp;<span class="source" (click)="openLinkDialog(contributor?.description?.source.split('|')[1])">{{ contributor?.description?.source.split('|')[0] }}</span></div>
+            <tui-select *ngIf="contributor?.description" tuiTextfieldSize="s" [(ngModel)]="selectedDescLang" tuiTextfieldSize="s" (ngModelChange)="descSelected($event)" [valueContent]="languageContent">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableDescLangs"></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <div class="section-title" [class.hide]="checkingDescOverflow">{{ 'contributor.works' | translate }}</div>
+        <div class="controls" [class.hide]="checkingDescOverflow">
+            <div class="control-row">
+                <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+                    <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+                </tui-textfield>
+            </div>
+            <div class="control-row">
+                <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+                    <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+                </tui-select>
+                <tui-segmented class="view-mode" [(activeItemIndex)]="viewIndex" (activeItemIndexChange)="viewChanged($event)">
+                    <button type="button" class="view-item" [disabled]="loading">
+                        <ng-icon name="tablerList"/>
+                    </button>
+                    <button type="button" class="view-item" [disabled]="loading">
+                        <ng-icon name="tablerLayoutColumns"/>
+                    </button>
+                    <button type="button" class="view-item" [disabled]="loading">
+                        <ng-icon name="tablerLayoutGrid"/>
+                    </button>
+                </tui-segmented>
+                <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+            </div>
+        </div>
+
+        <div [style.height.px]="0" [style.width.%]="100"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+
+        <tui-elastic-container [style.width.%]="100">
+            <div class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" *ngIf="works.length > 0">
+                <div class="series" *ngFor="let ser of works">
+                    <manga-series-list (click)="seriesClick(ser.slug)" [class]="theme()" [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+                    <manga-series-column (click)="seriesClick(ser.slug)" [class]="theme()" [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+                    <manga-series-grid (click)="seriesClick(ser.slug)" [class]="theme()" [search]="currentSearch" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+                </div>
+            </div>
+        </tui-elastic-container>
+
+        <div class="section-title" [class.hide]="checkingDescOverflow" [style.marginTop.px]="20" *ngIf="contributor.relations?.length > 0">{{ 'contributor.relations' | translate }}</div>
+        <div class="relation-wrapper" *ngIf="contributor.relations?.length > 0" [class.hide]="checkingDescOverflow">
+            <div class="relation" *ngFor="let relation of contributor.relations" (click)="relationClick(relation.slug)">
+                <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${relation.relation_id}/scaled`">
+                <div class="details">
+                    <div class="name" tuiFade>{{ relation.name }}</div>
+                    <div class="type">{{ `contributor.${relation.relation_type.toLowerCase()}` | translate }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="placeholder" style="width: 100%; height: 30px;"></div>
+    </div>
+</div>
+
+<link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>

@@ -160,7 +160,12 @@
         "character designer-unknown": "Character Designer",
         "original creator-female": "Original Creator",
         "original creator-male": "Original Creator",
-        "original creator-unknown": "Original Creator"
+        "original creator-unknown": "Original Creator",
+        "also-known-as": "Also known as:",
+        "works": "Published Works",
+        "relations": "Related Contributors",
+        "member": "Member",
+        "member-of": "Member of"
     },
 
     "report": {
@@ -370,12 +375,16 @@
 
     "publisher": {
         "also-known-as": "Also known as:",
-        "headquarter": "Headquarter",
         "founded": "Founded",
         "website": "Website",
         "not-found": "Publisher not found...",
         "source": "Source",
-        "works": "Published Works"
+        "works": "Published Works",
+        "relations": "Related Publishers",
+        "imprint": "Imprint",
+        "parent": "Parent",
+        "joint venture": "Joint Venture",
+        "subsidiary": "Subsidiary"
     },
 
     "__SECTION__PAGES__": "",
