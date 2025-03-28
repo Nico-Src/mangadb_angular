@@ -103,7 +103,16 @@
 
     "volume": {
         "nsfw-hint": "This cover has 16+ content. Enable it in settings to view.",
-        "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view."
+        "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view.",
+        "pages": "Pages",
+        "binding": {
+            "label": "Binding",
+            "softcover": "Softcover",
+            "hardcover": "Hardcover"
+        },
+        "dimensions": "Measures",
+        "release_date": "Release",
+        "rating": "Rating"
     },
 
     "series": {

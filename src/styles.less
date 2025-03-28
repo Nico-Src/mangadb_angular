@@ -42,6 +42,15 @@ tui-hint{
 .tag.content-rating{background-color: rgb(var(--mid-accent)) !important;color:white !important;}
 .tag.content-warning{background-color: rgb(var(--dark-accent)) !important;color:white !important;}
 
+tui-calendar,[tuiAppearance][data-appearance=action]{
+    --tui-text-action: rgb(var(--accent-color));
+    --tui-text-action-hover: rgb(var(--mid-accent));
+    --tui-text-action-active: rgb(var(--dark-accent));
+    --tui-text-negative: rgb(var(--accent-color));
+    --tui-background-accent-1: rgb(var(--accent-color));
+    --tui-background-accent-1-hover: rgb(var(--mid-accent));
+}
+
 body.light {
     background-color: @bg-color;
     app-root, tui-root{background-color: @bg-color;}
