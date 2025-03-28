@@ -46,7 +46,6 @@
             <div class="description" *ngIf="publisher.description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="publisher?.description?.description"></div>
             <div class="description" *ngIf="!publisher.description" #desc>
                 <div class="no-desc">
-                    <div class="title">{{ 'series.no-description.title' | translate }}</div>
                     <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
                 </div>
             </div>
@@ -92,7 +91,7 @@
             </div>
         </div>
 
-        <div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+        <div [style.height.px]="0" [style.width.%]="100"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
 
         <tui-elastic-container [style.width.%]="100">
             <div class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" *ngIf="works.length > 0">
