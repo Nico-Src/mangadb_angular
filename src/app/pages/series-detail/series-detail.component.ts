@@ -628,4 +628,12 @@ export class SeriesDetailComponent {
     contributorClick(contributor: any){
         this.router.navigate(['contributor',contributor.slug]);
     }
+
+    // redirect to volume
+    volumeClick(volume: any){
+        const slug = volume.slug;
+        const series = slug.split(':')[0];
+        const volSlug = slug.split(':')[1];
+        this.router.navigate(['volume', series, volSlug]);
+    }
 }

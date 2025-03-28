@@ -12,6 +12,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { UserRole } from '../models/user';
 import { PublisherDetailComponent } from './pages/publisher-detail/publisher-detail.component';
 import { ContributorDetailComponent } from './pages/contributor-detail/contributor-detail.component';
+import { VolumeDetailComponent } from './pages/volume-detail/volume-detail.component';
 
 export const routes: Routes = [
     {
@@ -61,6 +62,11 @@ export const routes: Routes = [
     {
         path: 'contributor/:slug',
         component: ContributorDetailComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'volume/:series/:slug',
+        component: VolumeDetailComponent,
         canActivate: [AuthGuard]
     },
     {

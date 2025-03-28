@@ -1,0 +1,310 @@
+@import '../../../variables.less';
+
+:host{
+    display:block;
+    position: relative;
+
+    ::ng-deep .t-loader{
+        stroke: rgb(var(--mid-accent)) !important;
+    }
+
+    tui-loader{
+        width: 100%;
+    }
+
+    .not-found{
+        margin: auto;
+        min-height: 200px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-direction: column;
+        background-color: @bg-color;
+        z-index: 2;
+
+        .icon{
+            color: #777;
+        }
+
+        .text{
+            color: #777;
+            font-size: 24px;
+        }
+    }
+
+    .banner-wrapper{
+        width: 100%;
+        height: 415px;
+        position: relative;
+
+        .banner{
+            width: 100%;
+            height: 340px;
+            background-color: #505050;
+            overflow: hidden;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+            manga-cover{
+                width: 100%;
+                height: 100%;
+            }
+
+            .banner-overlay{
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: 1;
+                inset: 0;
+                background-color: rgba(0,0,0,0.5);
+            }
+        }
+
+        .content.fits{
+            .title, .edition, .bottom, .copyright-wrapper{
+                opacity: 1 !important;
+            }
+        }
+
+        .content{
+            position: absolute;
+            inset: 0; top: 0; bottom: unset !important;
+            margin:auto;
+            z-index: 1;
+            top: 100px;
+            height: fit-content;
+            width: 100%;
+            padding: 0px 50px 0px 50px;
+            display:flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            align-content: flex-start;
+            flex-wrap: wrap;
+            transition: opacity var(--transition-duration) ease;
+
+            .cover-wrapper{
+                height: fit-content;
+                width: fit-content;
+                flex-shrink: 0;
+                position: relative;
+                margin-bottom: 7.5px;
+
+                manga-cover{
+                    width: 230px;
+
+                    ::ng-deep img{width: 230px;}
+                }
+            }
+
+            .detail-wrapper{
+                flex: 1;
+                max-width: 100%;
+                min-width: 0;
+                height: 100%;
+                display:flex;
+                justify-content: flex-start;
+                align-items: flex-start;
+                flex-direction: column;
+                padding-left: 15px;
+
+                .top{
+                    height: 237px;
+                    width: 100%;
+                    display:flex;
+                    flex-shrink: 0;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    flex-direction: column;
+    
+                    .title{
+                        font-size: 47px;
+                        font-weight: bolder;
+                        color:white;
+                        width: fit-content;
+                        height: fit-content;
+                        font-family: 'Poppins', sans-serif;
+                        max-width: 100%;
+                        line-height: 47px;
+                        position: relative;
+                        margin-bottom: 10px;
+                        opacity: 0;
+                        transition: opacity var(--transition-duration) ease;
+                    }
+
+                    .edition{
+                        display:flex;
+                        justify-content: center;
+                        align-items: center;
+                        opacity: 0;
+                        transition: opacity var(--transition-duration) ease;
+
+                        .name{
+                            font-size: 16px;
+                            font-weight: 400;
+                            color:#ddd;
+                            padding-left: 4px;
+                            font-family: 'Poppins', sans-serif;
+                            border-radius: 4px;
+                            display:flex;
+                            justify-content: center;
+                            align-items: center;
+                            transition: background-color var(--transition-duration) ease, opacity var(--transition-duration) ease;
+                            cursor: var(--cursor-pointer);
+                        }
+                    }
+
+                    .copyright-wrapper{
+                        width: 100%;
+                        height: fit-content;
+                        margin-top: auto;
+                        transform: translateY(1px);
+                        padding-bottom: 10px;
+                        display:flex;
+                        justify-content: flex-start;
+                        align-items: flex-end;
+                        position: relative;
+                        opacity: 0;
+                        transition: opacity var(--transition-duration) ease;
+    
+                        .copyright{
+                            color:rgba(255,255,255,.9);
+                            display:flex;
+                            justify-content: flex-start;
+                            margin-top: 3px;
+                            align-items: center;
+                            width: fit-content;
+                            height: fit-content;
+                            font-size: 10px;
+                            padding-right: 20px;
+    
+                            .icon{
+                                flex-shrink: 0;
+                                margin-right: 5px;
+                                transform: translateY(-2px);
+                                overflow: visible;
+                            }
+                        }
+    
+                        .report-btn{
+                            margin-left: auto;
+                            color:white;
+                            background-color: transparent;
+                            border-radius: 4px;
+                            padding: 2px 5px;
+                            cursor: pointer;
+                            transition: background-color var(--transition-duration) ease;
+                            flex-shrink: 0;
+                            display:flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            .icon{
+                                transform: translateY(-2px);
+                                overflow: visible; 
+                                font-size: 16px;
+                            }
+    
+                            &:hover{
+                                background-color: rgba(255,255,255,.15);
+                            }
+                        }
+                    }
+                }
+
+                .bottom{
+                    height: fit-content;
+                    width: 100%;
+                    padding-top: 15px;
+                    display:flex;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    position: relative;
+                    gap: 10px;
+                    opacity: 0;
+                    transition: opacity var(--transition-duration) ease;
+
+                    .carousel{
+                        width: 100%;
+                        background-color: rgba(0,0,0,.05);
+                        padding: 6px 10px;
+                        border-radius: 6px;
+                        overflow: hidden;
+                    }
+
+                    tui-scrollbar{
+                        width: 100%;
+                        padding-bottom: 10px;
+                        overflow-y: hidden;
+
+                        ::ng-deep .t-content{
+                            display:flex;
+                            justify-content: space-evenly;
+                            align-items: flex-start;
+                        }
+
+                        ::ng-deep .t-bar{
+                            bottom: -15px !important;
+                        }
+
+                        ::ng-deep .t-bar_vertical{display:none;}
+                    }
+
+                    .item{
+                        width: fit-content;
+                        display:flex;
+                        justify-content: flex-start;
+                        align-items: center;
+                        flex-direction: column;
+                        padding: 0px;
+                        width: fit-content;
+                        margin-right: 20px;
+                        flex-shrink: 0;
+
+                        .label{
+                            width: 100%;
+                            font-weight: 500;
+                            color: #777;
+                            font-size: 14px;
+                            display:flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+
+                        .icon{
+                            overflow: visible !important;
+                            transform: translateY(-2px);
+
+                            &.margin{
+                                margin: 3px 0px;
+                            }
+                        }
+    
+                        .value{
+                            width: 100%;
+                            font-weight: 400;
+                            font-size: 15px;
+                            color:#000;
+                            display:flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            .link{
+                                color: rgb(var(--dark-accent));
+                                transition: background var(--transition-duration) ease;
+                                border-radius: 4px;
+                                cursor: pointer;
+
+                                &:hover{
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

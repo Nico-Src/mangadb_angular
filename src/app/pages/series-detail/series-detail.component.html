@@ -107,10 +107,10 @@
         </div>
         <tui-elastic-container [class.hide]="checkingDescOverflow">
             <div class="volume-wrapper" *ngIf="tabIndex === 0">
-                <manga-volume [volume]="vol" [class]="theme()" *ngFor="let vol of volumes"></manga-volume>
+                <manga-volume (click)="volumeClick(vol)" [volume]="vol" [class]="theme()" *ngFor="let vol of volumes"></manga-volume>
             </div>
             <div class="volume-wrapper" *ngIf="tabIndex === 1">
-                <manga-volume [volume]="vol" [class]="theme()" *ngFor="let vol of special_editions"></manga-volume>
+                <manga-volume (click)="volumeClick(vol)" [volume]="vol" [class]="theme()" *ngFor="let vol of special_editions"></manga-volume>
             </div>
             <div class="series-wrapper" *ngIf="tabIndex === 2 && viewIndex === 0">
                 <ng-container *ngFor="let key of series.relation_keys">

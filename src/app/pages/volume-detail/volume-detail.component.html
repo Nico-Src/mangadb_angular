@@ -1,0 +1,97 @@
+<div class="banner-wrapper">
+    <div class="banner">
+        <manga-cover *ngIf="volume?.id" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" fit="cover" [blur]="true" [aspectRatio]="volume.aspect_ratio"></manga-cover>
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="not-found" *ngIf="show404">
+        <ng-icon name="heroDocumentMagnifyingGlass" class="icon" [style.fontSize.px]="80"></ng-icon>
+        <div class="text">{{ 'contributor.not-found' | translate }}</div>
+    </div>
+    <div class="content" #content>
+        <div class="cover-wrapper" *ngIf="!show404">
+            <manga-cover *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
+        </div>
+        <div class="detail-wrapper">
+            <div class="top" *ngIf="volume?.id">
+                <div class="title" #volumeTitle>
+                    {{ volume.name }}
+                </div>
+                <div class="edition" *ngIf="volume && ((volume.edition_name || volume.special_name))">
+                    <span class="name" *ngIf="(volume.edition_name && volume.special_name)">{{ volume.edition_name }} • {{ volume.special_name }}</span>
+                    <span class="name" *ngIf="(volume.edition_name && !volume.special_name)">{{ volume.edition_name }}</span>
+                    <span class="name" *ngIf="(!volume.edition_name && volume.special_name)">{{ volume.special_name }}</span>
+                </div>
+                <div class="copyright-wrapper">
+                    <div class="copyright"><ng-icon class="icon" name="faCopyright" [style.fontSize.px]="16"/>{{volume?.copyright}}</div>
+                    <button appearance="flat" size="m" tuiIconButton type="button" class="report-btn" (click)="openReportDialog()" [style.border-radius.%]="100" [tuiHint]="'report-dialog.title' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom">
+                        <ng-icon class="icon" name="faFlag" [style.fontSize.px]="16"></ng-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="bottom" *ngIf="volume?.id">
+                <div class="carousel" tuiFade>
+                    <tui-scrollbar class="scrollbar">
+                        <div class="item">
+                            <div class="label">{{ 'language.label' | translate }}</div>
+                            <ng-icon name="tablerLanguage" class="icon margin" [style.fontSize.px]="24"></ng-icon>
+                            <div class="value">{{ `language.${langToLoc(volume?.language)}` | translate }}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">{{ 'volume.pages' | translate }}</div>
+                            <ng-icon name="solarNotebook" class="icon margin" [style.fontSize.px]="24"></ng-icon>
+                            <div class="value">{{volume?.pages || '-'}}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">{{ 'volume.binding.label' | translate }}</div>
+                            <ng-icon name="tablerNotebook" class="icon margin" [style.fontSize.px]="24"></ng-icon>
+                            <div class="value">{{volume?.type ? (`volume.binding.${volume?.type?.toLowerCase()}` | translate) : '-'}}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">ISBN-10</div>
+                            <ng-icon name="matBarcodeOutline" class="icon" [style.fontSize.px]="30"></ng-icon>
+                            <div class="value">{{volume?.isbn10 || '-'}}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">ISBN-13</div>
+                            <ng-icon name="matBarcodeOutline" class="icon" [style.fontSize.px]="30"></ng-icon>
+                            <div class="value">{{volume?.isbn13 || '-'}}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">{{ 'volume.dimensions' | translate }}</div>
+                            <ng-icon name="tablerRulerMeasure" class="icon margin" [style.fontSize.px]="24"></ng-icon>
+                            <div class="value">{{volume?.measures || '-'}}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">{{ 'volume.release_date' | translate }}</div>
+                            <ng-icon name="tablerCalendar" class="icon margin" [style.fontSize.px]="24"></ng-icon>
+                            <div class="value">{{releaseDate(volume?.release_date)}}</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">{{ 'volume.rating' | translate }}</div>
+                            <ng-icon name="matFaceOutline" class="icon margin" [style.fontSize.px]="24"></ng-icon>
+                            <div class="value">{{volume?.rating || '-'}}+</div>
+                        </div>
+                    </tui-scrollbar>
+                </div>
+            </div>
+        </div>
+
+        <div class="placeholder" style="width: 100%; height: 30px;"></div>
+    </div>
+</div>
+
+<link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
