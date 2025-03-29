@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, HostListener, inject, Input, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, input, Input, ViewChild } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TuiAppearance, TuiLoader, TuiAlertService, TuiTextfield, tuiDateFormatProvider, TuiHint, TuiScrollbar, TuiButton } from '@taiga-ui/core';
 import { TuiCarousel, TuiElasticContainer, TuiFade, TuiPagination, TuiSegmented, TuiSkeleton } from '@taiga-ui/kit';
@@ -20,14 +20,16 @@ import { matBarcodeOutline, matFaceOutline } from '@ng-icons/material-icons/outl
 import { faSolidMinus, faSolidPlus } from '@ng-icons/font-awesome/solid';
 import { solarAltArrowLeftBold, solarAltArrowRightBold } from '@ng-icons/solar-icons/bold';
 import { VolumeJumpDialog } from '../../volume-jump-dialog/volume-jump-dialog.component';
+import { VolumeGalleryDialog } from '../../volume-gallery-dialog/volume-gallery-dialog.component';
+import { lucideImage } from '@ng-icons/lucide';
 
 @Component({
     selector: 'volume-detail',
-    imports: [ TranslatePipe, MangaCover, VolumeJumpDialog, TuiFade, TuiButton, LinkWarnDialog, TuiHint, NgIcon, NgIf, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
+    imports: [ TranslatePipe, MangaCover, VolumeJumpDialog, VolumeGalleryDialog, TuiFade, TuiButton, LinkWarnDialog, TuiHint, NgIcon, NgIf, NgFor, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
     templateUrl: './volume-detail.component.html',
     styleUrl: './volume-detail.component.less',
     providers: [tuiDateFormatProvider({mode: 'YMD', separator: '/'})],
-    viewProviders: [provideIcons({ solarLink, faCopyright, faSolidPlus, faSolidMinus, solarAltArrowLeftBold, solarAltArrowRightBold, faBookmark, tablerChartScatter3d, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerLanguage, solarNotebook, matFaceOutline, tablerCalendar, tablerRulerMeasure, matBarcodeOutline, tablerNotebook, faFlag })]
+    viewProviders: [provideIcons({ solarLink, faCopyright, lucideImage, faSolidPlus, faSolidMinus, solarAltArrowLeftBold, solarAltArrowRightBold, faBookmark, tablerChartScatter3d, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerLanguage, solarNotebook, matFaceOutline, tablerCalendar, tablerRulerMeasure, matBarcodeOutline, tablerNotebook, faFlag })]
 })
 export class VolumeDetailComponent {
     private readonly api = inject(APIService);
@@ -52,6 +54,7 @@ export class VolumeDetailComponent {
     @ViewChild('desc') desc: any;
     @ViewChild('linkDialog') linkDialog: any;
     @ViewChild('jumpDialog') jumpDialog: any;
+    @ViewChild('galleryDialog') galleryDialog: any;
 
     async ngOnInit(){
         this.title.setTitle(`Volume | MangaDB`);
@@ -59,6 +62,7 @@ export class VolumeDetailComponent {
         this.route.paramMap.subscribe(()=>{
             if(!this.volume?.id) return;
             this.show404 = false;
+            this.galleryDialog.setTabIndex(0);
 
             // reset description state (not expanded, max height and remove clamp)
             this.expandDesc = false;
@@ -88,10 +92,35 @@ export class VolumeDetailComponent {
         const completeSlug = `${seriesSlug}:${slug}`;
 
         this.api.request<any>(HttpMethod.GET, `volumes/slug/${completeSlug}?user_lang=${lang}`, {}).subscribe((res:any)=>{
-            console.log(res);
             this.volume = res;
-            this.volume.measures = this.formatMeasures();
+            this.volume.images = this.volume.images.filter((i:any)=>i.name);
+            this.volume.measures_text = this.formatMeasures();
+            if(this.volume.extras && this.volume.extras.trim() !== ''){
+                const tmpExtraObj = {
+                    name: this.volume.extras.split(':')[0],
+                    items: this.volume.extras.split(':')[1].split(';').filter((i:any) => i.trim() !== '')
+                };
+                const extrasObj:any = { name: tmpExtraObj.name, items: [] };
+                if(tmpExtraObj.items){
+                    for(let item of tmpExtraObj.items){
+                        const regex = /\[(\d+)\]/g;
+                        const matches = [...item.matchAll(regex)];
+                        
+                        const images = matches.map(match => match[1]);
+                        
+                        // If you want to remove the brackets and IDs from the original string, you can do this:
+                        const updatedItem = item.replace(/\[\d+\]/g, '');
+                        item = updatedItem;
+                        extrasObj.items.push({
+                            html: updatedItem,
+                            images
+                        });
+                    }
+                }
+                this.volume.extrasObj = extrasObj;
+            }
             this.loading = false;
+            console.log(this.volume)
 
             this.title.setTitle(`${this.volume.name} | MangaDB`);
 
@@ -205,15 +234,17 @@ export class VolumeDetailComponent {
     }
 
     // format measures of volume
-    formatMeasures(){
+    formatMeasures(include_depth: boolean = false){
         // if there are no measures set, return '-'
         if(!this.volume?.measures) return '-';
         const parts = this.volume.measures.split(' '); // 15.20 x 01.20 x 20.80 cm
                 
         // concetenate width, depth and height with 'x' and 'cm'
         const w = parseFloat(parts[0]);
+        const d = parseFloat(parts[2]);
         const h = parseFloat(parts[4]);
-        return `${w} x ${h} cm`;
+        if(include_depth) return `${w} x ${d} x ${h} cm`;
+        else return `${w} x ${h} cm`;
     }
 
     // convert date to a more human-readable format
@@ -221,6 +252,7 @@ export class VolumeDetailComponent {
         return readableDate(date, this.translate.currentLang, true);
     }
 
+    // redirect to volume
     visitVolume(slug:string){
         if(!slug) return;
         const series = slug.split(':')[0];
@@ -228,6 +260,7 @@ export class VolumeDetailComponent {
         this.router.navigate(['volume', series, volume], { replaceUrl: true });
     }
 
+    // toggle collection state
     toggleCollectionState(){
         // if not logged in show error
         if(!this.auth.isLoggedIn()){
@@ -246,5 +279,18 @@ export class VolumeDetailComponent {
         }, (err)=>{
             this.togglingCollected = false;
         });
+    }
+
+    // open dialog for specific extras image
+    openGalleryImage(index:any){
+        // 3 is the base index because there are 4 tabs by default (we need to skip them), plus the index of the image
+        const imageIndex = 3 + (index+1); 
+        this.galleryDialog.setTabIndex(imageIndex);
+        this.galleryDialog.showDialog();
+    }
+
+    open3D(){
+        this.galleryDialog.setTabIndex((3 + this.volume.images?.length + 1));
+        this.galleryDialog.showDialog();
     }
 }

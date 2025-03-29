@@ -11,7 +11,7 @@
         <div class="columns">
             <div class="column">
                 <div class="cover-wrapper" [class.non-3d]="volume.three_d === 0" *ngIf="!show404">
-                    <manga-cover *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
+                    <manga-cover [showGalleryBtn]="true" (openGallery)="galleryDialog.showDialog()" *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
                 </div>
                 <div class="info">
                     <div class="header">
@@ -29,9 +29,9 @@
                         <div class="label">{{ 'volume.binding.label' | translate }}</div>
                         <div class="value">{{volume?.type ? (`volume.binding.${volume?.type?.toLowerCase()}` | translate) : '-'}}</div>
                     </div>
-                    <div class="item">
+                    <div class="item" *ngIf="volume?.isbn10">
                         <div class="label">ISBN-10</div>
-                        <div class="value">{{volume?.isbn10 || '-'}}</div>
+                        <div class="value">{{volume?.isbn10}}</div>
                     </div>
                     <div class="item">
                         <div class="label">ISBN-13</div>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="item">
                         <div class="label">{{ 'volume.dimensions' | translate }}</div>
-                        <div class="value">{{volume?.measures || '-'}}</div>
+                        <div class="value" [tuiHintAppearance]="'dark'" [tuiHintDirection]="'bottom'" [tuiHint]="formatMeasures(true)">{{volume?.measures_text || '-'}}</div>
                     </div>
                     <div class="item">
                         <div class="label">{{ 'volume.release_date' | translate }}</div>
@@ -78,7 +78,7 @@
                             <button appearance="accent" size="m" tuiButton type="button" class="lists-btn" [tuiHint]="'volume.lists' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'">
                                 <ng-icon class="icon" name="faBookmark" [style.fontSize.px]="20"></ng-icon>
                             </button>
-                            <button appearance="accent" size="m" tuiButton type="button" class="three-d-btn" [tuiHint]="'volume.three-d' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'" *ngIf="volume.three_d === 1">
+                            <button appearance="accent" (click)="open3D()" size="m" tuiButton type="button" class="three-d-btn" [tuiHint]="'volume.three-d' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'" *ngIf="volume.three_d === 1">
                                 <ng-icon class="icon" name="tablerChartScatter3d" [style.fontSize.px]="20"></ng-icon>
                             </button>
                             <div class="pagination">
@@ -107,6 +107,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="section-title" [style.marginTop.px]="20" *ngIf="volume.links?.length > 0">
+                    <span>{{ 'volume.links' | translate }}</span>
+                </div>
+                <div class="link-wrapper" *ngIf="volume.links?.length > 0">
+                    <div class="item" *ngFor="let link of volume.links" (click)="openLinkDialog(link.url)">
+                        <img [src]="link.src">
+                        <span>{{ link.name }}</span>
+                    </div>
+                </div>
+                <div class="section-title" [style.marginTop.px]="20" *ngIf="volume.extrasObj?.items?.length > 0">
+                    <span>{{ 'volume.extras' | translate }}</span>
+                </div>
+                <div class="extras-wrapper" *ngIf="volume.extrasObj?.items?.length > 0">
+                    <div class="extra-item" [class.images]="extra.images?.length > 0" *ngFor="let extra of volume.extrasObj?.items">
+                        <div class="title" [innerHTML]="extra.html"></div>
+                        <button appearance="accent" size="xs" tuiButton type="button" class="img-btn small" *ngFor="let image of extra.images; index as i" (click)="openGalleryImage(i)">
+                            <ng-icon class="icon" name="lucideImage" [style.fontSize.px]="16"></ng-icon>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -116,6 +136,7 @@
 
 <link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
 <volume-jump-dialog [volume]="volume" (jumpTrigger)="jumpTo($event)" #jumpDialog></volume-jump-dialog>
+<volume-gallery-dialog [volume]="volume" #galleryDialog></volume-gallery-dialog>
 
 <ng-template #languageContent let-item>
     <div class="language-item">
