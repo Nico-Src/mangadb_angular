@@ -1,0 +1,30 @@
+<div class="window" [class.show]="show"></div>
+
+<div class="tabs">
+    <tui-segmented class="tab-input" [(activeItemIndex)]="tabIndex" [size]="'s'">
+        <button type="button" class="tab-item">
+            {{ 'volume.cover.front' | translate }}
+        </button>
+        <button type="button" class="tab-item" [disabled]="!volume?.spine_cover_path">
+            {{ 'volume.cover.spine' | translate }}
+        </button>
+        <button type="button" class="tab-item" [disabled]="!volume?.back_cover_path">
+            {{ 'volume.cover.back' | translate }}
+        </button>
+        <button type="button" class="tab-item" [disabled]="!volume?.back_cover_path || !volume?.spine_cover_path">
+            {{ 'volume.cover.spread' | translate }}
+        </button>
+        <button type="button" class="tab-item" *ngFor="let image of volume.images">
+            {{ image.name }}
+        </button>
+    </tui-segmented>
+</div>
+
+<div class="cover-wrapper">
+    <manga-cover *ngIf="volume?.id && (tabIndex === 0 || tabIndex === 3)" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1"></manga-cover>
+    <manga-cover *ngIf="volume?.id && (tabIndex === 1 || tabIndex === 3)" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [coverType]="'spine'"></manga-cover>
+    <manga-cover *ngIf="volume?.id && (tabIndex === 2 || tabIndex === 3)" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [coverType]="'back'"></manga-cover>
+    <ng-container *ngFor="let image of volume.images; index as i">
+        <manga-cover *ngIf="volume?.id && tabIndex === (3 + (i+1))" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [src]="image.src"></manga-cover>
+    </ng-container>
+</div>
