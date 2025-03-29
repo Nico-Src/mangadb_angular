@@ -8,70 +8,104 @@
         <div class="text">{{ 'contributor.not-found' | translate }}</div>
     </div>
     <div class="content" #content>
-        <div class="cover-wrapper" *ngIf="!show404">
-            <manga-cover *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
-        </div>
-        <div class="detail-wrapper">
-            <div class="top" *ngIf="volume?.id">
-                <div class="title" #volumeTitle>
-                    {{ volume.name }}
+        <div class="columns">
+            <div class="column">
+                <div class="cover-wrapper" [class.non-3d]="volume.three_d === 0" *ngIf="!show404">
+                    <manga-cover *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
                 </div>
-                <div class="edition" *ngIf="volume && ((volume.edition_name || volume.special_name))">
-                    <span class="name" *ngIf="(volume.edition_name && volume.special_name)">{{ volume.edition_name }} • {{ volume.special_name }}</span>
-                    <span class="name" *ngIf="(volume.edition_name && !volume.special_name)">{{ volume.edition_name }}</span>
-                    <span class="name" *ngIf="(!volume.edition_name && volume.special_name)">{{ volume.special_name }}</span>
-                </div>
-                <div class="copyright-wrapper">
-                    <div class="copyright"><ng-icon class="icon" name="faCopyright" [style.fontSize.px]="16"/>{{volume?.copyright}}</div>
-                    <button appearance="flat" size="m" tuiIconButton type="button" class="report-btn" (click)="openReportDialog()" [style.border-radius.%]="100" [tuiHint]="'report-dialog.title' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom">
-                        <ng-icon class="icon" name="faFlag" [style.fontSize.px]="16"></ng-icon>
-                    </button>
+                <div class="info">
+                    <div class="header">
+                        {{ `volume.info-header` | translate }}
+                    </div>
+                    <div class="item">
+                        <div class="label">{{ 'language.label' | translate }}</div>
+                        <div class="value">{{ `language.${langToLoc(volume?.language)}` | translate }}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">{{ 'volume.pages' | translate }}</div>
+                        <div class="value">{{volume?.pages || '-'}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">{{ 'volume.binding.label' | translate }}</div>
+                        <div class="value">{{volume?.type ? (`volume.binding.${volume?.type?.toLowerCase()}` | translate) : '-'}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">ISBN-10</div>
+                        <div class="value">{{volume?.isbn10 || '-'}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">ISBN-13</div>
+                        <div class="value">{{volume?.isbn13 || '-'}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">{{ 'volume.dimensions' | translate }}</div>
+                        <div class="value">{{volume?.measures || '-'}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">{{ 'volume.release_date' | translate }}</div>
+                        <div class="value">{{releaseDate(volume?.release_date)}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="label">{{ 'volume.rating' | translate }}</div>
+                        <div class="value">{{volume?.rating || '-'}}+</div>
+                    </div>
                 </div>
             </div>
-            <div class="bottom" *ngIf="volume?.id">
-                <div class="carousel" tuiFade>
-                    <tui-scrollbar class="scrollbar">
-                        <div class="item">
-                            <div class="label">{{ 'language.label' | translate }}</div>
-                            <ng-icon name="tablerLanguage" class="icon margin" [style.fontSize.px]="24"></ng-icon>
-                            <div class="value">{{ `language.${langToLoc(volume?.language)}` | translate }}</div>
+            <div class="column">
+                <div class="detail-wrapper">
+                    <div class="top" *ngIf="volume?.id">
+                        <div class="title" #volumeTitle>
+                            {{ volume.name }}
                         </div>
-                        <div class="item">
-                            <div class="label">{{ 'volume.pages' | translate }}</div>
-                            <ng-icon name="solarNotebook" class="icon margin" [style.fontSize.px]="24"></ng-icon>
-                            <div class="value">{{volume?.pages || '-'}}</div>
+                        <div class="edition" *ngIf="volume && ((volume.edition_name || volume.special_name))">
+                            <span class="name" *ngIf="(volume.edition_name && volume.special_name)">{{ volume.edition_name }} • {{ volume.special_name }}</span>
+                            <span class="name" *ngIf="(volume.edition_name && !volume.special_name)">{{ volume.edition_name }}</span>
+                            <span class="name" *ngIf="(!volume.edition_name && volume.special_name)">{{ volume.special_name }}</span>
                         </div>
-                        <div class="item">
-                            <div class="label">{{ 'volume.binding.label' | translate }}</div>
-                            <ng-icon name="tablerNotebook" class="icon margin" [style.fontSize.px]="24"></ng-icon>
-                            <div class="value">{{volume?.type ? (`volume.binding.${volume?.type?.toLowerCase()}` | translate) : '-'}}</div>
+                        <div class="copyright-wrapper">
+                            <div class="copyright"><ng-icon class="icon" name="faCopyright" [style.fontSize.px]="16"/>{{volume?.copyright}}</div>
+                            <button appearance="flat" size="m" tuiIconButton type="button" class="report-btn" (click)="openReportDialog()" [style.border-radius.%]="100" [tuiHint]="'report-dialog.title' | translate" tuiHintAppearance="dark" tuiHintDirection="bottom">
+                                <ng-icon class="icon" name="faFlag" [style.fontSize.px]="16"></ng-icon>
+                            </button>
                         </div>
-                        <div class="item">
-                            <div class="label">ISBN-10</div>
-                            <ng-icon name="matBarcodeOutline" class="icon" [style.fontSize.px]="30"></ng-icon>
-                            <div class="value">{{volume?.isbn10 || '-'}}</div>
+                    </div>
+                    <div class="bottom" *ngIf="volume?.id">
+                        <div class="actions">
+                            <button appearance="accent" [disabled]="togglingCollected" (click)="toggleCollectionState()" size="m" tuiButton type="button" class="collection-btn" [class.collected]="volume.collected">
+                                <ng-icon class="icon" name="faSolidMinus" [style.fontSize.px]="20" *ngIf="volume.collected"></ng-icon>
+                                <ng-icon class="icon" name="faSolidPlus" [style.fontSize.px]="20" *ngIf="!volume.collected"></ng-icon>
+                            </button>
+                            <button appearance="accent" size="m" tuiButton type="button" class="lists-btn" [tuiHint]="'volume.lists' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'">
+                                <ng-icon class="icon" name="faBookmark" [style.fontSize.px]="20"></ng-icon>
+                            </button>
+                            <button appearance="accent" size="m" tuiButton type="button" class="three-d-btn" [tuiHint]="'volume.three-d' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'" *ngIf="volume.three_d === 1">
+                                <ng-icon class="icon" name="tablerChartScatter3d" [style.fontSize.px]="20"></ng-icon>
+                            </button>
+                            <div class="pagination">
+                                <button appearance="accent" size="s" tuiButton type="button" class="prev-btn small" [disabled]="!volume.prev" (click)="visitVolume(volume.prev)">
+                                    <ng-icon class="icon" name="solarAltArrowLeftBold" [style.fontSize.px]="16"></ng-icon>
+                                </button>
+                                <button appearance="accent" (click)="openJumpDialog()" [disabled]="volume?.count === 1" size="s" [style.fontWeight]="'bold'" tuiButton type="button" class="prev-btn small">
+                                    {{ volume?.index ? volume?.index + 1 : 1 }}&nbsp;{{ 'volume.of' | translate }}&nbsp;{{ volume?.count }}
+                                </button>
+                                <button appearance="accent" size="s" tuiButton type="button" class="next-btn small" [disabled]="!volume.next" (click)="visitVolume(volume.next)">
+                                    <ng-icon class="icon" name="solarAltArrowRightBold" [style.fontSize.px]="16"></ng-icon>
+                                </button>
+                            </div>
                         </div>
-                        <div class="item">
-                            <div class="label">ISBN-13</div>
-                            <ng-icon name="matBarcodeOutline" class="icon" [style.fontSize.px]="30"></ng-icon>
-                            <div class="value">{{volume?.isbn13 || '-'}}</div>
+                    </div>
+                </div>
+                <div class="description-wrapper" [class.hide]="checkingDescOverflow">
+                    <div class="header">
+                        <span>{{ 'series.description' | translate }}</span>
+                    </div>
+                    <div class="description" *ngIf="volume.description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="volume?.description"></div>
+                    <div class="description" *ngIf="!volume.description" #desc>
+                        <div class="no-desc">
+                            <div class="title">{{ 'volume.no-description.title' | translate }}</div>
+                            <div class="desc">{{ 'volume.no-description.desc' | translate }}</div>
                         </div>
-                        <div class="item">
-                            <div class="label">{{ 'volume.dimensions' | translate }}</div>
-                            <ng-icon name="tablerRulerMeasure" class="icon margin" [style.fontSize.px]="24"></ng-icon>
-                            <div class="value">{{volume?.measures || '-'}}</div>
-                        </div>
-                        <div class="item">
-                            <div class="label">{{ 'volume.release_date' | translate }}</div>
-                            <ng-icon name="tablerCalendar" class="icon margin" [style.fontSize.px]="24"></ng-icon>
-                            <div class="value">{{releaseDate(volume?.release_date)}}</div>
-                        </div>
-                        <div class="item">
-                            <div class="label">{{ 'volume.rating' | translate }}</div>
-                            <ng-icon name="matFaceOutline" class="icon margin" [style.fontSize.px]="24"></ng-icon>
-                            <div class="value">{{volume?.rating || '-'}}+</div>
-                        </div>
-                    </tui-scrollbar>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,6 +115,7 @@
 </div>
 
 <link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
+<volume-jump-dialog [volume]="volume" (jumpTrigger)="jumpTo($event)" #jumpDialog></volume-jump-dialog>
 
 <ng-template #languageContent let-item>
     <div class="language-item">

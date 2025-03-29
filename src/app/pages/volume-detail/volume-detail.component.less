@@ -4,6 +4,8 @@
     display:block;
     position: relative;
 
+    --cover-width: 270px;
+
     ::ng-deep .t-loader{
         stroke: rgb(var(--mid-accent)) !important;
     }
@@ -64,7 +66,7 @@
         }
 
         .content.fits{
-            .title, .edition, .bottom, .copyright-wrapper{
+            .title, .edition, .bottom, .copyright-wrapper, .info, .description-wrapper{
                 opacity: 1 !important;
             }
         }
@@ -85,17 +87,93 @@
             flex-wrap: wrap;
             transition: opacity var(--transition-duration) ease;
 
+            .columns{
+                width: 100%;
+                height: fit-content;
+                display:flex;
+                justify-content: center;
+                align-items: flex-start;
+
+                .column:first-child{
+                    width: var(--cover-width);
+                    height: fit-content;
+                    flex-shrink: 0;
+                }
+
+                .column:not(:first-child){
+                    flex: 1;
+                    height: fit-content;
+                    max-width: calc(100% - var(--cover-width));
+                }
+            }
+
             .cover-wrapper{
                 height: fit-content;
                 width: fit-content;
                 flex-shrink: 0;
                 position: relative;
-                margin-bottom: 7.5px;
+                margin-bottom: 15px;
+                
+                &.non-3d{
+                    min-height: 300px;
+                    display:flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: white;
+                    border-radius: 4px;
+                }
 
                 manga-cover{
-                    width: 230px;
+                    width: var(--cover-width);
 
-                    ::ng-deep img{width: 230px;}
+                    ::ng-deep img{width: var(--cover-width);}
+                }
+            }
+
+            .info{
+                width: var(--cover-width);
+                height: fit-content;
+                display:flex;
+                justify-content: flex-start;
+                align-items: flex-start;
+                flex-direction: column;
+                opacity: 0;
+                border-radius: 6px;
+                transition: opacity var(--transition-duration) ease;
+                background-color: rgba(0,0,0,.05);
+                border-top: 3px solid rgb(var(--accent-color));
+                padding: 7px 10px;
+                gap: 10px;
+
+                .header{
+                    width: 100%;
+                    text-align: start;
+                    font-weight: bold;
+                    font-size: 16px;
+                    border-bottom: 2px solid rgba(0,0,0,.1);
+                    padding-bottom: 5px;
+                }
+
+                .item{
+                    width: 100%;
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .label{
+                        font-size: 12px;
+                        color: #555;
+                        font-weight: 500;
+                    }
+
+                    .value{
+                        font-size: 12px;
+                    }
+
+                    .value{
+                        margin-left: auto;
+                        font-weight: 600;
+                    }
                 }
             }
 
@@ -226,81 +304,106 @@
                     opacity: 0;
                     transition: opacity var(--transition-duration) ease;
 
-                    .carousel{
+                    .actions{
+                        height:fit-content;
                         width: 100%;
-                        background-color: rgba(0,0,0,.05);
-                        padding: 6px 10px;
-                        border-radius: 6px;
-                        overflow: hidden;
-                    }
-
-                    tui-scrollbar{
-                        width: 100%;
-                        padding-bottom: 10px;
-                        overflow-y: hidden;
-
-                        ::ng-deep .t-content{
-                            display:flex;
-                            justify-content: space-evenly;
-                            align-items: flex-start;
-                        }
-
-                        ::ng-deep .t-bar{
-                            bottom: -15px !important;
-                        }
-
-                        ::ng-deep .t-bar_vertical{display:none;}
-                    }
-
-                    .item{
-                        width: fit-content;
                         display:flex;
                         justify-content: flex-start;
                         align-items: center;
-                        flex-direction: column;
-                        padding: 0px;
-                        width: fit-content;
-                        margin-right: 20px;
-                        flex-shrink: 0;
+                        flex-wrap: wrap;
 
-                        .label{
-                            width: 100%;
-                            font-weight: 500;
-                            color: #777;
-                            font-size: 14px;
-                            display:flex;
-                            justify-content: center;
-                            align-items: center;
+                        .pagination{
+                            margin-left: auto;
                         }
 
-                        .icon{
-                            overflow: visible !important;
-                            transform: translateY(-2px);
+                        button{
+                            margin-right: 10px;
+                            margin-bottom: 10px;
 
-                            &.margin{
-                                margin: 3px 0px;
-                            }
-                        }
-    
-                        .value{
-                            width: 100%;
-                            font-weight: 400;
-                            font-size: 15px;
-                            color:#000;
-                            display:flex;
-                            justify-content: center;
-                            align-items: center;
+                            &:not(.small){height: 50px;}
 
-                            .link{
-                                color: rgb(var(--dark-accent));
-                                transition: background var(--transition-duration) ease;
-                                border-radius: 4px;
-                                cursor: pointer;
+                            .icon{transform: translateY(-1px);overflow: visible;}
 
-                                &:hover{
-                                    text-decoration: underline;
+                            &.collection-btn{
+                                --tui-background-accent-2: rgb(var(--accent-color));
+                                --tui-background-accent-2-hover: rgb(var(--mid-accent));
+                                --tui-background-accent-2-pressed: rgb(var(--dark-accent));
+
+                                &.collected{
+                                    --tui-background-accent-2: rgb(223, 117, 117);
+                                    --tui-background-accent-2-hover: rgb(244, 150, 150);
+                                    --tui-background-accent-2-pressed: rgb(197, 100, 100);
                                 }
                             }
+
+                            &:not(.collection-btn){
+                                color: black;
+                                --tui-background-accent-2: #ccc;
+                                --tui-background-accent-2-hover: #bbb;
+                                --tui-background-accent-2-pressed: #aaa;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .description-wrapper{
+                margin-top: 10px;
+                width: 100%;
+                height: fit-content;
+                position: relative;
+                font-size: 14px;
+                font-weight: 400;
+                padding-left: 15px;
+                color: #333;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                display: -webkit-box;
+                transition: max-height var(--transition-duration) ease, opacity var(--transition-duration) ease;
+                text-align: justify;
+                border-radius: 4px;
+                overflow: hidden;
+                position: relative;
+                opacity: 0;
+
+                .header{
+                    width: 100%;
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    font-weight: 600;
+                    margin-bottom: 5px;
+                    font-size: 17px;
+                }
+
+                ::ng-deep p{margin: 0px;}
+
+                .description{
+                    padding: 0px;
+                    pointer-events: none;
+                    line-height: 20px;
+                    overflow: hidden;
+                    font-size: 15px;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    transition: max-height var(--transition-duration) ease, opacity var(--transition-duration) ease;
+
+                    .no-desc{
+                        width: 100%;
+                        height: fit-content;
+                        font-size: 16px;
+                        margin: 2px 0px;
+                        position: relative;
+                        display:flex;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        flex-direction: column;
+                        border-radius: 4px;
+                        overflow: hidden;
+                        color: #777;
+        
+                        .desc{
+                            line-height: 15px;
                         }
                     }
                 }

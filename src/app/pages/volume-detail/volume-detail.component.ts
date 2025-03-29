@@ -1,12 +1,12 @@
 import { Component, computed, ElementRef, HostListener, inject, Input, ViewChild } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { TuiAppearance, TuiLoader, TuiAlertService, TuiTextfield, tuiDateFormatProvider, TuiHint, TuiScrollbar } from '@taiga-ui/core';
+import { TuiAppearance, TuiLoader, TuiAlertService, TuiTextfield, tuiDateFormatProvider, TuiHint, TuiScrollbar, TuiButton } from '@taiga-ui/core';
 import { TuiCarousel, TuiElasticContainer, TuiFade, TuiPagination, TuiSegmented, TuiSkeleton } from '@taiga-ui/kit';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { APIService, HttpMethod } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
-import { CDN_BASE, readableDate, UNKNOWN_DATE, ANNOUNCED_DATE, localeToLang, LANGS, langToLocale } from '../../../globals';
+import { CDN_BASE, readableDate, UNKNOWN_DATE, ANNOUNCED_DATE, localeToLang, LANGS, langToLocale, errorAlert, successAlert, getTranslation } from '../../../globals';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,17 +14,20 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { solarDoubleAltArrowDown, solarDoubleAltArrowUp, solarLink, solarNotebook } from '@ng-icons/solar-icons/outline';
 import { LinkWarnDialog } from '../../link-warn-dialog/link-warn-dialog.component';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
-import { faCopyright, faFlag } from '@ng-icons/font-awesome/regular';
-import { tablerCalendar, tablerLanguage, tablerNotebook, tablerRulerMeasure } from '@ng-icons/tabler-icons';
+import { faBookmark, faCopyright, faFlag } from '@ng-icons/font-awesome/regular';
+import { tablerCalendar, tablerChartScatter3d, tablerLanguage, tablerNotebook, tablerRulerMeasure } from '@ng-icons/tabler-icons';
 import { matBarcodeOutline, matFaceOutline } from '@ng-icons/material-icons/outline';
+import { faSolidMinus, faSolidPlus } from '@ng-icons/font-awesome/solid';
+import { solarAltArrowLeftBold, solarAltArrowRightBold } from '@ng-icons/solar-icons/bold';
+import { VolumeJumpDialog } from '../../volume-jump-dialog/volume-jump-dialog.component';
 
 @Component({
     selector: 'volume-detail',
-    imports: [ TranslatePipe, MangaCover, TuiFade, TuiScrollbar, LinkWarnDialog, TuiHint, NgIcon, NgIf, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
+    imports: [ TranslatePipe, MangaCover, VolumeJumpDialog, TuiFade, TuiButton, LinkWarnDialog, TuiHint, NgIcon, NgIf, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
     templateUrl: './volume-detail.component.html',
     styleUrl: './volume-detail.component.less',
     providers: [tuiDateFormatProvider({mode: 'YMD', separator: '/'})],
-    viewProviders: [provideIcons({ solarLink, faCopyright, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerLanguage, solarNotebook, matFaceOutline, tablerCalendar, tablerRulerMeasure, matBarcodeOutline, tablerNotebook, faFlag })]
+    viewProviders: [provideIcons({ solarLink, faCopyright, faSolidPlus, faSolidMinus, solarAltArrowLeftBold, solarAltArrowRightBold, faBookmark, tablerChartScatter3d, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerLanguage, solarNotebook, matFaceOutline, tablerCalendar, tablerRulerMeasure, matBarcodeOutline, tablerNotebook, faFlag })]
 })
 export class VolumeDetailComponent {
     private readonly api = inject(APIService);
@@ -38,6 +41,7 @@ export class VolumeDetailComponent {
     loading: boolean = true;
     linkDialogURL: string = "";
     infoIndex: number = 0;
+    togglingCollected: boolean = false;
 
     expandDesc: boolean = false;
     descOverflowing: boolean = false;
@@ -47,6 +51,7 @@ export class VolumeDetailComponent {
     @ViewChild('volumeTitle') volumeTitle: any;
     @ViewChild('desc') desc: any;
     @ViewChild('linkDialog') linkDialog: any;
+    @ViewChild('jumpDialog') jumpDialog: any;
 
     async ngOnInit(){
         this.title.setTitle(`Volume | MangaDB`);
@@ -57,8 +62,8 @@ export class VolumeDetailComponent {
 
             // reset description state (not expanded, max height and remove clamp)
             this.expandDesc = false;
-            this.desc.nativeElement.style.maxHeight = '120px';
-            this.desc.nativeElement.classList.remove('clamp');
+            // this.desc.nativeElement.style.maxHeight = '120px';
+            // this.desc.nativeElement.classList.remove('clamp');
             // check overflow for new description
             this.checkingDescOverflow = true;
 
@@ -93,7 +98,7 @@ export class VolumeDetailComponent {
             setTimeout(() => {
                 this.fitToParent(this.volumeTitle.nativeElement,{max: 50, height: 100});
                 //checkDescriptionOverflow(true);
-            }, 50);
+            }, 250);
         }, (err:any)=>{
             this.show404 = true;
             this.loading = false;
@@ -153,6 +158,26 @@ export class VolumeDetailComponent {
         this.linkDialogURL = link;
     }
 
+    // open jump dialog
+    openJumpDialog(){
+        this.jumpDialog.showDialog(this.volume.index);
+    }
+
+    // jump to given volume
+    async jumpTo(e:any){
+        if(e == this.volume.index){
+            const msg = await getTranslation(this.translate, `volume-jump-dialog.already`);
+            errorAlert(this.alerts, msg, undefined, this.translate);
+            return;
+        }
+
+        this.api.request<string>(HttpMethod.GET, `volumes/index/${this.volume.id}/${e}`, {}, 'text').subscribe((res)=>{
+            this.visitVolume(res);
+        }, (err:any)=>{
+            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+        });
+    }
+
     // show report dialog and load reports
     openReportDialog(){
         /*this.reportsLoading = true;
@@ -187,13 +212,39 @@ export class VolumeDetailComponent {
                 
         // concetenate width, depth and height with 'x' and 'cm'
         const w = parseFloat(parts[0]);
-        const d = parseFloat(parts[2]);
         const h = parseFloat(parts[4]);
-        return `${w} x ${d} x ${h} cm`;
+        return `${w} x ${h} cm`;
     }
 
     // convert date to a more human-readable format
     releaseDate(date:string){
         return readableDate(date, this.translate.currentLang, true);
+    }
+
+    visitVolume(slug:string){
+        if(!slug) return;
+        const series = slug.split(':')[0];
+        const volume = slug.split(':')[1];
+        this.router.navigate(['volume', series, volume], { replaceUrl: true });
+    }
+
+    toggleCollectionState(){
+        // if not logged in show error
+        if(!this.auth.isLoggedIn()){
+            // TODO translate
+            errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
+            return;
+        }
+    
+        this.togglingCollected = true;
+
+        this.api.request<any>(HttpMethod.GET, `volumes/toggle-collection/id/${this.volume.id}`, {}).subscribe((res)=>{
+            this.volume.collected = res;
+            this.togglingCollected = false;
+            if(res) successAlert(this.alerts, 'Successfully added to collection.', undefined, this.translate);
+            else successAlert(this.alerts, 'Successfully removed from collection.', undefined, this.translate);
+        }, (err)=>{
+            this.togglingCollected = false;
+        });
     }
 }
