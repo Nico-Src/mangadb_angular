@@ -112,7 +112,19 @@
         },
         "dimensions": "Measures",
         "release_date": "Release",
-        "rating": "Rating"
+        "rating": "Rating",
+        "info-header": "Book Details",
+        "lists": "Lists",
+        "three-d": "3D-View",
+        "of": "of",
+        "cover": {
+            "front": "Front",
+            "spine": "Spine",
+            "back": "Back",
+            "spread": "Spread"
+        },
+        "links": "Links",
+        "extras": "Extras"
     },
 
     "series": {
@@ -174,7 +186,19 @@
         "works": "Published Works",
         "relations": "Related Contributors",
         "member": "Member",
-        "member-of": "Member of"
+        "member-of": "Member of",
+        "type": {
+            "label": "Type",
+            "person": "Person",
+            "group": "Group",
+            "company": "Company"
+        },
+        "gender": {
+            "label": "Gender",
+            "male": "Male",
+            "female": "Female"
+        },
+        "links": "Links"
     },
 
     "report": {
@@ -541,5 +565,11 @@
         "add-success": "Series added to list.",
         "already-in-list": "Series already in list.",
         "in-list": "Already in list"
+    },
+
+    "volume-jump-dialog": {
+        "title": "Jump to Volume: ",
+        "go": "Go",
+        "already": "You are already at this volume."
     }
 }

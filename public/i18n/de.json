@@ -103,7 +103,17 @@
 
     "volume": {
         "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
-        "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen."
+        "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
+        "pages": "Seiten",
+        "binding": {
+            "label": "Format",
+            "softcover": "Taschenbuch",
+            "hardcover": "Gebunden"
+        },
+        "dimensions": "Abmessungen",
+        "release_date": "Veröffentlichung",
+        "rating": "Altersempfehlung",
+        "info-header": "Informationen"
     },
 
     "series": {

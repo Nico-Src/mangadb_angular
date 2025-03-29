@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { TuiButton, TuiAppearance, TuiLoader, TuiAlertService, TuiTextfield } from '@taiga-ui/core';
+import { TuiButton, TuiAppearance, TuiTextfield } from '@taiga-ui/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { errorAlert, successAlert, getTranslation } from '../../globals';
@@ -9,7 +9,7 @@ import { TuiSlider } from '@taiga-ui/kit';
 
 @Component({
     selector: 'volume-jump-dialog',
-    imports: [ TranslatePipe, TuiButton, TuiSlider, TuiAppearance, NgIf, TuiLoader, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
+    imports: [ TranslatePipe, TuiButton, TuiSlider, TuiAppearance, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
     templateUrl: './volume-jump-dialog.component.html',
     styleUrl: './volume-jump-dialog.component.less',
 })

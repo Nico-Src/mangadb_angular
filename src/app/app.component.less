@@ -43,6 +43,11 @@
     }
 }
 
+::ng-deep tui-hint[data-appearance=error]{
+    background-color: rgb(var(--accent-color)) !important;
+    color: white !important;
+}
+
 ::ng-deep body.light{
     .main-content{background-color: @bg-color;}
     .sidebar{background-color: @sidebar-color;}
