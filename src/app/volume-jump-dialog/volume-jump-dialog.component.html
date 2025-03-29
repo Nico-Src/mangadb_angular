@@ -1,0 +1,7 @@
+<div class="window" [class.show]="show" #window>
+    <div class="title">{{ 'volume-jump-dialog.title' | translate }}{{ tmpIndex + 1 }}</div>
+    <input size="m" [style.marginTop.px]="19" [style.marginBottom.px]="10" tuiSlider type="range" [max]="volume.count - 1" [(ngModel)]="tmpIndex"/>
+    <div class="button-wrapper">
+        <button size="s" [disabled]="tmpIndex == volume.index" tuiButton type="button" class="confirm" appearance="accent" (click)="jumpTo()">{{ 'volume-jump-dialog.go' | translate }}</button>
+    </div>
+</div>
