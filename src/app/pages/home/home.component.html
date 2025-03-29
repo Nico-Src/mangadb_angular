@@ -40,7 +40,7 @@
 </div>
 <tui-carousel class="section-content recently-added" [class.hide]="recentlyAddedLoading()" [itemsCount]="recentlyAddedShownItems" [(index)]="recentlyAddedIndex" [draggable]="true">
     <ng-content *ngFor="let volume of recentlyAddedVolumes">
-        <manga-volume [class]="theme()" *tuiItem [volume]="volume"></manga-volume>
+        <manga-volume (click)="volumeClick(volume)" [class]="theme()" *tuiItem [volume]="volume"></manga-volume>
     </ng-content>
 </tui-carousel>
 <tui-pagination size="s" class="pagination" [length]="recentlyAddedVolumes.length - (recentlyAddedShownItems - 1)" [(index)]="recentlyAddedIndex"/>
@@ -50,7 +50,7 @@
 </div>
 <tui-carousel class="section-content next-releases" [class.hide]="nextReleasesLoading()" [itemsCount]="nextReleasesShownItems" [(index)]="nextReleasesIndex" [draggable]="true">
     <ng-content *ngFor="let volume of nextReleasesVolumes">
-        <manga-volume [class]="theme()" *tuiItem [volume]="volume"></manga-volume>
+        <manga-volume (click)="volumeClick(volume)" [class]="theme()" *tuiItem [volume]="volume"></manga-volume>
     </ng-content>
 </tui-carousel>
 <tui-pagination size="s" class="pagination" [length]="nextReleasesVolumes.length - (nextReleasesShownItems - 1)" [(index)]="nextReleasesIndex"/>

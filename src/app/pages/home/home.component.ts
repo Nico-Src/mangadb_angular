@@ -158,6 +158,14 @@ export class HomeComponent {
         return rectAfter.height < rect.height;
     }
 
+    // redirect to volume
+    volumeClick(volume: any){
+        const slug = volume.slug;
+        const series = slug.split(':')[0];
+        const volSlug = slug.split(':')[1];
+        this.router.navigate(['volume', series, volSlug]);
+    }
+
     @HostListener('window:resize', ['$event'])
     onResize(event:any) {
         this.recentlyAddedShownItems = Math.floor(event.target.innerWidth / 200);
