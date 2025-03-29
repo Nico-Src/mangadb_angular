@@ -16,7 +16,7 @@ import { solarBuildings2Linear } from '@ng-icons/solar-icons/linear';
 import { solarDoubleAltArrowDown, solarDoubleAltArrowUp, solarLink } from '@ng-icons/solar-icons/outline';
 import { LinkWarnDialog } from '../../link-warn-dialog/link-warn-dialog.component';
 import { heroDocumentMagnifyingGlass } from '@ng-icons/heroicons/outline';
-import { tablerSortAscendingLetters, tablerSortDescendingLetters, tablerSortAscending, tablerSortDescending, tablerList, tablerLayoutColumns, tablerLayoutGrid } from '@ng-icons/tabler-icons';
+import { tablerSortAscendingLetters, tablerSortDescendingLetters, tablerSortAscending, tablerSortDescending, tablerList, tablerLayoutColumns, tablerLayoutGrid, tablerGenderFemale, tablerGenderMale } from '@ng-icons/tabler-icons';
 import { MangaSeriesColumnComponent } from '../../manga-series-column/manga-series-column.component';
 import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-grid.component';
 import { MangaSeriesListComponent } from '../../manga-series-list/manga-series-list.component';
@@ -27,7 +27,7 @@ import { MangaSeriesListComponent } from '../../manga-series-list/manga-series-l
     templateUrl: './contributor-detail.component.html',
     styleUrl: './contributor-detail.component.less',
     providers: [tuiDateFormatProvider({mode: 'YMD', separator: '/'})],
-    viewProviders: [provideIcons({ solarBuildings2Linear, matHistoryOutline, solarLink, heroDocumentMagnifyingGlass, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerSortAscending, tablerSortDescending, tablerList, tablerLayoutColumns, tablerLayoutGrid })]
+    viewProviders: [provideIcons({ solarBuildings2Linear, tablerGenderFemale, tablerGenderMale, matHistoryOutline, solarLink, heroDocumentMagnifyingGlass, solarDoubleAltArrowDown, solarDoubleAltArrowUp, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerSortAscending, tablerSortDescending, tablerList, tablerLayoutColumns, tablerLayoutGrid })]
 })
 export class ContributorDetailComponent {
     private readonly api = inject(APIService);

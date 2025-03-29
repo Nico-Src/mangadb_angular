@@ -22,7 +22,28 @@
                 </div>
             </div>
             <div class="bottom" *ngIf="contributor?.id">
-                
+                <div class="item">
+                    <div class="label"><span>{{ 'contributor.type.label' | translate }}</span></div>
+                    <div class="value">
+                        <span>{{ `contributor.type.${contributor?.type}` | translate }}</span>
+                    </div>
+                </div>
+                <div class="item website">
+                    <div class="label">
+                        <span>{{ 'contributor.gender.label' | translate }}</span>
+                        <ng-icon *ngIf="contributor.gender === 'female'" class="icon" name="tablerGenderFemale" [style.fontSize.px]="18"></ng-icon>
+                        <ng-icon *ngIf="contributor.gender === 'male'" class="icon" name="tablerGenderMale" [style.fontSize.px]="18"></ng-icon>
+                    </div>
+                    <div class="value">
+                        <span>{{ `contributor.gender.${contributor?.gender}` | translate }}</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label"><span>{{ 'contributor.links' | translate }}</span><ng-icon class="icon" name="solarLink" [style.fontSize.px]="18"></ng-icon></div>
+                    <div class="value">
+                        <span class="link" *ngFor="let link of contributor.links; index as i" (click)="openLinkDialog(link.url)">{{ link.domain }}<span style="color: black;" *ngIf="i < contributor?.links?.length - 1">,&nbsp;</span></span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="description-wrapper" [class.hide]="checkingDescOverflow">
