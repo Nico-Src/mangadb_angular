@@ -32,7 +32,16 @@ export class MangaCover {
     needsNSFW18Placeholder = signal(false);
     needsSkeleton = signal(false);
 
+    ngOnChanges(){
+        this.loading = true;
+        this.updateNSFW();
+    }
+
     ngOnInit(){
+        this.updateNSFW();
+    }
+
+    updateNSFW(){
         // get nsfw mode
         let nsfwMode = this.auth.getUserSetting('nsfw-mode');
         let ageVerified = false;
