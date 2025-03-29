@@ -1,7 +1,7 @@
 <div class="window" [class.show]="show"></div>
 
 <div class="tabs">
-    <tui-segmented class="tab-input" [(activeItemIndex)]="tabIndex" [size]="'s'">
+    <tui-segmented class="tab-input" [(activeItemIndex)]="tabIndex" [size]="'s'" (activeItemIndexChange)="tabChanged($event)">
         <button type="button" class="tab-item">
             {{ 'volume.cover.front' | translate }}
         </button>
@@ -17,6 +17,9 @@
         <button type="button" class="tab-item" *ngFor="let image of volume.images">
             {{ image.name }}
         </button>
+        <button type="button" class="tab-item" [disabled]="!threeD">
+            3D
+        </button>
     </tui-segmented>
 </div>
 
@@ -27,4 +30,11 @@
     <ng-container *ngFor="let image of volume.images; index as i">
         <manga-cover *ngIf="volume?.id && tabIndex === (3 + (i+1))" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [src]="image.src"></manga-cover>
     </ng-container>
+    <div class="viewer" *ngIf="tabIndex === (3 + volume.images?.length + 1)" #viewerRef>
+        <tui-loader class="loader" size="xl" [showLoader]="viewerLoading" [class.hidden]="!viewerLoading"></tui-loader>
+    </div>
 </div>
+
+<button appearance="accent" size="m" tuiIconButton type="button" class="close-btn" (click)="closeDialog()">
+    <ng-icon class="icon" name="tablerX" [style.fontSize.px]="20"></ng-icon>
+</button>
