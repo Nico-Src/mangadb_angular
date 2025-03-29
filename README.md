@@ -31,6 +31,10 @@ Help localize the web app by translating the texts into your language.
   - Multilingual support using `ngx-translate`.
 - **State Management**
   - Authentication state is managed with a service.
+- **Huge Content Database**
+  - Around ~60000 Volumes
+  - Around ~2000 Series you can search and filter by tags.
+  - A lot more...
  
 ## Database
 
@@ -41,9 +45,9 @@ Currently, my private database contains an extensive collection of manga metadat
 ![Contributor Badge](https://img.shields.io/badge/Contributors-2006-bda73c)
 ![Publisher Badge](https://img.shields.io/badge/Publishers-244-blue)
  
-## Preview (3:55min)
+## Preview (3:06min)
 
-[![Youtube Preview](https://img.youtube.com/vi/tdFozQr2bqM/0.jpg)](https://www.youtube.com/watch?v=tdFozQr2bqM)
+[![Youtube Preview](https://img.youtube.com/vi/xhRrrTKyoRU/0.jpg)](https://www.youtube.com/watch?v=xhRrrTKyoRU)
 
 (Click on it to watch the preview)
  
