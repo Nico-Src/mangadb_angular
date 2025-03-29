@@ -2,6 +2,10 @@
     display:block;
     width: fit-content;
 
+    &:hover{
+        .gallery-btn{opacity: 1;}
+    }
+
     .cover{
         height: 100%;
         width: 100%;
@@ -16,6 +20,23 @@
         height: 100%;
         border-radius: 4px;
         pointer-events: none;
+    }
+
+    .gallery-btn{
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        border-radius: 100%;
+        opacity: 0;
+        transition: all var(--transition-duration) ease;
+        --tui-background-accent-2: rgba(0,0,0,.35);
+        --tui-background-accent-2-hover: rgba(0,0,0,.65);
+        --tui-background-accent-2-pressed: rgba(0,0,0,.85);
+        color: white;
+
+        .icon{
+            transform: translateY(-2px);
+        }
     }
 
     .placeholder{
