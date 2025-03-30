@@ -41,7 +41,7 @@ export class VolumeGalleryDialog {
         if(!this.volume) return;
         // reset 3d and recheck if 3d is available
         this.reset3D();
-        this.threeD = !(!this.volume.measures || this.volume.measures?.trim() === "" || this.volume.measures === "-");
+        this.threeD = !(!this.volume.measures || this.volume.measures?.trim() === "" || this.volume.measures === "-" || this.volume.three_d === 0);
 
         // check if user can view 3d (based on age verification and volume nsfw status)
         const loggedIn = this.auth.isLoggedIn();

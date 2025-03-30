@@ -9,8 +9,8 @@ import { NgIf, NgFor, NgForOf } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { faCopyright, faFlag, faBookmark, faStar } from '@ng-icons/font-awesome/regular';
 import { faSolidPlus } from '@ng-icons/font-awesome/solid';
-import { TuiButton, TuiAppearance, TuiHint, TuiAlertService, TuiTextfield } from '@taiga-ui/core';
-import { TuiFade } from '@taiga-ui/kit';
+import { TuiButton, TuiAppearance, TuiHint, TuiAlertService, TuiTextfield, TuiDataList, TuiDropdown } from '@taiga-ui/core';
+import { TuiDataListDropdownManager, TuiFade } from '@taiga-ui/kit';
 import { TuiSelectModule, TuiInputModule, TuiTextfieldControllerModule, TuiTextareaModule, TuiInputDateModule } from '@taiga-ui/legacy';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { solarDoubleAltArrowDown, solarDoubleAltArrowUp, solarStar } from '@ng-icons/solar-icons/outline';
@@ -151,7 +151,6 @@ export class SeriesDetailComponent {
 
         this.api.request<any>(HttpMethod.GET, `series/slug/${slug}?lang=${lang}`, {}).subscribe((res)=>{
             this.series = res;
-            console.log(this.series)
             this.series['relation_keys'] = Object.keys(this.series.relations);
             this.title.setTitle(`${(this.series.name || 'No Name')} | MangaDB`);
 

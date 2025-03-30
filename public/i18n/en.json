@@ -124,7 +124,14 @@
             "spread": "Spread"
         },
         "links": "Links",
-        "extras": "Extras"
+        "extras": "Extras",
+        "context": {
+            "add-collection": "Add to Collection",
+            "remove-collection": "Remove from Collection",
+            "quick-view": "Quick-View",
+            "edit-price": "Edit Price",
+            "edit-date": "Edit Buy Date"
+        }
     },
 
     "series": {
@@ -580,5 +587,11 @@
         "title": "Jump to Volume: ",
         "go": "Go",
         "already": "You are already at this volume."
+    },
+
+    "edit-dialog": {
+        "price-title": "Edit Price",
+        "date-title": "Edit Buy Date",
+        "save": "Save"
     }
 }

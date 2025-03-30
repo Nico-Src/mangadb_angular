@@ -74,7 +74,7 @@
         </div>
         <div class="login-wrapper logged-in" *ngIf="loggedIn()">
             <button size="s" tuiButton type="button" class="logout" appearance="accent" (click)="showLogout = true;"><tui-icon icon="@tui.log-out" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ 'topbar.profile.logout' | translate }}</button>
-            <button *ngIf="user().role === UserRole.ADMIN" size="s" tuiButton type="button" class="switch-mode" appearance="accent" (click)="adminDashboard()"><tui-icon icon="@tui.key" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ sidebar.isInAdminArea() ? ('topbar.profile.admin-view' | translate) : ('topbar.profile.user-view' | translate) }}</button>
+            <button *ngIf="user().role === UserRole.ADMIN" size="s" tuiButton type="button" class="switch-mode" appearance="accent" (click)="adminDashboard()"><tui-icon icon="@tui.key" [style.fontSize.px]="20"></tui-icon>&nbsp;{{ sidebar.isInAdminArea() ? ('topbar.profile.user-view' | translate) : ('topbar.profile.admin-view' | translate) }}</button>
         </div>
     </div>
 </div>

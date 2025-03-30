@@ -340,6 +340,7 @@ export class VolumeDetailComponent {
         this.api.request<any>(HttpMethod.GET, `volumes/toggle-collection/id/${this.volume.id}`, {}).subscribe((res)=>{
             this.volume.collected = res;
             this.togglingCollected = false;
+            // TODO translate
             if(res) successAlert(this.alerts, 'Successfully added to collection.', undefined, this.translate);
             else successAlert(this.alerts, 'Successfully removed from collection.', undefined, this.translate);
         }, (err)=>{
