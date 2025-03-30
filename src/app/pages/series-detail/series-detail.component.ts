@@ -609,6 +609,7 @@ export class SeriesDetailComponent {
             'text'
         ).subscribe(async (res)=>{
             this.reportDescription = "";
+            this.showReportDialog = false;
             // reload reports
             this.loadReports();
             // show success message

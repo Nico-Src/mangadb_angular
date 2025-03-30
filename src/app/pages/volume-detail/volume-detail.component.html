@@ -39,7 +39,7 @@
                     </div>
                     <div class="item">
                         <div class="label">{{ 'volume.dimensions' | translate }}</div>
-                        <div class="value" [tuiHintAppearance]="'dark'" [tuiHintDirection]="'bottom'" [tuiHint]="formatMeasures(true)">{{volume?.measures_text || '-'}}</div>
+                        <div class="value tooltip" [tuiHintAppearance]="'dark'" [tuiHintDirection]="'bottom'" [tuiHint]="formatMeasures(true)">{{volume?.measures_text || '-'}}</div>
                     </div>
                     <div class="item">
                         <div class="label">{{ 'volume.release_date' | translate }}</div>
@@ -138,6 +138,52 @@
 <volume-jump-dialog [volume]="volume" (jumpTrigger)="jumpTo($event)" #jumpDialog></volume-jump-dialog>
 <volume-gallery-dialog [volume]="volume" #galleryDialog></volume-gallery-dialog>
 
+<div class="report-dialog" (click)="reportDialogClick($event)" #reportDialog>
+    <div class="window" [class.show]="showReportDialog">
+        <div class="title">{{ 'report-dialog.title' | translate }}</div>
+        <label>
+            <span class="select-label">
+                {{ "report-dialog.type" | translate }}
+            </span>
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedReportType" [valueContent]="reportTypeContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="reportTypeContent" [items]="reportTypes"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <label [style.marginTop.px]="10" [style.display]="'block'">
+            <span class="select-label">
+                {{ "series.description" | translate }}
+            </span>
+            <tui-textarea class="report-description" [tuiTextfieldLabelOutside]="true" [(ngModel)]="reportDescription"/>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="reportsLoading">
+                <button size="s" tuiButton type="button" (click)="openReportViewDialog()" class="confirm" appearance="accent" [disabled]="reports.length === 0">{{ 'report-dialog.show-reports' | translate }}</button>
+            </tui-loader>
+            <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="addReport()">{{ 'report-dialog.report' | translate }}</button>
+        </div>
+    </div>
+</div>
+<div class="report-dialog" (click)="reportViewDialogClick($event)" #reportViewDialog>
+    <div class="window" [class.show]="showReportViewDialog">
+        <div class="title">{{ 'report-dialog.view-title' | translate }}</div>
+        <tui-accordion class="container">
+            <tui-accordion-item [size]="'s'" *ngFor="let report of reports">
+                {{ `report.type.${report.type}` | translate}}&nbsp;<div class="time" [style.marginLeft]="'auto'">{{ agoTime(report.timestamp) }}...</div>
+                <ng-template tuiAccordionItemContent>
+                    <div class="description">{{ report.description }}</div>
+                    <div class="status">
+                        <div class="indicator" [class]="report.status"></div>
+                        <div class="text">{{ `report.status.${report.status}` | translate }}</div>
+                        <div class="by" *ngIf="report.reviewer" [tuiHint]="report.reviewer.username" [tuiHintAppearance]="'dark'" [tuiHintDirection]="'bottom'">
+                            <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${report.reviewed_by}/scaled`">
+                        </div>
+                    </div>
+                </ng-template>
+            </tui-accordion-item>
+        </tui-accordion>
+    </div>
+</div>
+
 <ng-template #languageContent let-item>
     <div class="language-item">
         <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
@@ -149,5 +195,11 @@
     <div class="order-item">
         <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
         <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #reportTypeContent let-item>
+    <div class="language-item">
+        <span class="language-name">{{ `report.type.${item.key}` | translate }}</span>
     </div>
 </ng-template>
