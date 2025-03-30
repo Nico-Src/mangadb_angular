@@ -1,1 +1,60 @@
-<p style="color: rgb(var(--mid-accent))">Collection works!</p>
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+    </div>
+    <div class="control-row">
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+    </div>
+</div>
+
+<div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+
+<div class="volume-wrapper" [class.hidden]="loading" *ngIf="volumeKeys.length > 0">
+    <div *ngFor="let series of volumeKeys">
+        <div class="series-header">{{ series }}</div>
+        <div class="volumes">
+            <manga-volume #volume (openPriceEdit)="openPriceEditDialog($event)" (openBuyDateEdit)="openBuyDateEditDialog($event)" (click)="volumeClick(vol)" [showCollectionMetadata]="true" [volume]="vol" [class]="theme()" *ngFor="let vol of volumes[series]"></manga-volume>
+        </div>
+    </div>
+</div>
+
+<div class="edit-dialog" (click)="editPriceDialogClick($event)" #editPriceDialog>
+    <div class="window" [class.show]="showEditPriceDialog">
+        <div class="title">{{ 'edit-dialog.price-title' | translate }}</div>
+        <tui-textfield *ngIf="editPriceObj" tuiTextfieldSize="s">
+            <label tuiLabel></label>
+            <input tuiInputNumber [postfix]="'€'" [(ngModel)]="editPriceObj.price"/>
+        </tui-textfield>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="savingPriceEdit">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="savePriceEdit()">{{ 'edit-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="edit-dialog" (click)="editBuyDateDialogClick($event)" #editBuyDateDialog>
+    <div class="window" [class.show]="showEditBuyDateDialog">
+        <div class="title">{{ 'edit-dialog.date-title' | translate }}</div>
+        <tui-input-date [(ngModel)]="editBuyDateObj.date" *ngIf="editBuyDateObj" tuiTextfieldSize="s"></tui-input-date>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="savingBuyDateEdit">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="saveBuyDateEdit()">{{ 'edit-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
