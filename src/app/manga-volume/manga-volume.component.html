@@ -1,4 +1,4 @@
-<div class="cover-wrapper" tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+<div class="cover-wrapper" tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown" *ngIf="!showCollectionMetadata">
     <manga-cover [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
     <img class="language" [src]="`/img/flags/${toLocale(volume.language)}.png`">
     <div class="special-name" *ngIf="volume.special_name">
@@ -8,14 +8,33 @@
         <ng-icon name="lucideLibrary" [style.fontSize.px]="18"></ng-icon>
     </div>
 </div>
-<div class="details" [class.release-hidden]="!showRelease">
+<div class="cover-wrapper" tuiDropdownContext [tuiDropdown]="contextMenuCollection" #dropdown="tuiDropdown" *ngIf="showCollectionMetadata">
+    <manga-cover [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
+    <img class="language" [src]="`/img/flags/${toLocale(volume.language)}.png`">
+    <div class="special-name" *ngIf="volume.special_name">
+        {{ volume.special_name }}
+    </div>
+    <div class="collected" *ngIf="volume?.collected">
+        <ng-icon name="lucideLibrary" [style.fontSize.px]="18"></ng-icon>
+    </div>
+</div>
+<div class="details" [class.release-hidden]="!showRelease" *ngIf="!showCollectionMetadata">
     <div class="name">{{ volume.name }}</div>
     <div class="pages"><span>{{ volume.pages || 0 }}</span>&nbsp;<ng-icon class="icon" name="solarNotebook"/></div>
 </div>
-<div class="release" [class.preorder]="preOrder(volume.release_date)" *ngIf="showRelease">
+<div class="details" [class.release-hidden]="!showRelease" *ngIf="showCollectionMetadata">
+    <div class="name">{{ volume.name }}</div>
+    <div class="pages"><span>{{ volume.price || '-' }}€</span>&nbsp;<ng-icon class="icon" name="solarTagPrice"/></div>
+</div>
+<div class="release" [class.preorder]="preOrder(volume.release_date)" *ngIf="showRelease && !showCollectionMetadata">
     <div *ngIf="volume?.release_date_text"><ng-icon class="icon" name="solarCalendar"/>&nbsp;{{ volume?.release_date_readable | translate }}</div>
     <div *ngIf="!volume?.release_date_text"><ng-icon class="icon" name="solarCalendar"/>&nbsp;{{ releaseDate(volume?.release_date) }}</div>
 </div>
+<div class="release" [class.preorder]="preOrder(volume.release_date)" *ngIf="showRelease && showCollectionMetadata">
+    <div *ngIf="volume?.buy_date_text"><ng-icon class="icon" name="solarCalendar"/>&nbsp;{{ volume?.buy_date_readable | translate }}</div>
+    <div *ngIf="!volume?.buy_date_text"><ng-icon class="icon" name="solarCalendar"/>&nbsp;{{ releaseDate(volume?.buy_date) }}</div>
+</div>
+
 
 <ng-template #contextMenu>
     <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
@@ -24,6 +43,15 @@
             <ng-icon [name]="volume.collected ? 'heroMinus' : 'heroPlus'" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5" *ngIf="item.title === 'toggle-collection'"></ng-icon>
             <span *ngIf="item.title !== 'toggle-collection'">{{ `volume.context.${item.title}` | translate }}</span>
             <span *ngIf="item.title === 'toggle-collection'">{{ (volume.collected ? `volume.context.remove-collection` : `volume.context.add-collection`) | translate }}</span>
+        </button>
+    </tui-data-list>
+</ng-template>
+
+<ng-template #contextMenuCollection>
+    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+        <button *ngFor="let item of collectionMenuItems" tuiOption type="button" (click)="item.action(); dropdown.toggle(false)">
+            <ng-icon [name]="item.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+            <span>{{ `volume.context.${item.title}` | translate }}</span>
         </button>
     </tui-data-list>
 </ng-template>
