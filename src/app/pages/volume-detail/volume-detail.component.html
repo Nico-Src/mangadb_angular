@@ -75,7 +75,7 @@
                                 <ng-icon class="icon" name="faSolidMinus" [style.fontSize.px]="20" *ngIf="volume.collected"></ng-icon>
                                 <ng-icon class="icon" name="faSolidPlus" [style.fontSize.px]="20" *ngIf="!volume.collected"></ng-icon>
                             </button>
-                            <button appearance="accent" size="m" tuiButton type="button" class="lists-btn" [tuiHint]="'volume.lists' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'">
+                            <button appearance="accent" size="m" (click)="openListDialog()" tuiButton type="button" class="lists-btn" [tuiHint]="'volume.lists' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'">
                                 <ng-icon class="icon" name="faBookmark" [style.fontSize.px]="20"></ng-icon>
                             </button>
                             <button appearance="accent" (click)="open3D()" size="m" tuiButton type="button" class="three-d-btn" [tuiHint]="'volume.three-d' | translate" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'error'" *ngIf="volume.three_d === 1">
@@ -137,6 +137,7 @@
 <link-warn-dialog [link]="linkDialogURL" #linkDialog></link-warn-dialog>
 <volume-jump-dialog [volume]="volume" (jumpTrigger)="jumpTo($event)" #jumpDialog></volume-jump-dialog>
 <volume-gallery-dialog [volume]="volume" #galleryDialog></volume-gallery-dialog>
+<volume-list-dialog [volume]="volume" #listDialog></volume-list-dialog>
 
 <div class="report-dialog" (click)="reportDialogClick($event)" #reportDialog>
     <div class="window" [class.show]="showReportDialog">

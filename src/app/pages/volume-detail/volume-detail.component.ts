@@ -23,10 +23,11 @@ import { VolumeJumpDialog } from '../../volume-jump-dialog/volume-jump-dialog.co
 import { VolumeGalleryDialog } from '../../volume-gallery-dialog/volume-gallery-dialog.component';
 import { lucideImage } from '@ng-icons/lucide';
 import { UserRole } from '../../../models/user';
+import { VolumeListDialog } from '../../volume-list-dialog/volume-list-dialog.component';
 
 @Component({
     selector: 'volume-detail',
-    imports: [ TranslatePipe, MangaCover, VolumeJumpDialog, TuiTextareaModule, TuiAccordion, TuiLoader, VolumeGalleryDialog, TuiFade, TuiButton, LinkWarnDialog, TuiHint, NgIcon, NgIf, NgFor, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
+    imports: [ TranslatePipe, MangaCover, VolumeListDialog, VolumeJumpDialog, TuiTextareaModule, TuiAccordion, TuiLoader, VolumeGalleryDialog, TuiFade, TuiButton, LinkWarnDialog, TuiHint, NgIcon, NgIf, NgFor, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
     templateUrl: './volume-detail.component.html',
     styleUrl: './volume-detail.component.less',
     providers: [tuiDateFormatProvider({mode: 'YMD', separator: '/'})],
@@ -67,6 +68,7 @@ export class VolumeDetailComponent {
     @ViewChild('galleryDialog') galleryDialog: any;
     @ViewChild('reportDialog') reportDialog: any;
     @ViewChild('reportViewDialog') reportViewDialog: any;
+    @ViewChild('listDialog') listDialog: any;
 
     async ngOnInit(){
         this.title.setTitle(`Volume | MangaDB`);
@@ -78,9 +80,6 @@ export class VolumeDetailComponent {
 
             // reset description state (not expanded, max height and remove clamp)
             this.expandDesc = false;
-            // this.desc.nativeElement.style.maxHeight = '120px';
-            // this.desc.nativeElement.classList.remove('clamp');
-            // check overflow for new description
             this.checkingDescOverflow = true;
 
             this.content.nativeElement.classList.remove('fits');
@@ -138,7 +137,6 @@ export class VolumeDetailComponent {
 
             setTimeout(() => {
                 this.fitToParent(this.volumeTitle.nativeElement,{max: 50, height: 100});
-                //checkDescriptionOverflow(true);
             }, 250);
         }, (err:any)=>{
             this.show404 = true;
@@ -167,36 +165,22 @@ export class VolumeDetailComponent {
         this.content.nativeElement.classList.add('fits');
     }
 
-    // check overflow of given description
-    checkDescriptionOverflow(descText:string){
-        if(!descText) return;
-        // create temporary element
-        const tmpDesc = document.createElement('div');
-        tmpDesc.innerHTML = descText;
-        tmpDesc.classList.add('tmp-description');
-        const desc = this.desc.nativeElement;
-        // append to parent for same styling
-        desc.parentElement.appendChild(tmpDesc);
-        // get before and after height (clamping)
-        const tmpRectBefore = tmpDesc.getBoundingClientRect();
-        const maxHeight = tmpRectBefore.height;
-        desc.setAttribute('data-max-height', maxHeight.toString());
-        tmpDesc.classList.add('clamp');
-        const tmpRectAfter = tmpDesc.getBoundingClientRect();
-        // compare to check for overflowing content
-        this.descOverflowing = tmpRectAfter.height < maxHeight;
-        if(this.descOverflowing) desc.classList.add('clamp');
-        // remove temp element
-        tmpDesc.remove();
-        // show description
-        this.checkingDescOverflow = false;
-        desc.classList.add('loaded');
-    }
-
     // open link dialog for given link
     openLinkDialog(link:string){
         this.linkDialog.showDialog();
         this.linkDialogURL = link;
+    }
+
+    // show rating dialog
+    openListDialog(){
+        // if not logged in show error
+        if(!this.auth.isLoggedIn()){
+            // TODO translate
+            errorAlert(this.alerts, 'You need to be logged in to do this.', undefined, this.translate);
+            return;
+        }
+        // load reading status
+        this.listDialog.showDialog();
     }
 
     // open jump dialog
