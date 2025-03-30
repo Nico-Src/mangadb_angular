@@ -203,9 +203,11 @@
 
     "report": {
         "type": {
+            "broken-link": "Broken Link",
             "wrong-info": "Wrong Information",
             "missing-info": "Missing Information",
             "missing-volumes": "Missing Volumes",
+            "explicit-content": "Explicit Content",
             "other": "Other"
         },
         "status": {
@@ -463,6 +465,10 @@
             "theme_accent": {
                 "title": "Theme accent color",
                 "desc": "Choose your own accent color to customize the appearance of our website."
+            },
+            "show-drag-indicator": {
+                "title": "3D View - Show Drag Indicator",
+                "desc": "Hide or show the drag indicator shown in the 3D view of a volume when opened for the first time."
             }
         },
         "language": {
@@ -560,10 +566,13 @@
     "list-dialog": {
         "title": "Lists",
         "no-lists": "You haven't created any lists for series yet.",
+        "no-volume-lists": "You haven't created any lists for volumes yet.",
         "add": "Add",
         "not-selected": "You have to select a list first.",
         "add-success": "Series added to list.",
+        "add-volume-success": "Volume added to list.",
         "already-in-list": "Series already in list.",
+        "already-in-list-volume": "Volume already in list.",
         "in-list": "Already in list"
     },
 

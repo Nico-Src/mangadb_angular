@@ -15,10 +15,11 @@ import { TuiInputColorModule, TuiInputModule, TuiTextfieldControllerModule, TuiS
 import { pSBC, Color, Solver } from '../../../libs/filterTint.js';
 import { TuiBooleanHandler } from '@taiga-ui/cdk/types';
 import { APIService, HttpMethod } from '../../../services/api.service';
+import { TuiSwitch } from '@taiga-ui/kit';
 
 @Component({
     selector: 'app-settings',
-    imports: [TranslatePipe, TuiTextfield, TuiInputModule, TuiButton, TuiSelectModule, TuiTextfieldControllerModule, TuiAppearance, ReactiveFormsModule, FormsModule, NgAutoAnimateDirective, NgIf, NgFor, NgIcon, TuiInputColorModule],
+    imports: [TranslatePipe, TuiTextfield, TuiInputModule, TuiSwitch, TuiButton, TuiSelectModule, TuiTextfieldControllerModule, TuiAppearance, ReactiveFormsModule, FormsModule, NgAutoAnimateDirective, NgIf, NgFor, NgIcon, TuiInputColorModule],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.less',
     viewProviders: [provideIcons({ tablerHome, tablerBrush, tablerUser, tablerLanguage, tablerWallpaper, tablerCheck })]
@@ -36,6 +37,7 @@ export class SettingsComponent {
         appearance: {
             theme: true,
             theme_accent: true,
+            show_drag_indicator: true
         },
         language: {
             content: true
@@ -51,6 +53,7 @@ export class SettingsComponent {
     availableContentLanguages = JSON.parse(JSON.stringify(LANGS));
     selectedNSFWOption = DEFAULT_SETTINGS['nsfw-mode'];
     nsfwSettings:any = NSFW_SETTINGS;
+    showDragIndicator:boolean = DEFAULT_SETTINGS['show-drag-indicator'];
     constructor(private translate: TranslateService, private title: Title, private cookie: CookieService) { }
     
     ngOnInit() {
@@ -61,8 +64,9 @@ export class SettingsComponent {
 
         // get current settings
         this.selectedTheme = this.auth.getUserSetting('theme');
-        console.log(this.selectedTheme)
         this.selectedAccentColor = this.auth.getUserSetting('theme-accent-color');
+        this.showDragIndicator = this.auth.getUserSetting('show-drag-indicator');
+        console.log(this.showDragIndicator);
 
         this.availableContentLanguages.unshift({key: 'language.interface', value: 'interface', disabled: false});
         this.selectedContentLanguage = this.availableContentLanguages.find((lang:any) => lang.value === this.auth.getUserSetting('prefered-content-language'));
@@ -144,6 +148,7 @@ export class SettingsComponent {
         settings['theme-accent-color'] = this.selectedAccentColor;
         settings['prefered-content-language'] = this.selectedContentLanguage.value;
         settings['nsfw-mode'] = this.selectedNSFWOption.key;
+        settings['show-drag-indicator'] = this.showDragIndicator;
         // send api request
         this.api.request<string>(HttpMethod.POST, `users/${user.id}/save-settings`, { settings }, 'text').subscribe();
     }

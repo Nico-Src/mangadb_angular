@@ -61,6 +61,15 @@
                 </div>
             </div>
         </div>
+        <div class="setting vertical" *ngIf="settings.appearance.show_drag_indicator">
+            <div class="details">
+                <div class="title">{{ 'settings.appearance.show-drag-indicator.title' | translate }}</div>
+                <div class="description">{{ 'settings.appearance.show-drag-indicator.desc' | translate }}</div>
+            </div>
+            <div class="inputs">
+                <input tuiSwitch type="checkbox" [(ngModel)]="showDragIndicator" (change)="saveSettings();" [size]="'m'"/>
+            </div>
+        </div>
         <div class="setting vertical" *ngIf="settings.language.content">
             <div class="details">
                 <div class="title">{{ 'settings.language.content.title' | translate }}</div>

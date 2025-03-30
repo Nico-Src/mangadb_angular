@@ -111,9 +111,35 @@
             position: absolute;
             inset: 0;
             margin: auto;
+            z-index: 10;
 
             &.hidden{
                 pointer-events: none !important;
+            }
+        }
+
+        .drag-indicator{
+            position: absolute;
+            right: 0; left: 0; bottom: 0px;
+            margin: auto;
+            opacity:0;
+            pointer-events: none;
+            width: fit-content;
+            z-index: 10;
+            height: fit-content;
+            transition: opacity var(--transition-duration) ease;
+            border-radius: 6px;
+            padding: 10px;
+            animation: drag 1s infinite ease-in-out;
+
+            &.show{
+                opacity: 1;
+            }
+
+            .icon{
+                font-size: 30px;
+                color: white;
+                overflow: visible;
             }
         }
     }
@@ -137,5 +163,17 @@
         &:hover{
             background-color: rgba(255,255,255,.35) !important;
         }
+    }
+}
+
+@keyframes drag {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
     }
 }

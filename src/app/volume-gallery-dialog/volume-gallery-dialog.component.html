@@ -31,6 +31,7 @@
         <manga-cover *ngIf="volume?.id && tabIndex === (3 + (i+1))" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [src]="image.src"></manga-cover>
     </ng-container>
     <div class="viewer" *ngIf="tabIndex === (3 + volume.images?.length + 1)" #viewerRef>
+        <div class="drag-indicator" [class.show]="showDragIndicator"><ng-icon name="tablerHandFinger" class="icon"></ng-icon></div>
         <tui-loader class="loader" size="xl" [showLoader]="viewerLoading" [class.hidden]="!viewerLoading"></tui-loader>
     </div>
 </div>

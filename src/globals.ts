@@ -41,6 +41,7 @@ export const DEFAULT_SETTINGS:any = {
     'theme': 'light',
     'nsfw-mode': 'settings.nsfw.hide-nsfw',
     'view-mode': 'column',
+    'show-drag-indicator': true
 };
 
 export const NSFW_SETTINGS = [
@@ -190,7 +191,6 @@ export const isDateInFuture = (date: string) => {
 
 // Converts a UTC date string to a human-readable "time ago" format based on the current locale.
 export const ago = (str: string,lang: string) => {
-    console.log(str)
     // Get the current locale
     const locale = toMomentLocale(lang);
     // Parse the input string into a moment.js object (assuming the input string is in UTC format)

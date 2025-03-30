@@ -71,7 +71,8 @@ export class AuthService {
         const user = this.getUser();
         const settings = user.settings;
         // also if settings are not set
-        if(!settings || Object.keys(settings).length === 0) return DEFAULT_SETTINGS[setting];
+        const keys = Object.keys(settings);
+        if(!settings || keys.length === 0 || !keys.includes(setting)) return DEFAULT_SETTINGS[setting];
         // else return setting
         return settings[setting];
     }

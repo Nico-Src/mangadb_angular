@@ -9,7 +9,7 @@ import { TuiSegmented, TuiSlider } from '@taiga-ui/kit';
 import { MangaCover } from '../manga-cover/manga-cover.component';
 import * as THREE from 'three';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerX } from '@ng-icons/tabler-icons';
+import { tablerHandFinger, tablerX } from '@ng-icons/tabler-icons';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,7 +17,7 @@ import { AuthService } from '../../services/auth.service';
     imports: [ TranslatePipe, MangaCover, TuiButton, NgIcon, TuiSegmented, TuiLoader, TuiSlider, NgIf, NgFor, ReactiveFormsModule, FormsModule, TuiTextfield, TuiSelectModule, TuiTextfieldControllerModule],
     templateUrl: './volume-gallery-dialog.component.html',
     styleUrl: './volume-gallery-dialog.component.less',
-    viewProviders:[provideIcons({ tablerX })]
+    viewProviders:[provideIcons({ tablerX, tablerHandFinger })]
 })
 export class VolumeGalleryDialog {
     private readonly alerts = inject(TuiAlertService);
@@ -30,6 +30,7 @@ export class VolumeGalleryDialog {
     threeDInitalized: boolean = false;
     viewer: any = {mouse:{}};
     viewerLoading: boolean = false;
+    showDragIndicator: boolean = false;
 
     public allowedToView3D: boolean = false;
 
@@ -52,7 +53,6 @@ export class VolumeGalleryDialog {
         const nsfwMode = this.auth.getUserSetting('nsfw-mode');
         const nsfwPlaceholder = (this.volume.nsfw == 1 && nsfwMode === 'settings.nsfw.hide-nsfw');
         const nsfw18Placeholder = (this.volume.nsfw18 == 1 && (nsfwMode === 'settings.nsfw.hide-nsfw' || nsfwMode === 'settings.nsfw.show-nsfw')) || (this.volume.nsfw18 == 1 && user.age_verified === false);
-        console.log(nsfwMode, nsfwPlaceholder, nsfw18Placeholder)
         // show error message if volume covers have explicit content
         if(nsfwPlaceholder || nsfw18Placeholder){
             this.allowedToView3D = false;
@@ -71,6 +71,7 @@ export class VolumeGalleryDialog {
             this.viewer.renderer = undefined;
         }
         this.threeDInitalized = false;
+        this.showDragIndicator = false;
     }
 
     // open dialog
@@ -112,6 +113,7 @@ export class VolumeGalleryDialog {
     // tab change event handler
     async tabChanged(e:any){
         if(!this.allowedToView3D) return;
+        const showDragIndicatorSetting = this.auth.getUserSetting('show-drag-indicator');
         // if tab is 3d view and 3d view hasnt been initialized yet initialize it
         if(e === this.threeDIndex() && !this.threeDInitalized){
             await this.delay(500);
@@ -203,6 +205,7 @@ export class VolumeGalleryDialog {
             setTimeout(()=>{
                 this.viewer.renderer.domElement.classList.remove('loading');
                 this.viewerLoading = false;
+                if(showDragIndicatorSetting) this.showDragIndicator = true;
             }, 750);
         } else {
             await this.delay(500);
@@ -212,6 +215,7 @@ export class VolumeGalleryDialog {
             setTimeout(()=>{
                 this.viewer.renderer.domElement.classList.remove('loading');
                 this.viewerLoading = false;
+                if(showDragIndicatorSetting) this.showDragIndicator = true;
             }, 250);
         }
     }
@@ -220,7 +224,7 @@ export class VolumeGalleryDialog {
     model3DMovement(e:any){
         // left mouse button rotates the book
         if(this.viewer.mouse[0]){
-            //showDragIndicator.value = false;
+            this.showDragIndicator = false;
             this.viewer.cube.rotation.y += e.movementX * 0.01;
     
             // TODO fix for novels (because spine and edge is switched for novels)
