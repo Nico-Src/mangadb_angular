@@ -5,11 +5,11 @@
 <div class="header-item" *ngIf="!inAdminArea">
     <span class="name" tuiFade>{{ 'sidebar.personal' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/collection']" [class.active]="router.url === '/collection'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.collection' | translate) ">
+<div class="item" [routerLink]="['/collection']" [class.active]="router.url.startsWith('/collection')" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.collection' | translate) ">
     <ng-icon name="solarLibrary" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.collection' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/reading-history']" [class.active]="router.url === '/reading-history'" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.reading-history' | translate) ">
+<div class="item" [routerLink]="['/reading-history']" [class.active]="router.url.startsWith('/reading-history')" *ngIf="!inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.reading-history' | translate) ">
     <ng-icon name="solarHistory" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.reading-history' | translate }}</span>
 </div>

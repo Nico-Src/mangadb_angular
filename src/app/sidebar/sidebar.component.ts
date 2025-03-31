@@ -39,6 +39,7 @@ export class SideBar {
         
     }
 
+    // redirect to random series
     randomSeries(){
         if(this.randomLoading) return;
         this.randomLoading = true;
