@@ -14,6 +14,7 @@ import { PublisherDetailComponent } from './pages/publisher-detail/publisher-det
 import { ContributorDetailComponent } from './pages/contributor-detail/contributor-detail.component';
 import { VolumeDetailComponent } from './pages/volume-detail/volume-detail.component';
 import { ReadingHistoryComponent } from './pages/reading-history/reading-history.component';
+import { ListsComponent } from './pages/lists/lists.component';
 
 export const routes: Routes = [
     {
@@ -42,6 +43,12 @@ export const routes: Routes = [
     {
         path: 'reading-history',
         component: ReadingHistoryComponent,
+        canActivate: [AuthGuard],
+        data: { requiresLogin: true }
+    },
+    {
+        path: 'lists',
+        component: ListsComponent,
         canActivate: [AuthGuard],
         data: { requiresLogin: true }
     },

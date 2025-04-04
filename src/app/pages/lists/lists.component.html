@@ -1,0 +1,61 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input [disabled]="loading" (ngModelChange)="searchUpdate($event)" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+    </div>
+</div>
+
+<div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+
+<div auto-animate>
+    <div class="section-title" [class.hide]="loading" *ngIf="volumeLists.length > 0">{{ 'lists.volume-lists' | translate }}</div>
+    <div class="list-wrapper" [class.hide]="loading" *ngIf="volumeLists.length > 0">
+        <div class="list-item" *ngFor="let list of volumeLists">
+            <div class="details">
+                <div class="name">{{ list.name }}</div>
+                <div class="entries"><ng-icon name="tablerList" class="icon"></ng-icon>&nbsp;{{ list.items }} {{ 'lists.entries' | pluralTranslate:list.items | translate }}</div>
+                <div class="time">
+                    <span>{{ agoTime(list.last_change) }}...</span>
+                    <div class="buttons">
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="remove-btn" [style.border-radius.%]="100">
+                            <ng-icon name="tablerTrash" class="icon"></ng-icon>
+                        </button>
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="edit-btn" [style.border-radius.%]="100">
+                            <ng-icon name="tablerEdit" class="icon"></ng-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="cover-wrapper">
+                <manga-cover [id]="list.last_added" [nsfw]="list.nsfw === 1" [nsfw18]="list.nsfw18 === 1" [aspectRatio]="list.aspect_ratio"></manga-cover>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title" [class.hide]="loading" *ngIf="seriesLists.length > 0">{{ 'lists.series-lists' | translate }}</div>
+    <div class="list-wrapper" [class.hide]="loading" *ngIf="seriesLists.length > 0">
+        <div class="list-item" *ngFor="let list of seriesLists">
+            <div class="details">
+                <div class="name">{{ list.name }}</div>
+                <div class="entries"><ng-icon name="tablerList" class="icon"></ng-icon>&nbsp;{{ list.items }} {{ 'lists.entries' | pluralTranslate:list.items | translate }}</div>
+                <div class="time">
+                    <span>{{ agoTime(list.last_change) }}...</span>
+                    <div class="buttons">
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="remove-btn" [style.border-radius.%]="100">
+                            <ng-icon name="tablerTrash" class="icon"></ng-icon>
+                        </button>
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="edit-btn" [style.border-radius.%]="100">
+                            <ng-icon name="tablerEdit" class="icon"></ng-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="cover-wrapper">
+                <manga-cover [id]="list.last_added" [nsfw]="list.nsfw === 1" [nsfw18]="list.nsfw18 === 1" [aspectRatio]="list.aspect_ratio"></manga-cover>
+            </div>
+        </div>
+    </div>
+</div>
