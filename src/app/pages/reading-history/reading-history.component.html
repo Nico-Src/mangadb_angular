@@ -1,1 +1,79 @@
-<p style="color: rgb(var(--mid-accent))">dashboard works!</p>
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+    </div>
+    <div class="control-row">
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+    </div>
+</div>
+
+<div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+
+<div class="series-wrapper">
+    <div class="series-item" *ngFor="let ser of series; index as i" [class.reverse]="i % 2 == 0">
+        <div class="inner-item" [class.solid]="i % 2 == 0"></div>
+        <span class="dot"></span>
+        <div class="inner-item" [class.solid]="i % 2 == 1">
+            <ng-container>
+                <div class="header">
+                    <img class="origin" [src]="`/img/flags/${toLocale(ser.origin)}.png`">
+                    <div class="text">{{ ser.name }} - {{ `series.type.${ser.type.toLowerCase()}` | translate }}</div>
+                </div>
+                <div class="date">
+                    {{ historyDateRange(ser) }}
+                </div>
+                <div class="content">
+                    <div class="cover-wrapper">
+                        <manga-cover [id]="ser.volume.id" [nsfw]="ser.volume.nsfw === 1" [nsfw18]="ser.volume.nsfw18 === 1" [aspectRatio]="ser.volume.aspect_ratio"></manga-cover>
+                    </div>
+                    <div class="details">
+                        <div class="description" [innerHTML]="ser.description" *ngIf="ser.description"></div>
+                        <div class="description" *ngIf="!ser.description">
+                            <div class="no-desc">
+                                <div class="title">{{ 'series.no-description.title' | translate }}</div>
+                                <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="rating" *ngIf="ser.score">
+                            <ng-icon name="matStarOutline" *ngFor="let n of [].constructor(ser.score)"/>
+                            <ng-icon name="matStarOutlineOutline" *ngFor="let n of [].constructor(10 - ser.score)"/>
+                        </div>
+                        <div class="stat-wrapper">
+                            <div class="stat status" [class]="ser.status">
+                                <div class="label">{{ 'reading-status.status.label' | translate }}</div>
+                                <div class="value">{{ `reading-status.status.${ser.status}` | translate }}</div>
+                            </div>
+                            <div class="stat" *ngIf="ser.status !== 'completed'">
+                                <div class="label"><ng-icon name="matPriorityHighOutline" class="icon"></ng-icon>&nbsp;{{ 'reading-status.priority.label' | translate }}</div>
+                                <div class="value">{{ `reading-status.priority.${ser.priority}` | translate }}</div>
+                            </div>
+                            <div class="stat">
+                                <div class="label"><ng-icon name="tablerProgress" class="icon"></ng-icon>&nbsp;{{ 'reading-status.progress-type.progress' | translate }}</div>
+                                <div class="value">{{ ser.progress }} {{ `reading-status.progress-type.${ser.progress_type}` | translate }}</div>
+                            </div>
+                            <div class="stat" *ngIf="ser.reread > 0">
+                                <div class="label"><ng-icon name="tablerView360Arrow" class="icon"></ng-icon>&nbsp;{{ 'reading-status.reread.label' | translate }}</div>
+                                <div class="value">{{ ser.reread }} {{ `reading-status.reread.postfix` | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="ago">{{ agoTime(ser.last_update) }}...</div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>

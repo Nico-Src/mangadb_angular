@@ -13,6 +13,7 @@ import { UserRole } from '../models/user';
 import { PublisherDetailComponent } from './pages/publisher-detail/publisher-detail.component';
 import { ContributorDetailComponent } from './pages/contributor-detail/contributor-detail.component';
 import { VolumeDetailComponent } from './pages/volume-detail/volume-detail.component';
+import { ReadingHistoryComponent } from './pages/reading-history/reading-history.component';
 
 export const routes: Routes = [
     {
@@ -35,6 +36,12 @@ export const routes: Routes = [
     {
         path: 'collection',
         component: CollectionComponent,
+        canActivate: [AuthGuard],
+        data: { requiresLogin: true }
+    },
+    {
+        path: 'reading-history',
+        component: ReadingHistoryComponent,
         canActivate: [AuthGuard],
         data: { requiresLogin: true }
     },
