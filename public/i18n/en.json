@@ -448,7 +448,12 @@
         },
         "order": {
             "name": "Name",
-            "added": "Added"
+            "added": "Added",
+            "update": "Last Update",
+            "priority": "Priority",
+            "score": "Score",
+            "end-date": "End Date",
+            "start-date": "Start Date"
         }
     },
 
