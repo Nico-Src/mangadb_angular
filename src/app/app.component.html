@@ -1,11 +1,11 @@
 <tui-root>
-    <header class="topbar">
+    <header class="topbar" [class.loaded]="app_loaded">
         <top-bar [class]="theme()" [class.expanded]="sidebar.isOpen()"></top-bar>
     </header>
-    <aside class="sidebar" [class.expanded]="sidebar.isOpen()">
+    <aside class="sidebar" [class.expanded]="sidebar.isOpen()" [class.loaded]="app_loaded">
         <side-bar [class]="theme()" [class.expanded]="sidebar.isOpen()"></side-bar>
     </aside>
-    <main class="main-content" (scroll)="mainScroll()" #main [class.expanded]="sidebar.isOpen()">
+    <main class="main-content" (scroll)="mainScroll()" #main [class.expanded]="sidebar.isOpen()" [class.loaded]="app_loaded">
         <router-outlet [class]="theme()"></router-outlet>
     </main>
 </tui-root>

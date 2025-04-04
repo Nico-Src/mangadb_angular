@@ -32,6 +32,7 @@ export class AppComponent {
     private readonly alerts:TuiAlertService = inject(TuiAlertService);
 
     theme = computed(() => this.auth.theme());
+    app_loaded: boolean = false;
     @ViewChild('main') main:any;
 
     constructor(private cookie:CookieService, private translate: TranslateService, public sidebar: SideBarService) {
@@ -133,6 +134,9 @@ export class AppComponent {
         }
 
         document.body.style.setProperty('--accent-filters',result.filter.replace('filter: ','').replace(';','').trim());
+        setTimeout(()=>{
+            this.app_loaded = true;
+        },350);
     }
 
     // scroll event on main content
