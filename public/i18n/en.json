@@ -429,6 +429,21 @@
         "subsidiary": "Subsidiary"
     },
 
+    "lists": {
+        "volume-lists": "Volume-Lists",
+        "series-lists": "Series-Lists",
+        "entries": {
+            "none": "Einträge",
+            "singular": "Eintrag",
+            "plural": "Einträge"
+        },
+        "add": "Add List",
+        "type": {
+            "volume": "Volume",
+            "series": "Series"
+        }
+    },
+
     "__SECTION__PAGES__": "",
 
     "home": {
@@ -598,5 +613,26 @@
         "price-title": "Edit Price",
         "date-title": "Edit Buy Date",
         "save": "Save"
+    },
+
+    "delete-list-dialog": {
+        "title": "Delete List?",
+        "desc": "Are you sure you want to delete this list? This action cannot be undone."
+    },
+
+    "add-list-dialog": {
+        "title": "Add List",
+        "add": "Add",
+        "name": "Name",
+        "type": "Type",
+        "success": "List added.",
+        "already-exists": "List with this name and type already exists."
+    },
+
+    "edit-list-dialog": {
+        "title": "Edit List",
+        "save": "Save",
+        "success": "Changes saved successfully.",
+        "error-change-type": "Can't change type of lists with entries in them."
     }
 }
