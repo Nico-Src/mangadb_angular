@@ -5,14 +5,15 @@
         <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
             <input [disabled]="loading" (ngModelChange)="searchUpdate($event)" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
         </tui-textfield>
+        <button (click)="openAddListDialog()" size="s" tuiButton type="button" appearance="accent" class="add-btn"><ng-icon name="tablerPlus" [style.fontSize.px]="16" class="icon"></ng-icon>{{ 'lists.add' | translate }}</button>
     </div>
 </div>
 
 <div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
 
-<div auto-animate>
+<div>
     <div class="section-title" [class.hide]="loading" *ngIf="volumeLists.length > 0">{{ 'lists.volume-lists' | translate }}</div>
-    <div class="list-wrapper" [class.hide]="loading" *ngIf="volumeLists.length > 0">
+    <div class="list-wrapper" [class.hide]="loading" *ngIf="volumeLists.length > 0" auto-animate>
         <div class="list-item" *ngFor="let list of volumeLists">
             <div class="details">
                 <div class="name">{{ list.name }}</div>
@@ -20,10 +21,10 @@
                 <div class="time">
                     <span>{{ agoTime(list.last_change) }}...</span>
                     <div class="buttons">
-                        <button appearance="accent" size="s" tuiIconButton type="button" class="remove-btn" [style.border-radius.%]="100">
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="remove-btn" (click)="openDeleteListDialog(list)" [style.border-radius.%]="100">
                             <ng-icon name="tablerTrash" class="icon"></ng-icon>
                         </button>
-                        <button appearance="accent" size="s" tuiIconButton type="button" class="edit-btn" [style.border-radius.%]="100">
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="edit-btn" (click)="openEditListDialog(list)" [style.border-radius.%]="100">
                             <ng-icon name="tablerEdit" class="icon"></ng-icon>
                         </button>
                     </div>
@@ -36,7 +37,7 @@
     </div>
 
     <div class="section-title" [class.hide]="loading" *ngIf="seriesLists.length > 0">{{ 'lists.series-lists' | translate }}</div>
-    <div class="list-wrapper" [class.hide]="loading" *ngIf="seriesLists.length > 0">
+    <div class="list-wrapper" [class.hide]="loading" *ngIf="seriesLists.length > 0" auto-animate>
         <div class="list-item" *ngFor="let list of seriesLists">
             <div class="details">
                 <div class="name">{{ list.name }}</div>
@@ -44,10 +45,10 @@
                 <div class="time">
                     <span>{{ agoTime(list.last_change) }}...</span>
                     <div class="buttons">
-                        <button appearance="accent" size="s" tuiIconButton type="button" class="remove-btn" [style.border-radius.%]="100">
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="remove-btn" (click)="openDeleteListDialog(list)" [style.border-radius.%]="100">
                             <ng-icon name="tablerTrash" class="icon"></ng-icon>
                         </button>
-                        <button appearance="accent" size="s" tuiIconButton type="button" class="edit-btn" [style.border-radius.%]="100">
+                        <button appearance="accent" size="s" tuiIconButton type="button" class="edit-btn" (click)="openEditListDialog(list)" [style.border-radius.%]="100">
                             <ng-icon name="tablerEdit" class="icon"></ng-icon>
                         </button>
                     </div>
@@ -59,3 +60,70 @@
         </div>
     </div>
 </div>
+
+<div class="add-dialog" [class.show]="showAddDialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window">
+        <div class="title">{{ 'add-list-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-list-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addListItem.name">
+            </tui-textfield>
+        </label>
+        <label [style.marginTop.px]="10" [style.display]="'block'">
+            {{ 'add-list-dialog.type' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addListItem.type" [valueContent]="listTypeContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="listTypeContent" [items]="listTypes"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="showAddDialog = false">{{ 'dialog.cancel' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingList">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="addList()">{{ 'add-list-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="edit-dialog" [class.show]="showEditDialog" (click)="editDialogClick($event)" #editDialog>
+    <div class="window">
+        <div class="title">{{ 'edit-list-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-list-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="editListItem.name">
+            </tui-textfield>
+        </label>
+        <label [style.marginTop.px]="10" [style.display]="'block'">
+            {{ 'add-list-dialog.type' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="editListItem.type" [valueContent]="listTypeContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="listTypeContent" [items]="listTypes"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="showEditDialog = false">{{ 'dialog.cancel' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="savingEdit">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="saveListEdit()">{{ 'edit-list-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="delete-dialog" [class.show]="showDeleteDialog" (click)="deleteDialogClick($event)" #deleteDialog>
+    <div class="window">
+        <div class="title">{{ 'delete-list-dialog.title' | translate }}</div>
+        <div class="desc">{{ 'delete-list-dialog.desc' | translate }}</div>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="showDeleteDialog = false">{{ 'dialog.cancel' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="deletingList">
+                <button size="s" tuiButton type="button" class="confirm" appearance="accent" (click)="deleteList()">{{ 'dialog.confirm' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #listTypeContent let-item>
+    <div class="type-item">
+        {{ `lists.type.${item}` | translate }}
+    </div>
+</ng-template>

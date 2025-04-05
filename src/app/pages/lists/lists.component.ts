@@ -1,29 +1,30 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { APIService, HttpMethod } from '../../../services/api.service';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/core';
+import { TuiAlertService, TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { TuiPagination } from '@taiga-ui/kit';
 import { NgFor, NgIf } from '@angular/common';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
-import { ago, CDN_BASE, getTranslation, langToLocale, readableDate, UNKNOWN_DATE } from '../../../globals';
+import { ago, CDN_BASE, errorAlert, getTranslation, langToLocale, readableDate, successAlert, UNKNOWN_DATE } from '../../../globals';
 import { NgAutoAnimateDirective } from 'ng-auto-animate';
 import { PluralTranslatePipe } from '../../../pipes/pluralTranslate';
-import { tablerEdit, tablerList, tablerTrash } from '@ng-icons/tabler-icons';
+import { tablerEdit, tablerList, tablerPlus, tablerTrash } from '@ng-icons/tabler-icons';
 
 @Component({
     selector: 'app-dashboard',
     imports: [TuiTextfieldControllerModule, TuiTextfield, MangaCover, TuiButton, PluralTranslatePipe, NgAutoAnimateDirective, NgIf, TuiLoader, NgFor, TuiSelectModule, ReactiveFormsModule, FormsModule, NgIcon, TranslatePipe],
     templateUrl: './lists.component.html',
     styleUrl: './lists.component.less',
-    viewProviders: [provideIcons({ tablerList, tablerTrash, tablerEdit })]
+    viewProviders: [provideIcons({ tablerList, tablerTrash, tablerEdit, tablerPlus })]
 })
 export class ListsComponent {
+    private readonly alerts = inject(TuiAlertService);
     private readonly api = inject(APIService);
     private readonly auth = inject(AuthService);
     readonly cdn_base = CDN_BASE;
@@ -33,6 +34,20 @@ export class ListsComponent {
     lists: any = [];
     volumeLists: any = [];
     seriesLists: any = [];
+    showDeleteDialog: boolean = false;
+    listToDelete: any = null;
+    deletingList: boolean = false;
+    showAddDialog: boolean = false;
+    addListItem: any = {name: '', type: 'series'};
+    addingList: boolean = false;
+    showEditDialog: boolean = false;
+    editListItem: any = {name: '', type: 'series'};;
+    savingEdit: boolean = false;
+    listTypes: any = ['series','volume'];
+
+    @ViewChild('addDialog') addDialog:any;
+    @ViewChild('editDialog') editDialog:any;
+    @ViewChild('deleteDialog') deleteDialog:any;
     constructor(private translate: TranslateService, private title: Title, private router: Router) { }
     
     ngOnInit() {
@@ -71,6 +86,117 @@ export class ListsComponent {
         }, (err:any)=>{
             this.loading = false;
         });
+    }
+
+    // open add list dialog
+    openAddListDialog(){
+        this.showAddDialog = true;
+    }
+
+    // open delete list dialog
+    openDeleteListDialog(list:any){
+        this.listToDelete = list.id;
+        this.showDeleteDialog = true;
+    }
+
+    // open delete list dialog
+    openEditListDialog(list:any){
+        this.editListItem = {id: list.id, name: list.name, type: list.type};
+        this.showEditDialog = true;
+    }
+
+    // add list
+    addList(){
+        // check validity of input
+        if(!this.addListItem.name || this.addListItem.name.trim() === ''){
+            // TODO translate
+            errorAlert(this.alerts, 'Invalid List Name.', undefined, this.translate);
+            return;
+        }
+    
+        if(!this.addListItem.type){
+            // TODO translate
+            errorAlert(this.alerts, 'Invalid List Type.', undefined, this.translate);
+            return;
+        }
+    
+        this.addingList = true;
+
+        this.api.request<string>(HttpMethod.POST, `lists/add`, {name: this.addListItem.name, type: this.addListItem.type}, 'text').subscribe(async (res:string)=>{
+            const msg = await getTranslation(this.translate, 'add-list-dialog.success');
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.showAddDialog = false;
+            this.addingList = false;
+            this.loadLists();
+        }, async (err:any)=>{
+            if(err.status === 409){
+                const msg = await getTranslation(this.translate, `add-list-dialog.already-exists`);
+                errorAlert(this.alerts, msg, undefined, this.translate);
+            } else {
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            }
+            this.addingList = false;
+        });
+    }
+
+    // save list edit
+    saveListEdit(){
+        if(!this.editListItem?.id) return;
+        this.savingEdit = true;
+
+        this.api.request<string>(HttpMethod.POST, `lists/edit/${this.editListItem.id}`, {name: this.editListItem.name, type: this.editListItem.type}, 'text').subscribe(async(res:any)=>{
+            const msg = await getTranslation(this.translate, 'edit-list-dialog.success');
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.showEditDialog = false;
+            this.savingEdit = false;
+            this.loadLists();
+        }, async(err:any)=>{
+            console.log(err)
+            if(err.error === "cant-change-list-type"){
+                const msg = await getTranslation(this.translate, `edit-list-dialog.error-change-type`)
+                errorAlert(this.alerts, msg, undefined, this.translate);
+            } else {
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            }
+            this.savingEdit = false;
+        });
+    }
+
+    // delete list
+    deleteList(){
+        if(!this.listToDelete) return;
+        this.deletingList = true;
+        this.api.request<string>(HttpMethod.DELETE, `lists/delete/${this.listToDelete}`, {}, 'text').subscribe(async(res:any)=>{
+            const msg = await getTranslation(this.translate, 'add-list-dialog.delete-success');
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.showDeleteDialog = false;
+            this.deletingList = false;
+            this.loadLists();
+        }, async(err:any)=>{
+            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            this.deletingList = false;
+        });
+    }
+
+    // if backdrop of dialog is clicked close it
+    addDialogClick(event:any){
+        if (event.target === this.addDialog.nativeElement) {
+            this.showAddDialog = false;
+        }
+    }
+
+    // if backdrop of dialog is clicked close it
+    deleteDialogClick(event:any){
+        if (event.target === this.deleteDialog.nativeElement) {
+            this.showDeleteDialog = false;
+        }
+    }
+
+    // if backdrop of dialog is clicked close it
+    editDialogClick(event:any){
+        if (event.target === this.editDialog.nativeElement) {
+            this.showEditDialog = false;
+        }
     }
 
     // search update
