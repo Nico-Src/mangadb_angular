@@ -22,7 +22,7 @@ export class APIService {
             case HttpMethod.POST:
                 return this.http.post<T>(`${API_BASE}/${url}`, params, {responseType: responseType as "json", headers: headers});
             case HttpMethod.DELETE:
-                return this.http.delete<T>(`${API_BASE}/${url}`, {responseType: responseType as "json", headers: headers});
+                return this.http.delete<T>(`${API_BASE}/${url}`, {responseType: responseType as "json", headers: headers, body: params});
             case HttpMethod.PUT:
                 return this.http.put<T>(`${API_BASE}/${url}`, params, {responseType: responseType as "json", headers: headers});
             case HttpMethod.PATCH:
