@@ -15,6 +15,7 @@ import { ContributorDetailComponent } from './pages/contributor-detail/contribut
 import { VolumeDetailComponent } from './pages/volume-detail/volume-detail.component';
 import { ReadingHistoryComponent } from './pages/reading-history/reading-history.component';
 import { ListsComponent } from './pages/lists/lists.component';
+import { ListDetailComponent } from './pages/list-detail/list-detail.component';
 
 export const routes: Routes = [
     {
@@ -49,6 +50,12 @@ export const routes: Routes = [
     {
         path: 'lists',
         component: ListsComponent,
+        canActivate: [AuthGuard],
+        data: { requiresLogin: true }
+    },
+    {
+        path: 'list/:slug',
+        component: ListDetailComponent,
         canActivate: [AuthGuard],
         data: { requiresLogin: true }
     },

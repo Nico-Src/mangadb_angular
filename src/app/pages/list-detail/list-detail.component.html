@@ -1,0 +1,57 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input [disabled]="loading" (ngModelChange)="searchKeyDown($event)" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <button (click)="ordering = !ordering" size="s" tuiButton type="button" appearance="accent" class="order-btn" *ngIf="!ordering"><ng-icon name="solarListBold" class="icon"></ng-icon>{{ 'lists.order' | translate }}</button>
+        <button (click)="cancelReorder()" size="s" tuiButton type="button" appearance="accent" class="order-cancel-btn" *ngIf="ordering"><ng-icon name="tablerCancel" class="icon"></ng-icon>{{ 'lists.cancel-reorder' | translate }}</button>
+        <button (click)="saveReorder()" size="s" tuiButton type="button" appearance="accent" class="order-btn" *ngIf="ordering"><ng-icon name="matSaveOutline" class="icon"></ng-icon>{{ 'lists.save-reorder' | translate }}</button>
+        <tui-segmented class="view-mode" [(activeItemIndex)]="viewIndex" (activeItemIndexChange)="viewChanged($event)" *ngIf="list?.type === 'series'">
+            <button type="button" class="view-item" [disabled]="loading">
+                <ng-icon name="tablerList"/>
+            </button>
+            <button type="button" class="view-item" [disabled]="loading">
+                <ng-icon name="tablerLayoutColumns"/>
+            </button>
+            <button type="button" class="view-item" [disabled]="loading">
+                <ng-icon name="tablerLayoutGrid"/>
+            </button>
+        </tui-segmented>
+    </div>
+</div>
+
+<div [style.height.px]="0"><tui-loader class="loader" size="l" [showLoader]="loading"></tui-loader></div>
+
+<div class="series-wrapper" auto-animate [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" *ngIf="list && list.type === 'series' && !ordering">
+    <div class="series" *ngFor="let ser of items">
+        <manga-series-list (click)="seriesClick(ser)" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+        <manga-series-column (click)="seriesClick(ser)" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+        <manga-series-grid (click)="seriesClick(ser)" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+    </div>
+</div>
+
+<tui-tiles class="series-wrapper" [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" [debounce]="50" [(order)]="order" *ngIf="list?.type === 'series' && ordering">
+    <tui-tile *ngFor="let ser of items; let index = index" class="series" [style.order]="order.get(index)">
+        <manga-series-list [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+        <manga-series-column [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+        <manga-series-grid [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+        <div class="handle" tuiTileHandle>
+            <ng-icon class="icon" name="tablerArrowsMove"></ng-icon>
+        </div>
+    </tui-tile>
+</tui-tiles>
+
+<div class="volume-wrapper" auto-animate *ngIf="list?.type === 'volume' && !ordering">
+    <manga-volume [customMenuItems]="removeFromListMenuItem" (click)="volumeClick(vol)" [volume]="vol" [class]="theme()" *ngFor="let vol of items"></manga-volume>
+</div>
+
+<tui-tiles class="volume-wrapper" [class.hidden]="loading" [debounce]="50" [(order)]="order" *ngIf="list?.type === 'volume' && ordering">
+    <tui-tile *ngFor="let vol of items; let index = index" class="volume" [style.order]="order.get(index)">
+        <manga-volume [volume]="vol" [class]="theme()"></manga-volume>
+        <div class="handle" tuiTileHandle>
+            <ng-icon class="icon" name="tablerArrowsMove"></ng-icon>
+        </div>
+    </tui-tile>
+</tui-tiles>
