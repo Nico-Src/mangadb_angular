@@ -130,7 +130,8 @@
             "remove-collection": "Remove from Collection",
             "quick-view": "Quick-View",
             "edit-price": "Edit Price",
-            "edit-date": "Edit Buy Date"
+            "edit-date": "Edit Buy Date",
+            "remove-from-list": "Remove from List"
         }
     },
 
@@ -441,7 +442,12 @@
         "type": {
             "volume": "Volume",
             "series": "Series"
-        }
+        },
+        "order": "Reorder",
+        "cancel-reorder": "Cancel",
+        "save-reorder": "Save",
+        "reorder-success": "Order saved successfully.",
+        "item-removed": "Item removed from List successfully."
     },
 
     "__SECTION__PAGES__": "",

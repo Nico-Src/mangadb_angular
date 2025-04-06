@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="cover-wrapper">
+            <div class="cover-wrapper" (click)="listClick(list.slug)">
                 <manga-cover [id]="list.last_added" [nsfw]="list.nsfw === 1" [nsfw18]="list.nsfw18 === 1" [aspectRatio]="list.aspect_ratio"></manga-cover>
             </div>
         </div>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
             </div>
-            <div class="cover-wrapper">
+            <div class="cover-wrapper" (click)="listClick(list.slug)">
                 <manga-cover [id]="list.last_added" [nsfw]="list.nsfw === 1" [nsfw18]="list.nsfw18 === 1" [aspectRatio]="list.aspect_ratio"></manga-cover>
             </div>
         </div>

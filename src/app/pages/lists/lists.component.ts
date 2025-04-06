@@ -17,7 +17,7 @@ import { PluralTranslatePipe } from '../../../pipes/pluralTranslate';
 import { tablerEdit, tablerList, tablerPlus, tablerTrash } from '@ng-icons/tabler-icons';
 
 @Component({
-    selector: 'app-dashboard',
+    selector: 'app-list',
     imports: [TuiTextfieldControllerModule, TuiTextfield, MangaCover, TuiButton, PluralTranslatePipe, NgAutoAnimateDirective, NgIf, TuiLoader, NgFor, TuiSelectModule, ReactiveFormsModule, FormsModule, NgIcon, TranslatePipe],
     templateUrl: './lists.component.html',
     styleUrl: './lists.component.less',
@@ -208,6 +208,11 @@ export class ListsComponent {
             this.volumeLists = this.lists.filter((l:any)=>l.type === 'volume');
             this.seriesLists = this.lists.filter((l:any)=>l.type === 'series');
         }
+    }
+
+    // redirect to list detail page
+    listClick(slug:any){
+        this.router.navigate(['list',slug]);
     }
 
     // language to locale code

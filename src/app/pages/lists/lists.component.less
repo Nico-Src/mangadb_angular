@@ -92,11 +92,14 @@
             align-items: center;
             cursor: pointer;
             overflow: hidden;
+            transition: background var(--transition-duration) ease;
 
             &:hover{
                 .cover-wrapper manga-cover{
                     transform: scale(0.95);
                 }
+
+                background-color: rgba(0,0,0,.1);
             }
 
             .details{
