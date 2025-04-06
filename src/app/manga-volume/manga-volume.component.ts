@@ -11,7 +11,7 @@ import { TuiDataListDropdownManager } from '@taiga-ui/kit';
 import { AuthService } from '../../services/auth.service';
 import { APIService, HttpMethod } from '../../services/api.service';
 import { heroMinus, heroPlus, heroViewfinderCircle } from '@ng-icons/heroicons/outline';
-import { tablerClockEdit, tablerShoppingBagEdit } from '@ng-icons/tabler-icons';
+import { tablerClockEdit, tablerShoppingBagEdit, tablerTrash } from '@ng-icons/tabler-icons';
 import { TuiDay } from '@taiga-ui/cdk/date-time';
 
 @Component({
@@ -19,7 +19,7 @@ import { TuiDay } from '@taiga-ui/cdk/date-time';
     imports: [MangaCover, NgIcon, NgFor, TuiDataList, TuiDataListDropdownManager, TuiDropdown, TranslatePipe, NgIf],
     templateUrl: './manga-volume.component.html',
     styleUrl: './manga-volume.component.less',
-    viewProviders: [provideIcons({ solarNotebook, solarCalendar, lucideLibrary, heroViewfinderCircle, heroPlus, heroMinus, solarTagPrice, tablerClockEdit, tablerShoppingBagEdit })]
+    viewProviders: [provideIcons({ solarNotebook, solarCalendar, tablerTrash, lucideLibrary, heroViewfinderCircle, heroPlus, heroMinus, solarTagPrice, tablerClockEdit, tablerShoppingBagEdit })]
 })
 export class MangaVolume {
     private readonly api = inject(APIService);
@@ -32,19 +32,22 @@ export class MangaVolume {
     @Input() volume:any = {};
     @Input() showRelease = true;
     @Input() showCollectionMetadata = false;
+    @Input() customMenuItems:any = [];
     @ViewChild('release') release:any;
     @ViewChild('dropdown') dropdown:any;
 
-    protected readonly menuItems = [
+    defaultMenuItems = [
         {title: 'quick-view', icon: 'heroViewfinderCircle', action: this.quickView.bind(this)},
         {title: 'toggle-collection', icon: '', action: this.toggleCollection.bind(this)},
-    ] as const;
+    ];
+
+    menuItems = this.defaultMenuItems;
     
-    protected readonly collectionMenuItems = [
+    collectionMenuItems = [
         {title: 'quick-view', icon: 'heroViewfinderCircle', action: this.quickView.bind(this)},
         {title: 'edit-price', icon: 'tablerShoppingBagEdit', action: this.openPriceEditDialog.bind(this)},
         {title: 'edit-date', icon: 'tablerClockEdit', action: this.openBuyDateEditDialog.bind(this)},
-    ] as const;
+    ];
 
     constructor(private translate: TranslateService){}
 
@@ -54,12 +57,12 @@ export class MangaVolume {
     }
 
     // open price edit dialog
-    openPriceEditDialog(){
+    openPriceEditDialog(vol:any){
         this.openPriceEdit.emit({id: this.volume.item_id, price: this.volume.price, series: this.volume.series});
     }
 
     // open buy date edit dialog
-    openBuyDateEditDialog(){
+    openBuyDateEditDialog(vol:any){
         this.openBuyDateEdit.emit({id: this.volume.item_id, date: this.volume.buy_date_tui, series: this.volume.series});
     }
 
@@ -75,6 +78,11 @@ export class MangaVolume {
             this.volume.buy_date_readable = this.releaseDate(this.volume.buy_date);
             this.volume.buy_date_text = (this.volume.buy_date_readable === UNKNOWN_DATE || this.volume.buy_date_readable === ANNOUNCED_DATE);
         }
+
+        this.menuItems = [
+            ...this.defaultMenuItems,
+            ...this.customMenuItems
+        ];
     }
 
     public updateBuyDate(){
@@ -94,12 +102,12 @@ export class MangaVolume {
         return isDateInFuture(date);
     }
 
-    quickView(){
+    quickView(vol:any){
         
     }
 
     // toggle collection state
-    toggleCollection(){
+    toggleCollection(vol:any){
         // if not logged in show error
         if(!this.auth.isLoggedIn()){
             // TODO translate
