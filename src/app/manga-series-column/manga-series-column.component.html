@@ -1,4 +1,7 @@
-<div class="cover-wrapper">
+<div class="cover-wrapper" tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown" *ngIf="menuItems.length > 0">
+    <manga-cover [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+</div>
+<div class="cover-wrapper" *ngIf="menuItems.length === 0">
     <manga-cover [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
 </div>
 <div class="details">
@@ -23,3 +26,12 @@
         <div *ngFor="let tag of series.otherTags" class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div>
     </div>
 </div>
+
+<ng-template #contextMenu>
+    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+        <button *ngFor="let item of menuItems" tuiOption type="button" (click)="item.action(series); dropdown.toggle(false)">
+            <ng-icon [name]="item.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+            <span>{{ `volume.context.${item.title}` | translate }}</span>
+        </button>
+    </tui-data-list>
+</ng-template>

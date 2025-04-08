@@ -1,21 +1,28 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CDN_BASE, langToLocale } from '../../globals';
 import { NgIf, NgFor } from '@angular/common';
 import { MangaCover } from '../manga-cover/manga-cover.component';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { TuiFade } from '@taiga-ui/kit';
+import { TuiDataListDropdownManager, TuiFade } from '@taiga-ui/kit';
+import { TuiDataList, TuiDropdown } from '@taiga-ui/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { tablerTrash } from '@ng-icons/tabler-icons';
 
 @Component({
     selector: 'manga-series-list',
-    imports: [MangaCover, NgIf, NgFor, TranslatePipe, TuiFade],
+    imports: [MangaCover, NgIf, NgFor, TranslatePipe, TuiFade, TuiDataList, TuiDataListDropdownManager, TuiDropdown, NgIcon],
     templateUrl: './manga-series-list.component.html',
     styleUrl: './manga-series-list.component.less',
+    viewProviders: [provideIcons({tablerTrash})]
 })
 export class MangaSeriesListComponent {
     readonly cdn_base = CDN_BASE;
     loading = true;
     @Input() series:any = {};
     @Input() search:any = "";
+    @Input() customMenuItems:any = [];
+    @ViewChild('dropdown') dropdown:any;
+    menuItems: any = [];
 
     constructor(private translate: TranslateService){}
 
@@ -36,7 +43,7 @@ export class MangaSeriesListComponent {
     }
 
     ngOnChanges(){
-        
+        this.menuItems = [...this.customMenuItems];
     }
 
     // language to locale code
