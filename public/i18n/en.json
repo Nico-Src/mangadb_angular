@@ -60,7 +60,9 @@
         "marketplace": "Marketplace",
         "about-us": "About us",
         "privacy": "Privacy",
-        "imprint": "Imprint"
+        "imprint": "Imprint",
+        "admin-dashboard": "Admin-Dashboard",
+        "admin-series": "Admin-Series"
     },
 
     "sidebar": {
@@ -79,7 +81,17 @@
         "marketplace": "Marketplace",
         "about-us": "About us",
         "privacy": "Privacy",
-        "imprint": "Imprint"
+        "imprint": "Imprint",
+        "admin-dashboard": "Dashboard",
+        "admin-content": "Content",
+        "admin-series": "Series",
+        "admin-volumes": "Volumes",
+        "admin-publishers": "Publishers",
+        "admin-contributors": "Contributors",
+        "admin-media": "Media Library",
+        "admin-management": "Management",
+        "admin-reports": "Reports",
+        "admin-users": "Users"
     },
 
     "topbar": {

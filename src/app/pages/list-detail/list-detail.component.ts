@@ -23,7 +23,7 @@ import { matSaveOutline } from '@ng-icons/material-icons/outline';
 
 @Component({
     selector: 'app-list-detail',
-    imports: [TuiTextfieldControllerModule, TuiTextfield, TuiTile, TuiTiles, TuiButton, MangaVolume, MangaSeriesColumnComponent, NgAutoAnimateDirective, MangaSeriesGridComponent, TuiSegmented, MangaSeriesListComponent, MangaCover, NgIf, TuiLoader, NgFor, TuiSelectModule, ReactiveFormsModule, FormsModule, NgIcon, TranslatePipe],
+    imports: [TuiTextfieldControllerModule, TuiTextfield, TuiTile, TuiTiles, TuiButton, MangaVolume, MangaSeriesColumnComponent, NgAutoAnimateDirective, MangaSeriesGridComponent, TuiSegmented, MangaSeriesListComponent, NgIf, TuiLoader, NgFor, TuiSelectModule, ReactiveFormsModule, FormsModule, NgIcon, TranslatePipe],
     templateUrl: './list-detail.component.html',
     styleUrl: './list-detail.component.less',
     viewProviders: [provideIcons({ tablerList, tablerLayoutColumns, tablerLayoutGrid, tablerArrowsMove, solarListBold, tablerCancel, matSaveOutline })]
@@ -147,10 +147,9 @@ export class ListDetailComponent {
     }
 
     // remove item from list
-    removeFromList(vol:any){
-        console.log({list_id: this.list.id, item_id: vol.id})
-        if(!vol) return;
-        this.api.request<any>(HttpMethod.DELETE, `lists/items/delete`, {list_id: this.list.id, item_id: vol.id}, 'text').subscribe(async(res:any)=>{
+    removeFromList(item:any){
+        if(!item) return;
+        this.api.request<any>(HttpMethod.DELETE, `lists/items/delete`, {list_id: this.list.id, item_id: item.id}, 'text').subscribe(async(res:any)=>{
             const msg = await getTranslation(this.translate, `lists.item-removed`);
             successAlert(this.alerts, msg, undefined, this.translate);
             this.loadListItems();

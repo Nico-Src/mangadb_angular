@@ -62,3 +62,44 @@
     <ng-icon name="solarFileText" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.imprint' | translate }}</span>
 </div>
+
+<!-- ADMIN AREA -->
+
+<div class="item" [routerLink]="['/admin/dashboard']" [class.active]="router.url === '/admin/dashboard'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-dashboard' | translate) ">
+    <ng-icon name="tablerDashboard" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-dashboard' | translate }}</span>
+</div>
+<div class="header-item" *ngIf="inAdminArea">
+    <span class="name" tuiFade>{{ 'sidebar.admin-content' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin/series']" [class.active]="router.url.startsWith('/admin/series')" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-series' | translate) ">
+    <ng-icon name="lucideLibrary" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-series' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin-volumes']" [class.active]="router.url === '/admin/volumes'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-volumes' | translate) ">
+    <ng-icon name="lucideBook" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-volumes' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin-publishers']" [class.active]="router.url === '/admin/publishers'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-publishers' | translate) ">
+    <ng-icon name="heroBuildingOffice2" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-publishers' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin-contributors']" [class.active]="router.url === '/admin/contributors'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-contributors' | translate) ">
+    <ng-icon name="matFaceOutline" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-contributors' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin-media']" [class.active]="router.url === '/admin/media'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-media' | translate) ">
+    <ng-icon name="lucideImage" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-media' | translate }}</span>
+</div>
+<div class="header-item" *ngIf="inAdminArea">
+    <span class="name" tuiFade>{{ 'sidebar.admin-management' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin-reports']" [class.active]="router.url === '/admin/reports'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-reports' | translate) ">
+    <ng-icon name="tablerMessageReport" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-reports' | translate }}</span>
+</div>
+<div class="item" [routerLink]="['/admin-users']" [class.active]="router.url === '/admin/users'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-users' | translate) ">
+    <ng-icon name="tablerUsers" class="icon" [style.fontSize.px]="18"></ng-icon>
+    <span class="name" tuiFade>{{ 'sidebar.admin-users' | translate }}</span>
+</div>

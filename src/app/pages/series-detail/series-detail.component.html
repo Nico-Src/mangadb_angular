@@ -56,7 +56,6 @@
             <div class="description" *ngIf="series.description" tuiFade="vertical" [class.hide-description]="checkingDescOverflow" #desc [innerHTML]="series?.description?.description"></div>
             <div class="description" *ngIf="!series.description" #desc>
                 <div class="no-desc">
-                    <div class="title">{{ 'series.no-description.title' | translate }}</div>
                     <div class="desc">{{ 'series.no-description.desc' | translate }}</div>
                 </div>
             </div>

@@ -26,9 +26,9 @@
 
 <div class="series-wrapper" auto-animate [class.list]="viewIndex === 0" [class.column]="viewIndex === 1" [class.grid]="viewIndex === 2" [class.hidden]="loading" *ngIf="list && list.type === 'series' && !ordering">
     <div class="series" *ngFor="let ser of items">
-        <manga-series-list (click)="seriesClick(ser)" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
-        <manga-series-column (click)="seriesClick(ser)" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
-        <manga-series-grid (click)="seriesClick(ser)" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
+        <manga-series-list (click)="seriesClick(ser)" [customMenuItems]="removeFromListMenuItem" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 0"></manga-series-list>
+        <manga-series-column (click)="seriesClick(ser)" [customMenuItems]="removeFromListMenuItem" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 1"></manga-series-column>
+        <manga-series-grid (click)="seriesClick(ser)" [customMenuItems]="removeFromListMenuItem" [class]="theme()" [search]="search" [series]="ser" *ngIf="viewIndex === 2"></manga-series-grid>
     </div>
 </div>
 

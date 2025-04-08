@@ -8,19 +8,20 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerHome, tablerListSearch, tablerQuote } from '@ng-icons/tabler-icons';
+import { tablerDashboard, tablerHome, tablerListSearch, tablerMessageReport, tablerQuote, tablerUsers } from '@ng-icons/tabler-icons';
 import { solarLibrary, solarHistory, solarBillList, solarSettings, solarUsersGroupRounded, solarCart4, solarFileText } from '@ng-icons/solar-icons/outline';
 import { solarBuildingsLinear } from '@ng-icons/solar-icons/linear';
-import { lucideDices } from '@ng-icons/lucide';
-import { matPrivacyTipOutline } from '@ng-icons/material-icons/outline';
+import { lucideBook, lucideDices, lucideImage, lucideLibrary } from '@ng-icons/lucide';
+import { matFaceOutline, matPrivacyTipOutline } from '@ng-icons/material-icons/outline';
 import { APIService, HttpMethod } from '../../services/api.service';
+import { heroBuildingOffice2 } from '@ng-icons/heroicons/outline';
 
 @Component({
     selector: 'side-bar',
     imports: [NgIf, TuiFade, TuiHint, TranslatePipe, RouterLink, NgIcon],
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.less',
-    viewProviders: [provideIcons({ tablerHome, solarLibrary, solarHistory, solarBillList, solarSettings, tablerListSearch, solarBuildingsLinear, lucideDices, solarUsersGroupRounded, solarCart4, tablerQuote, matPrivacyTipOutline, solarFileText })]
+    viewProviders: [provideIcons({ tablerHome, tablerDashboard, lucideLibrary, lucideBook, matFaceOutline, lucideImage, tablerUsers, tablerMessageReport, heroBuildingOffice2, solarLibrary, solarHistory, solarBillList, solarSettings, tablerListSearch, solarBuildingsLinear, lucideDices, solarUsersGroupRounded, solarCart4, tablerQuote, matPrivacyTipOutline, solarFileText })]
 })
 export class SideBar {
     private readonly api = inject(APIService);
