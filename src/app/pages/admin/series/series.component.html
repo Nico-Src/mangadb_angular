@@ -1,0 +1,48 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+    </div>
+</div>
+
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="series-table">
+    <thead>
+        <tr>
+            <th tuiTh [style.width.%]="54">Name</th>
+            <th tuiTh [style.width.%]="8">Type</th>
+            <th tuiTh [style.width.%]="30">Slug</th>
+            <th tuiTh [style.width.%]="8">Visibility</th>
+        </tr>
+    </thead>
+    <tbody tuiTbody>
+        <tr *ngFor="let item of series">
+            <td tuiTd [style.maxWidth.%]="54">
+                {{ item.name }}
+            </td>
+            <td tuiTd>
+                {{ item.type }}
+            </td>
+            <td tuiTd>
+                {{ item.slug }}
+            </td>
+            <td tuiTd class="td-icon">
+                <ng-icon name="solarGlobal" class="icon public" *ngIf="item.public == 1"></ng-icon>
+                <ng-icon name="tablerLock" class="icon private" *ngIf="item.public == 0"></ng-icon>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>

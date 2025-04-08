@@ -16,6 +16,7 @@ import { VolumeDetailComponent } from './pages/volume-detail/volume-detail.compo
 import { ReadingHistoryComponent } from './pages/reading-history/reading-history.component';
 import { ListsComponent } from './pages/lists/lists.component';
 import { ListDetailComponent } from './pages/list-detail/list-detail.component';
+import { AdminSeriesComponent } from './pages/admin/series/series.component';
 
 export const routes: Routes = [
     {
@@ -93,6 +94,14 @@ export const routes: Routes = [
     {
         path: 'admin/dashboard',
         component: DashboardComponent,
+        canActivate: [RoleGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/series',
+        component: AdminSeriesComponent,
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]
