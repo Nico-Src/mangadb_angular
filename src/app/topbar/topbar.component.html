@@ -20,7 +20,7 @@
     <button (click)="toggleSidebar()" appearance="flat" size="m" tuiIconButton type="button" tuiHintAppearance="dark" tuiHintDirection="bottom" class="menu-btn" [iconStart]="sidebar.isOpen() ? '@tui.x' : '@tui.menu'" [style.border-radius.%]="100"></button>
 </div>
 
-<tui-textfield iconStart="@tui.search" class="search-wrapper" [class.hidden]="router.url.startsWith('/browse-series') || router.url.startsWith('/series/')" tuiTextfieldSize="m">
+<tui-textfield iconStart="@tui.search" class="search-wrapper" [class.hidden]="router.url.startsWith('/browse-series') || router.url.startsWith('/series/') || router.url.startsWith('/admin/')" tuiTextfieldSize="m">
     <input (keydown)="searchKeyDown($event)" [placeholder]="'topbar.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" (ngModelChange)="debounceSearch()" (focus)="searchFocused = true" (blur)="searchFocused = false" #searchEl/>
     <div class="search-results" [class.empty]="results.length === 0 || search.trim() === '' || searchLoading">
         <span *ngIf="!searchLoading && search.trim() === ''">{{ 'topbar.search.empty' | translate }}</span>

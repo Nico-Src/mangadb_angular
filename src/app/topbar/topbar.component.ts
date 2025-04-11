@@ -97,7 +97,7 @@ export class TopBar {
     @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) { 
         // ctrl + s to focus search
-        if(event.ctrlKey && event.key === 's') {
+        if(event.ctrlKey && event.key === 's' && !this.searchEl.nativeElement.parentElement.classList.contains('hidden')) {
             event.preventDefault();
             this.searchEl.nativeElement.focus();
         }
