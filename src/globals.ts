@@ -68,6 +68,22 @@ export const dateTimeFormats = [
     {locale: 'ja', format: 'LLL'},
 ];
 
+export const SERIES_TYPES = [
+    {key: 'Manga', name: 'Manga'},
+    {key: 'Manwha', name: 'Manhwa'},
+    {key: 'Manhua', name: 'Manhua'},
+    {key: 'Novel', name: 'Novel'},
+    {key: 'Other', name: 'Other'}
+];
+
+export const SERIES_RELATION_TYPES = [
+    {key: 'Spin-Off', name: 'Spin-Off'},
+    {key: 'Sequel', name: 'Sequel'},
+    {key: 'Prequel', name: 'Prequel'},
+    {key: 'Alternate Version', name: 'Alternate Version'},
+    {key: 'Main-Story', name: 'Main-Story'}
+];
+
 export const REPORT_TYPES = [
     {key: 'wrong-info', name: 'Wrong Information', type: 'series'},
     {key: 'missing-info', name: 'Missing Information', type: 'series'},

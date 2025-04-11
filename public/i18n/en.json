@@ -150,6 +150,7 @@
     "series": {
         "not-found": "Series could not be found...",
         "type": {
+            "label": "Type",
             "manga": "Manga",
             "novel": "Novel",
             "manwha": "Manhwa",
@@ -179,11 +180,33 @@
             "main-story": "Main-Story",
             "alternate version": "Alternate-Version"
         },
+        "relation-type":{
+            "label": "Type",
+            "spin-off": "Spin-Off",
+            "sequel": "Sequel",
+            "prequel": "Prequel",
+            "main-story": "Main-Story",
+            "alternate version": "Alternate-Version"
+        },
         "chapter":"Chapter",
         "status":"Status",
         "publishers": "Publishers",
         "contributors": "Contributors",
-        "aliases": "Other Titles"
+        "aliases": "Other Titles",
+        "currently-edited": "Currently edited by",
+        "context": {
+            "edit": "Edit"
+        },
+        "name": "Name",
+        "slug": "Slug",
+        "public": "Public",
+        "free-lock": "Unlock",
+        "save": "Save",
+        "save-success": "Changes saved successfully.",
+        "descriptions": "Descriptions",
+        "new-alias": "New Alias",
+        "new-description": "New Description",
+        "new-relation": "New Relation"
     },
 
     "contributor":{
@@ -652,5 +675,25 @@
         "save": "Save",
         "success": "Changes saved successfully.",
         "error-change-type": "Can't change type of lists with entries in them."
+    },
+
+    "add-alias-dialog": {
+        "title": "Add Alias",
+        "alias": "Alias",
+        "language": "Language",
+        "add": "Add"
+    },
+
+    "add-description-dialog": {
+        "title": "Add Description",
+        "language": "Language",
+        "add": "Add",
+        "exists": "Description with that language exists already."
+    },
+
+    "add-relation-dialog": {
+        "title": "Add Relation",
+        "add": "Add",
+        "search": "Search"
     }
 }

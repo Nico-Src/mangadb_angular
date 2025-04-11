@@ -15,8 +15,161 @@
                         <input tuiTextfield [(ngModel)]="editSeries.name">
                     </tui-textfield>
                 </label>
+                <label>
+                    {{ 'series.slug' | translate }}
+                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                        <input tuiTextfield [(ngModel)]="editSeries.slug" [readOnly]="true">
+                    </tui-textfield>
+                </label>
+                <div class="wrapper">
+                    <label>
+                        {{ "series.type.label" | translate }}
+                        <tui-select tuiTextfieldSize="s" [(ngModel)]="editSeries.type" [valueContent]="typeContent" [tuiTextfieldLabelOutside]="true">
+                            <tui-data-list-wrapper *tuiDataList [itemContent]="typeContent" [items]="seriesTypes"></tui-data-list-wrapper>
+                        </tui-select>
+                    </label>
+                    <label class="switch-input">
+                        {{ "series.public" | translate }}
+                        <input tuiSwitch type="checkbox" [(ngModel)]="editSeries.public" [size]="'m'"/>
+                    </label>
+                </div>
+                <div class="header-title">{{ 'series.aliases' | translate }}</div>
+                <div class="alias-wrapper" auto-animate>
+                    <div class="alias" *ngFor="let alias of editSeries.aliases">
+                        <img class="lang" [src]="`img/flags/${toLocale(alias.language)}.png`">
+                        {{ alias.title }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeAlias(alias)"></ng-icon>
+                    </div>
+                    <div class="alias add" (click)="openAliasDialog()">
+                        <ng-icon name="tablerPlus" class="icon"></ng-icon>&nbsp;{{ 'series.new-alias' | translate }}
+                    </div>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'series.descriptions' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openDescriptionDialog()" *ngIf="series">{{ 'series.new-description' | translate }}</button>
+                </div>
+                <tui-tabs [(activeItemIndex)]="descriptionTabIndex" [size]="'m'" class="description-tabs" (activeItemIndexChange)="descriptionTabChanged($event)">
+                    <button tuiTab type="button" *ngFor="let desc of editSeries.descriptions" (contextmenu)="removeDescription($event,desc)">
+                        {{ `language.${toLocale(desc.language)}` | translate }}
+                    </button>
+                </tui-tabs>
+                <tui-editor *ngIf="selectedDescription?.description != undefined" [(ngModel)]="selectedDescription.description" [tools]="tools" class="editor"></tui-editor>
+                <div class="html-preview" *ngIf="selectedDescription?.description != undefined">
+                    <textarea [(ngModel)]="selectedDescription.description"></textarea>
+                </div>
+                <label *ngIf="selectedDescription?.description != undefined">
+                    {{ 'series.source' | translate }}
+                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                        <input tuiTextfield [(ngModel)]="selectedDescription.source">
+                    </tui-textfield>
+                </label>
+                <div class="header-title">
+                    <span>{{ 'series.relations' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openRelationDialog()" *ngIf="series">{{ 'series.new-relation' | translate }}</button>
+                </div>
+                <div class="relation-wrapper" auto-animate>
+                    <div class="relation-item" *ngFor=" let relation of editSeries?.relations" (contextmenu)="removeRelation(relation)">
+                        <div class="name">{{ relation.name }}</div>
+                        <label>
+                            <tui-select tuiTextfieldSize="s" [(ngModel)]="relation.relation_type" [valueContent]="relationTypeContent" [tuiTextfieldLabelOutside]="true">
+                                <tui-data-list-wrapper *tuiDataList [itemContent]="relationTypeContent" [items]="relationTypes"></tui-data-list-wrapper>
+                            </tui-select>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
-        <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="removeLock()" *ngIf="series">{{ 'dialog.cancel' | translate }}</button>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="removeLock()" *ngIf="series">{{ 'series.free-lock' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="saving">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveEdit()" *ngIf="series">{{ 'series.save' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div class="placeholder" style="width: 100%; height: 20px;"></div>
     </div>
 </div>
+
+<div class="alias-dialog" (click)="aliasDialogClick($event)" #aliasDialog>
+    <div class="window" [class.show]="showAliasDialog">
+        <div class="title">{{ 'add-alias-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-alias-dialog.alias' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addAliasItem.name">
+            </tui-textfield>
+        </label>
+        <label>
+            {{ 'add-alias-dialog.language' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addAliasItem.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLanguages"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addAlias()">{{ 'add-alias-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="description-dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
+    <div class="window" [class.show]="showDescriptionDialog">
+        <div class="title">{{ 'add-description-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-description-dialog.language' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addDescriptionItem.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLanguages"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addDescription()">{{ 'add-description-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="relation-dialog" (click)="relationDialogClick($event)" #relationDialog>
+    <div class="window" [class.show]="showRelationDialog">
+        <div class="title">{{ 'add-relation-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-relation-dialog.search' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="relationSearchKeyDown($event)">
+                <input tuiTextfield [(ngModel)]="relationSearch">
+            </tui-textfield>
+        </label>
+        <tui-data-list class="series-list" [emptyContent]="test">
+            <div *ngFor="let item of searchedRelations" tuiOption (click)="selectRelation(item)">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
+                <span class="series-name">{{item.name}} - {{item.type}}</span>
+            </div>
+        </tui-data-list>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addRelation()">{{ 'add-relation-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #typeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `series.type.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #relationTypeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `series.relation-type.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #relationContent let-item>
+    <div class="relation-item">
+        <span class="relation-name">{{ item.name }}</span>
+    </div>
+</ng-template>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #test let-item>
+    
+</ng-template>
