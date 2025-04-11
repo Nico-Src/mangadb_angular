@@ -17,6 +17,8 @@ import { ReadingHistoryComponent } from './pages/reading-history/reading-history
 import { ListsComponent } from './pages/lists/lists.component';
 import { ListDetailComponent } from './pages/list-detail/list-detail.component';
 import { AdminSeriesComponent } from './pages/admin/series/series.component';
+import { AdminSeriesDetailComponent } from './pages/admin/series-detail/series-detail.component';
+import { EditGuard } from '../guards/editGuard';
 
 export const routes: Routes = [
     {
@@ -105,6 +107,15 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/series/:id',
+        component: AdminSeriesDetailComponent,
+        canActivate: [RoleGuard,EditGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR],
+            route: 'series'
         }
     },
     // auto redirect

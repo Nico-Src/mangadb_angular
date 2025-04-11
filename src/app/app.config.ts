@@ -9,6 +9,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { RoleGuard } from '../guards/roleGuard';
 import { routes } from './app.routes';
 import { AuthGuard } from "../guards/authGuard";
+import { EditGuard } from "../guards/editGuard";
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) => new TranslateHttpLoader(http, './i18n/', '.json');
 
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
             },
         }),
         RoleGuard,
-        AuthGuard
+        AuthGuard,
+        EditGuard
     ]
 };
