@@ -2,7 +2,7 @@ import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiTable, TuiTableCell } from '@taiga-ui/addon-table';
 import { TuiTextfield } from '@taiga-ui/core';
@@ -19,7 +19,7 @@ import { CDN_BASE } from '../../../../globals';
 
 @Component({
     selector: 'app-admin-series',
-    imports: [TuiCell,NgFor,NgIf,TuiTable,TuiTextfield,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule,TuiFade],
+    imports: [NgFor,NgIf,TuiTable,TuiTextfield,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './series.component.html',
     styleUrl: './series.component.less',
     viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit})]
@@ -46,12 +46,19 @@ export class AdminSeriesComponent {
         {title: 'edit', icon: 'tablerEdit', action: this.editSeries.bind(this)},
     ];
     @ViewChild('dropdown') dropdown:any;
-    constructor(private translate: TranslateService, private title: Title, private router: Router) { }
+    constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute) { }
     
     ngOnInit() {
         // set title
         this.translate.get(_('title.admin-series')).subscribe((res: any) => {
             this.title.setTitle(`${res} | MangaDB`);
+        });
+
+        // get query params (also on change)
+        this.route.queryParams.subscribe(params => {
+            if(params['order']) this.selectedOrder = this.orders.find((o: { value: any; }) => o.value === params['order']);
+            if(params['page']) this.currentPage = parseInt(params['page']);
+            if(params['search']) this.search = this.prevSearch = this.currentSearch = params['search'];
         });
 
         this.updateQueryParams();
