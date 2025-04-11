@@ -115,6 +115,48 @@
             &:hover{
                 background-color: #ccc;
             }
+
+            &.locked{
+                position: relative;
+            }
+
+            &.locked td{
+                text-decoration: line-through;
+            }
+        }
+
+        .edit-placeholder{
+            position: absolute;
+            inset: 0;
+            background-color: rgb(var(--accent-color));
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            padding-right: 50px;
+
+            .name,.username{
+                color: white;
+            }
+
+            .by{
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+
+                span{
+                    color: #ccc;
+                    font-size: 13px;
+                }
+            }
+
+            .image{
+                height: 30px;
+                aspect-ratio: 1;
+                border-radius: 50%;
+                object-fit: cover;
+            }
         }
 
         tr:last-child{

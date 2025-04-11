@@ -18,11 +18,19 @@
             <th tuiTh [style.width.%]="54">Name</th>
             <th tuiTh [style.width.%]="8">Type</th>
             <th tuiTh [style.width.%]="30">Slug</th>
-            <th tuiTh [style.width.%]="8">Visibility</th>
+            <th tuiTh [style.width.%]="8" [style.textAlign]="'center'">Visibility</th>
         </tr>
     </thead>
     <tbody tuiTbody>
-        <tr *ngFor="let item of series">
+        <tr *ngFor="let item of series" [class.locked]="item.lockedBy?.id" tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+            <ng-template #contextMenu>
+                <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                    <button *ngFor="let menuItem of menuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
+                        <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                        <span>{{ `series.context.${menuItem.title}` | translate }}</span>
+                    </button>
+                </tui-data-list>
+            </ng-template>
             <td tuiTd [style.maxWidth.%]="54">
                 {{ item.name }}
             </td>
@@ -36,6 +44,14 @@
                 <ng-icon name="solarGlobal" class="icon public" *ngIf="item.public == 1"></ng-icon>
                 <ng-icon name="tablerLock" class="icon private" *ngIf="item.public == 0"></ng-icon>
             </td>
+            <div class="edit-placeholder" *ngIf="item.lockedBy?.id">
+                <div class="name">{{ item.name }}</div>
+                <div class="by">
+                    <span>{{ 'series.currently-edited' | translate }}</span>
+                    <div class="username">{{ item.lockedBy.username }}</div>
+                    <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${item.lockedBy.id}/scaled`">
+                </div>
+            </div>
         </tr>
     </tbody>
 </table>

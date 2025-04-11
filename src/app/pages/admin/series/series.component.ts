@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../services/auth.service';
@@ -9,24 +9,26 @@ import { TuiTextfield } from '@taiga-ui/core';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerLock, tablerSortAscendingLetters, tablerSortDescendingLetters } from '@ng-icons/tabler-icons';
+import { tablerEdit, tablerLock, tablerSortAscendingLetters, tablerSortDescendingLetters } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { TuiCell } from '@taiga-ui/layout';
 import { TuiFade, TuiPagination } from '@taiga-ui/kit';
 import { solarGlobal } from '@ng-icons/solar-icons/outline';
 import { solarGlobalBold } from '@ng-icons/solar-icons/bold';
+import { CDN_BASE } from '../../../../globals';
 
 @Component({
     selector: 'app-admin-series',
     imports: [TuiCell,NgFor,NgIf,TuiTable,TuiTextfield,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule,TuiFade],
     templateUrl: './series.component.html',
     styleUrl: './series.component.less',
-    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSortDescendingLetters,tablerLock,solarGlobal})]
+    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit})]
 })
 export class AdminSeriesComponent {
     private readonly api = inject(APIService);
     private readonly auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
+    cdn_base = CDN_BASE;
     tableSize:any = 'm';
     search:string = "";
     currentSearch:string = "";
@@ -40,6 +42,10 @@ export class AdminSeriesComponent {
     ]
     selectedOrder: any = this.orders[0];
     series: any = [];
+    menuItems = [
+        {title: 'edit', icon: 'tablerEdit', action: this.editSeries.bind(this)},
+    ];
+    @ViewChild('dropdown') dropdown:any;
     constructor(private translate: TranslateService, private title: Title, private router: Router) { }
     
     ngOnInit() {
@@ -86,5 +92,10 @@ export class AdminSeriesComponent {
                 this.updateQueryParams();
             }
         }
+    }
+
+    // edit series
+    editSeries(ser:any){
+        this.router.navigate(['admin','series',ser.id]);
     }
 }
