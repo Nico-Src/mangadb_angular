@@ -6,6 +6,7 @@ import 'moment/locale/ja';
 
 export const API_BASE = 'http://localhost:4545';
 export const CDN_BASE = 'http://localhost:5555';
+export const SCRAPER_BASE = 'http://localhost:4000';
 
 export const CONFIG = {
     version: '0.0.1',
@@ -82,6 +83,21 @@ export const SERIES_RELATION_TYPES = [
     {key: 'Prequel', name: 'Prequel'},
     {key: 'Alternate Version', name: 'Alternate Version'},
     {key: 'Main-Story', name: 'Main-Story'}
+];
+
+export const SERIES_PUBLICATION_STATUSES = [
+    {key: 'Ongoing', name: 'Ongoing'},
+    {key: 'Completed', name: 'Completed'},
+    {key: 'Hiatus', name: 'Hiatus'},
+    {key: 'Cancelled', name: 'Cancelled'}
+];
+
+export const CONTRIBUTOR_TYPES = [
+    {key: 'Author', name: 'Author'},
+    {key: 'Artist', name: 'Artist'},
+    {key: 'Character Designer', name: 'Character Designer'},
+    {key: 'Original Creator', name: 'Original Creator'},
+    {key: 'Artist/Author', name: 'Artist/Author'}
 ];
 
 export const REPORT_TYPES = [
@@ -168,6 +184,21 @@ export const readableDatetime = (str: string,loc: string) => {
 
     // check if the date should be written out (31st december instead of 31-12)
     return parsed.locale(locale).format(dateTimeFormats.find(f => f.locale === locale)?.format || 'en');
+}
+
+// convert lang to origin
+export const getOriginByLang = (lang:string) => {
+    switch(lang){
+        case "Chinese": return "China";
+        case "Japanese": return "Japan";
+        case "English": return "United Kingdom";
+        case "French": return "France";
+        case "Spanish": return "Spain";
+        case "Italian": return "Italy";
+        case "Korean": return "Korea";
+        case "German": return "Germany";
+        default: return "United Kingdom";
+    }
 }
 
 // convert language to locale

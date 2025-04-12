@@ -42,6 +42,9 @@ export class AppComponent {
         this.translate.setDefaultLang(CONFIG.default_locale);
         // set locale (based on cookie, if user already selected a language) or default
         this.translate.use(this.cookie.get('language') || CONFIG.default_locale);
+        this.sidebar.onSetScroll = (scroll:number) => {
+            this.main.nativeElement.scrollTop = scroll;
+        };
     }
 
     ngOnInit(): void {

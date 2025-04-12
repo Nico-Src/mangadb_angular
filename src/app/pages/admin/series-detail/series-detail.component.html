@@ -34,7 +34,7 @@
                     </label>
                 </div>
                 <div class="header-title">{{ 'series.aliases' | translate }}</div>
-                <div class="alias-wrapper" auto-animate>
+                <div class="alias-wrapper">
                     <div class="alias" *ngFor="let alias of editSeries.aliases">
                         <img class="lang" [src]="`img/flags/${toLocale(alias.language)}.png`">
                         {{ alias.title }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeAlias(alias)"></ng-icon>
@@ -66,7 +66,7 @@
                     <span>{{ 'series.relations' | translate }}</span>
                     <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openRelationDialog()" *ngIf="series">{{ 'series.new-relation' | translate }}</button>
                 </div>
-                <div class="relation-wrapper" auto-animate>
+                <div class="relation-wrapper">
                     <div class="relation-item" *ngFor=" let relation of editSeries?.relations" (contextmenu)="removeRelation(relation)">
                         <div class="name">{{ relation.name }}</div>
                         <label>
@@ -76,10 +76,156 @@
                         </label>
                     </div>
                 </div>
+                <div class="header-title">
+                    <span>{{ 'series.publishers' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openPublisherDialog()" *ngIf="series">{{ 'series.new-publisher' | translate }}</button>
+                </div>
+                <div class="publisher-wrapper">
+                    <ng-container *ngFor="let publisher of editSeries?.publishers">
+                        <div class="publisher-item">
+                            <div class="buttons">
+                                <ng-icon name="tablerPlus" class="add" (click)="addEdition(publisher)"></ng-icon>
+                                <ng-icon name="tablerMinus" class="remove" (click)="removePublisher(publisher)"></ng-icon>
+                            </div>
+                            <div class="name">{{ publisher.name }}</div>
+                            <div class="wrapper">
+                                <label>
+                                    {{ 'series.volumes' | translate }}
+                                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                        <input tuiTextfield [(ngModel)]="publisher.volumes">
+                                    </tui-textfield>
+                                </label>
+                                <label>
+                                    {{ 'series.chapter' | translate }}
+                                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                        <input tuiTextfield [(ngModel)]="publisher.chapter">
+                                    </tui-textfield>
+                                </label>
+                                <label>
+                                    {{ 'series.start' | translate }}
+                                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                        <input tuiTextfield [(ngModel)]="publisher.start">
+                                    </tui-textfield>
+                                </label>
+                                <label>
+                                    {{ 'series.end' | translate }}
+                                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                        <input tuiTextfield [(ngModel)]="publisher.end">
+                                    </tui-textfield>
+                                </label>
+                            </div>
+                            <div class="wrapper" [style.marginTop.px]="10">
+                                <label>
+                                    {{ 'series.status' | translate }}
+                                    <tui-select tuiTextfieldSize="s" [(ngModel)]="publisher.status" [valueContent]="statusContent" [tuiTextfieldLabelOutside]="true">
+                                        <tui-data-list-wrapper *tuiDataList [itemContent]="statusContent" [items]="seriesPublicationStatuses"></tui-data-list-wrapper>
+                                    </tui-select>
+                                </label>
+                                <label>
+                                    {{ 'language.label' | translate }}
+                                    <tui-select tuiTextfieldSize="s" [(ngModel)]="publisher.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                                        <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLanguages"></tui-data-list-wrapper>
+                                    </tui-select>
+                                </label>
+                                <label class="switch-input">
+                                    {{ "series.origin" | translate }}
+                                    <input tuiSwitch type="checkbox" [(ngModel)]="publisher.origin" [size]="'m'"/>
+                                </label>
+                            </div>
+                        </div>
+                        <ng-container *ngFor="let edition of editSeries.publisher_editions">
+                            <div class="edition" *ngIf="edition.publisher_id == publisher.publisher_id">
+                                <div class="buttons">
+                                    <ng-icon name="tablerMinus" class="remove" (click)="removeEdition(edition)"></ng-icon>
+                                </div>
+                                <div class="wrapper">
+                                    <label>
+                                        {{ 'series.name' | translate }}
+                                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                            <input tuiTextfield [(ngModel)]="edition.name">
+                                        </tui-textfield>
+                                    </label>
+                                    <label>
+                                        {{ 'series.status' | translate }}
+                                        <tui-select tuiTextfieldSize="s" [(ngModel)]="edition.status" [valueContent]="statusContent" [tuiTextfieldLabelOutside]="true">
+                                            <tui-data-list-wrapper *tuiDataList [itemContent]="statusContent" [items]="seriesPublicationStatuses"></tui-data-list-wrapper>
+                                        </tui-select>
+                                    </label>
+                                    <label class="switch-input">
+                                        {{ "series.default" | translate }}
+                                        <input tuiSwitch type="checkbox" [(ngModel)]="edition.default_edition" [size]="'m'"/>
+                                    </label>
+                                </div>
+                                <div class="wrapper" [style.marginTop.px]="10">
+                                    <label>
+                                        {{ 'series.volumes' | translate }}
+                                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                            <input tuiTextfield [(ngModel)]="edition.volumes">
+                                        </tui-textfield>
+                                    </label>
+                                    <label>
+                                        {{ 'series.chapter' | translate }}
+                                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                            <input tuiTextfield [(ngModel)]="edition.chapter">
+                                        </tui-textfield>
+                                    </label>
+                                    <label>
+                                        {{ 'series.start' | translate }}
+                                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                            <input tuiTextfield [(ngModel)]="edition.start">
+                                        </tui-textfield>
+                                    </label>
+                                    <label>
+                                        {{ 'series.end' | translate }}
+                                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                                            <input tuiTextfield [(ngModel)]="edition.end">
+                                        </tui-textfield>
+                                    </label>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'series.contributors' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openContributorDialog()" *ngIf="series">{{ 'series.new-contributor' | translate }}</button>
+                </div>
+                <div class="contributor-wrapper">
+                    <div class="contributor-item" *ngFor="let contributor of editSeries?.contributors" (contextmenu)="removeContributor($event,contributor)">
+                        <div class="image" *ngIf="contributor.image">
+                            <img crossorigin="anonymous" [src]="`${cdn_url}/contributor/image/${contributor.contributor_id}/scaled`">
+                        </div>
+                        <div class="image no-image" *ngIf="!contributor.image">
+                            <ng-icon class="icon" name="tablerPlus"></ng-icon>
+                        </div>
+                        <div class="details">
+                            <div class="name">{{ contributor?.last_name?.toUpperCase() }} {{ contributor?.first_name }}</div>
+                            <label>
+                                {{ 'contributor.role' | translate }}
+                                <tui-select tuiTextfieldSize="s" [(ngModel)]="contributor.type" [valueContent]="contributorTypeContent" [tuiTextfieldLabelOutside]="true">
+                                    <tui-data-list-wrapper *tuiDataList [itemContent]="contributorTypeContent" [items]="contributorTypes"></tui-data-list-wrapper>
+                                </tui-select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'series.tags' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="autoTags()" *ngIf="series">{{ 'series.auto-tags' | translate }}</button>
+                </div>
+                <div class="tag-wrapper">
+                    <div class="tag" *ngFor="let tag of editSeries.tags">
+                        {{ tag.name }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeTag(tag)"></ng-icon>
+                    </div>
+                    <div class="tag add" (click)="openTagDialog()">
+                        <ng-icon name="tablerPlus" class="icon"></ng-icon>&nbsp;{{ 'series.new-tag' | translate }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="button-wrapper">
             <button size="s" tuiButton type="button" class="cancel" appearance="accent" (click)="removeLock()" *ngIf="series">{{ 'series.free-lock' | translate }}</button>
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openScrapeDialog()" *ngIf="series">{{ 'series.scrape' | translate }}</button>
             <tui-loader class="loader" [overlay]="true" [showLoader]="saving">
                 <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveEdit()" *ngIf="series">{{ 'series.save' | translate }}</button>
             </tui-loader>
@@ -133,7 +279,7 @@
                 <input tuiTextfield [(ngModel)]="relationSearch">
             </tui-textfield>
         </label>
-        <tui-data-list class="series-list" [emptyContent]="test">
+        <tui-data-list class="series-list" [emptyContent]="test" auto-animate>
             <div *ngFor="let item of searchedRelations" tuiOption (click)="selectRelation(item)">
                 <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
                 <span class="series-name">{{item.name}} - {{item.type}}</span>
@@ -145,9 +291,100 @@
     </div>
 </div>
 
+<div class="publisher-dialog" (click)="publisherDialogClick($event)" #publisherDialog>
+    <div class="window" [class.show]="showPublisherDialog">
+        <div class="title">{{ 'add-publisher-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-publisher-dialog.search' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="publisherSearchKeyDown($event)">
+                <input tuiTextfield [(ngModel)]="publisherSearch">
+            </tui-textfield>
+        </label>
+        <tui-data-list class="series-list" [emptyContent]="test" auto-animate>
+            <div *ngFor="let item of searchedPublishers" tuiOption (click)="selectPublisher(item)">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
+                <span class="series-name">{{item.name}}</span>
+            </div>
+        </tui-data-list>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addPublisher()">{{ 'add-publisher-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="contributor-dialog" (click)="contributorDialogClick($event)" #contributorDialog>
+    <div class="window" [class.show]="showContributorDialog">
+        <div class="title">{{ 'add-contributor-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-contributor-dialog.search' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="contributorSearchKeyDown($event)">
+                <input tuiTextfield [(ngModel)]="contributorSearch">
+            </tui-textfield>
+        </label>
+        <tui-data-list class="series-list" [emptyContent]="test" auto-animate>
+            <div *ngFor="let item of searchedContributors" tuiOption (click)="selectContributor(item)">
+                <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
+                <span class="series-name">{{item.name}}</span>
+            </div>
+        </tui-data-list>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addContributor()">{{ 'add-contributor-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="tag-dialog" (click)="tagDialogClick($event)" #tagDialog>
+    <div class="window" [class.show]="showTagDialog">
+        <div class="title">{{ 'add-tag-dialog.title' | translate }}</div>
+        <label>
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addTagItem" [valueContent]="tagContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="tagContent" [items]="allTags"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addTag()">{{ 'add-tag-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="scrape-dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
+    <div class="window" [class.show]="showScrapeDialog">
+        <div class="title">{{ 'scrape-dialog.title' | translate }}</div>
+        <label>
+            {{ 'scrape-dialog.url' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="scrapeSearchKeyDown($event)">
+                <input tuiTextfield [(ngModel)]="scraperUrl" [readOnly]="scraping">
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="scraping">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="scrape()">{{ 'scrape-dialog.scrape' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
 <ng-template #typeContent let-item>
     <div class="type-item">
         <span class="type-name">{{ `series.type.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #tagContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `tags.${item.name?.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #contributorTypeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `contributor.${item.key.toLowerCase()}-unknown` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #statusContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `tags.${item.key.toLowerCase()}` | translate }}</span>
     </div>
 </ng-template>
 

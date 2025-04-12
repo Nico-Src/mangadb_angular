@@ -206,10 +206,21 @@
         "descriptions": "Descriptions",
         "new-alias": "New Alias",
         "new-description": "New Description",
-        "new-relation": "New Relation"
+        "new-relation": "New Relation",
+        "new-publisher": "New Publisher", 
+        "new-contributor": "New Contributor",
+        "new-tag": "New Tag",
+        "start": "Start",
+        "end": "End",
+        "origin": "Origin",
+        "default": "Default",
+        "auto-tags": "Auto",
+        "tags": "Tags",
+        "scrape": "Scrape"
     },
 
     "contributor":{
+        "role": "Role",
         "artist-female": "Artist",
         "artist-male": "Artist",
         "artist-unknown": "Artist",
@@ -695,5 +706,28 @@
         "title": "Add Relation",
         "add": "Add",
         "search": "Search"
+    },
+
+    "add-publisher-dialog": {
+        "title": "Add Publisher",
+        "add": "Add",
+        "search": "Search"
+    },
+
+    "add-contributor-dialog": {
+        "title": "Add Contributor",
+        "add": "Add",
+        "search": "Search"
+    },
+
+    "add-tag-dialog": {
+        "title": "Add Tag",
+        "add": "Add"
+    },
+
+    "scrape-dialog": {
+        "title": "Scrape URL",
+        "url": "URL",
+        "scrape": "Scrape"
     }
 }
