@@ -9,6 +9,7 @@
             <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
         </tui-select>
         <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'series.add' | translate }}</button>
     </div>
 </div>
 
@@ -55,6 +56,36 @@
         </tr>
     </tbody>
 </table>
+
+
+<div class="add-dialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window" [class.show]="showAddDialog">
+        <div class="title">{{ 'add-series-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-series-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addSeriesItem.name">
+            </tui-textfield>
+        </label>
+        <label>
+            {{ 'add-series-dialog.type' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addSeriesItem.type" [valueContent]="typeContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="typeContent" [items]="seriesTypes"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingSeries">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addSeries()">{{ 'add-series-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #typeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `series.type.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
 
 <ng-template #orderContent let-item>
     <div class="order-item">

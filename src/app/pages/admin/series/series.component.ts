@@ -5,31 +5,32 @@ import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiTable, TuiTableCell } from '@taiga-ui/addon-table';
-import { TuiTextfield } from '@taiga-ui/core';
+import { TuiAlertService, TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerEdit, tablerLock, tablerSortAscendingLetters, tablerSortDescendingLetters } from '@ng-icons/tabler-icons';
+import { tablerEdit, tablerLock, tablerPlus, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { TuiCell } from '@taiga-ui/layout';
 import { TuiFade, TuiPagination } from '@taiga-ui/kit';
 import { solarGlobal } from '@ng-icons/solar-icons/outline';
 import { solarGlobalBold } from '@ng-icons/solar-icons/bold';
-import { CDN_BASE } from '../../../../globals';
+import { CDN_BASE, errorAlert, getTranslation, SERIES_TYPES, successAlert } from '../../../../globals';
 
 @Component({
     selector: 'app-admin-series',
-    imports: [NgFor,NgIf,TuiTable,TuiTextfield,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
+    imports: [NgFor,NgIf,TuiTable,TuiTextfield,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './series.component.html',
     styleUrl: './series.component.less',
-    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit})]
+    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit,tablerPlus,tablerTrash})]
 })
 export class AdminSeriesComponent {
+    private readonly alerts = inject(TuiAlertService);
     private readonly api = inject(APIService);
     private readonly auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
     cdn_base = CDN_BASE;
-    tableSize:any = 'm';
+    tableSize:any = 's';
     search:string = "";
     currentSearch:string = "";
     prevSearch:string = "";
@@ -44,8 +45,15 @@ export class AdminSeriesComponent {
     series: any = [];
     menuItems = [
         {title: 'edit', icon: 'tablerEdit', action: this.editSeries.bind(this)},
+        {title: 'delete', icon: 'tablerTrash', action: this.confirmDeleteSeries.bind(this)},
     ];
     @ViewChild('dropdown') dropdown:any;
+
+    showAddDialog:boolean = false;
+    @ViewChild('addDialog') addDialog:any;
+    addingSeries:boolean = false;
+    seriesTypes:any = SERIES_TYPES;
+    addSeriesItem:any = {name: undefined, type: this.seriesTypes[0]};
     constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute) { }
     
     ngOnInit() {
@@ -104,5 +112,56 @@ export class AdminSeriesComponent {
     // edit series
     editSeries(ser:any){
         this.router.navigate(['admin','series',ser.id]);
+    }
+
+    // if backdrop of dialog is clicked close it
+    addDialogClick(e:any){
+        if (e.target === this.addDialog.nativeElement) {
+            this.showAddDialog = false;
+        }
+    }
+
+    // open alias dialog
+    openAddDialog(){
+        this.showAddDialog = true;
+    }
+
+    // add series
+    addSeries(){
+        if(!this.addSeriesItem?.name || !this.addSeriesItem?.type?.key) return;
+        this.addingSeries = true;
+
+        this.api.request<string>(HttpMethod.POST, `admin-series/add`, {name: this.addSeriesItem.name, type: this.addSeriesItem.type.key}, 'text').subscribe(async(res:any)=>{
+            const msg = await getTranslation(this.translate, `add-series-dialog.success`);
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.addSeriesItem = {name: '', type: this.seriesTypes[0]};
+            this.loadSeries();
+            this.addingSeries = false;
+            this.showAddDialog = false;
+        }, async (err:any)=>{
+            if(err.status == 409){
+                const msg = await getTranslation(this.translate, `add-series-dialog.exists-already`);
+                errorAlert(this.alerts, msg, undefined, this.translate);
+            } else {
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            }
+            this.addingSeries = false;
+        });
+    }
+
+    // delete series
+    async confirmDeleteSeries(ser:any){
+        if(!ser) return;
+        const msg = await getTranslation(this.translate, 'series.delete-question');
+        const deleteSeries = confirm(msg);
+        if(!deleteSeries) return;
+
+        this.api.request<string>(HttpMethod.DELETE, `admin-series/delete/${ser.id}`, {}, 'text').subscribe(async (res:any)=>{
+            const msg = await getTranslation(this.translate, `series.delete-success`);
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.loadSeries();
+        }, (err:any)=>{
+            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+        });
     }
 }
