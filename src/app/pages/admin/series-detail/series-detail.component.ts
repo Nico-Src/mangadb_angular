@@ -17,6 +17,7 @@ import { NgAutoAnimateDirective } from 'ng-auto-animate';
 import { TUI_EDITOR_DEFAULT_EXTENSIONS, TUI_EDITOR_DEFAULT_TOOLS, TUI_EDITOR_EXTENSIONS, TuiEditor } from '@taiga-ui/editor';
 import { SideBarService } from '../../../../services/sidebar.service';
 import { HttpClient } from '@angular/common/http';
+import { matFaceOutline } from '@ng-icons/material-icons/outline';
 
 @Component({
     selector: 'app-admin-series-detail',
@@ -33,7 +34,7 @@ import { HttpClient } from '@angular/common/http';
           ],
         },
     ],
-    viewProviders: [provideIcons({tablerX,tablerPlus,tablerMinus})]
+    viewProviders: [provideIcons({tablerX,tablerPlus,tablerMinus,matFaceOutline})]
 })
 export class AdminSeriesDetailComponent {
     private readonly sidebar = inject(SideBarService);

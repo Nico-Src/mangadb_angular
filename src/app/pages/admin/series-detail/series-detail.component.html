@@ -1,12 +1,12 @@
 <div class="banner-wrapper">
     <div class="banner" *ngIf="series">
-        <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" fit="cover" [blur]="true" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+        <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="false" [nsfw18]="false" fit="cover" [blur]="true" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
         <div class="banner-overlay"></div>
     </div>
     <div class="content" *ngIf="series" [class.loading]="loading">
         <div class="top-wrapper">
             <div class="cover-wrapper">
-                <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="series.volume.nsfw === 1" [nsfw18]="series.volume.nsfw18 === 1" [res]="'high'" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
+                <manga-cover *ngIf="series.volume?.id" [id]="series.volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [aspectRatio]="series.volume.aspect_ratio"></manga-cover>
             </div>
             <div class="details" *ngIf="editSeries">
                 <label>
@@ -196,7 +196,7 @@
                             <img crossorigin="anonymous" [src]="`${cdn_url}/contributor/image/${contributor.contributor_id}/scaled`">
                         </div>
                         <div class="image no-image" *ngIf="!contributor.image">
-                            <ng-icon class="icon" name="tablerPlus"></ng-icon>
+                            <ng-icon class="icon" name="matFaceOutline"></ng-icon>
                         </div>
                         <div class="details">
                             <div class="name">{{ contributor?.last_name?.toUpperCase() }} {{ contributor?.first_name }}</div>
