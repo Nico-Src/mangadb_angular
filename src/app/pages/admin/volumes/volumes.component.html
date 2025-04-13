@@ -1,0 +1,108 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'volume.add' | translate }}</button>
+    </div>
+</div>
+
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="volumes-table">
+    <thead>
+        <tr>
+            <th tuiTh [style.width.%]="25">{{ 'series.name' | translate }}</th>
+            <th tuiTh [style.width.%]="65">Series</th>
+            <th tuiTh [style.width.%]="10" [style.textAlign]="'center'">Language</th>
+        </tr>
+    </thead>
+    <tbody tuiTbody>
+        <ng-container *ngFor="let item of groups">
+            <tr tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown" class="group">
+                <ng-template #contextMenu>
+                    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                        <button *ngFor="let menuItem of groupMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
+                            <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                            <span>{{ `volume.context.${menuItem.title}` | translate }}</span>
+                        </button>
+                    </tui-data-list>
+                </ng-template>
+                <td tuiTd [style.maxWidth.%]="25">
+                    {{ item.name }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="65">
+                    [{{ item.series?.type }}] {{ item.series?.name }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="10">
+                    
+                </td>
+            </tr>
+            <tr *ngFor="let volume of item.volumes" [class.locked]="volume.lockedBy?.id" tuiDropdownContext [tuiDropdown]="contextMenuVolume" #dropdownVolume="tuiDropdown">
+                <ng-template #contextMenuVolume>
+                    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                        <button *ngFor="let menuItem of volumeMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdownVolume.toggle(false)">
+                            <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                            <span>{{ `volume.context.${menuItem.title}` | translate }}</span>
+                        </button>
+                    </tui-data-list>
+                </ng-template>
+                <td tuiTd [style.maxWidth.%]="25">
+                    {{ volume.name }}<span *ngIf="volume.special == true"> - {{ volume.special_name }}</span><span *ngIf="volume.nsfw == true" class="rating">16+</span><span *ngIf="volume.nsfw18 == true" class="rating">18+</span>
+                </td>
+                <td tuiTd [style.maxWidth.%]="65">
+                    [{{ item.series?.type }}] {{ item.series?.name }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="10" [style.textAlign]="'center'">
+                    <img [src]="`/img/flags/${toLoc(volume.language)}.png`" class="flag">
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+
+<div class="edit-group-dialog" (click)="editGroupDialogClick($event)" #editGroupDialog>
+    <div class="window" [class.show]="showEditGroupDialog">
+        <div class="title">{{ 'edit-group-dialog.title' | translate }}</div>
+        <label *ngIf="editGroupItem">
+            {{ 'edit-group-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="editGroupItem.name">
+            </tui-textfield>
+        </label>
+        <tui-combo-box [(ngModel)]="editGroupItem.series" *ngIf="editGroupItem" [valueContent]="seriesContent">
+            {{ 'edit-group-dialog.series' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            [{{ item.type }}] {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="savingGroupEdit">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveGroupEdit()">{{ 'edit-group-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #seriesContent let-item>
+    <div class="series-item">
+        <span class="series-name">[{{ item.type }}] {{ item.name }}</span>
+    </div>
+</ng-template>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>

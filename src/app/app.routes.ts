@@ -19,6 +19,7 @@ import { ListDetailComponent } from './pages/list-detail/list-detail.component';
 import { AdminSeriesComponent } from './pages/admin/series/series.component';
 import { AdminSeriesDetailComponent } from './pages/admin/series-detail/series-detail.component';
 import { EditGuard } from '../guards/editGuard';
+import { AdminVolumesComponent } from './pages/admin/volumes/volumes.component';
 
 export const routes: Routes = [
     {
@@ -116,6 +117,14 @@ export const routes: Routes = [
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR],
             route: 'series'
+        }
+    },
+    {
+        path: 'admin/volumes',
+        component: AdminVolumesComponent,
+        canActivate: [RoleGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR]
         }
     },
     // auto redirect

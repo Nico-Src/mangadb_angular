@@ -76,7 +76,7 @@
     <ng-icon name="lucideLibrary" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.admin-series' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/admin-volumes']" [class.active]="router.url === '/admin/volumes'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-volumes' | translate) ">
+<div class="item" [routerLink]="['/admin/volumes']" [class.active]="router.url.startsWith('/admin/volumes')" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-volumes' | translate) ">
     <ng-icon name="lucideBook" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.admin-volumes' | translate }}</span>
 </div>

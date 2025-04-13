@@ -62,7 +62,8 @@
         "privacy": "Privacy",
         "imprint": "Imprint",
         "admin-dashboard": "Admin-Dashboard",
-        "admin-series": "Admin-Series"
+        "admin-series": "Admin-Series",
+        "admin-volumes": "Admin-Volumes"
     },
 
     "sidebar": {
@@ -143,8 +144,14 @@
             "quick-view": "Quick-View",
             "edit-price": "Edit Price",
             "edit-date": "Edit Buy Date",
-            "remove-from-list": "Remove from List"
-        }
+            "remove-from-list": "Remove from List",
+            "edit": "Edit",
+            "delete": "Delete",
+            "reorder": "Reorder",
+            "reorder-groups": "Reorder Groups",
+            "auto-reorder": "Auto Reorder"
+        },
+        "add": "Add Volumes"
     },
 
     "series": {
@@ -195,7 +202,8 @@
         "aliases": "Other Titles",
         "currently-edited": "Currently edited by",
         "context": {
-            "edit": "Edit"
+            "edit": "Edit",
+            "delete": "Delete"
         },
         "name": "Name",
         "slug": "Slug",
@@ -216,7 +224,10 @@
         "default": "Default",
         "auto-tags": "Auto",
         "tags": "Tags",
-        "scrape": "Scrape"
+        "scrape": "Scrape",
+        "add": "Add Series",
+        "delete-question": "Are you sure you want to delete this series. This action cannot be undone.",
+        "delete-success": "Series deleted successfully."
     },
 
     "contributor":{
@@ -520,7 +531,8 @@
             "priority": "Priority",
             "score": "Score",
             "end-date": "End Date",
-            "start-date": "Start Date"
+            "start-date": "Start Date",
+            "series-title": "Series Title"
         }
     },
 
@@ -729,5 +741,22 @@
         "title": "Scrape URL",
         "url": "URL",
         "scrape": "Scrape"
+    },
+
+    "add-series-dialog": {
+        "title": "Add Series",
+        "add": "Add",
+        "name": "Name",
+        "type": "Type",
+        "success": "Series added successfully.",
+        "exists-already": "Series with this name and type exists already."
+    },
+
+    "edit-group-dialog": {
+        "title": "Edit Group",
+        "name": "Name",
+        "series": "Series",
+        "save": "Save",
+        "success": "Changes saved successfully."
     }
 }
