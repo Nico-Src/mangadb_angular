@@ -151,7 +151,8 @@
             "reorder-groups": "Reorder Groups",
             "auto-reorder": "Auto Reorder"
         },
-        "add": "Add Volumes"
+        "add": "Add Volume",
+        "add-group": "Add Group"
     },
 
     "series": {
@@ -758,5 +759,18 @@
         "series": "Series",
         "save": "Save",
         "success": "Changes saved successfully."
+    },
+
+    "reorder-dialog": {
+        "title": "Reorder Volumes",
+        "save": "Save",
+        "auto": "Auto",
+        "success": "Volume Order updated successfully."
+    },
+
+    "reorder-group-dialog": {
+        "title": "Reorder Volume Groups",
+        "save": "Save",
+        "success": "Group Order updated successfully."
     }
 }

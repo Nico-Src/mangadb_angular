@@ -10,6 +10,7 @@
         </tui-select>
         <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
         <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'volume.add' | translate }}</button>
+        <button size="s" tuiButton type="button" class="save" appearance="accent"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'volume.add-group' | translate }}</button>
     </div>
 </div>
 
@@ -39,7 +40,7 @@
                     [{{ item.series?.type }}] {{ item.series?.name }}
                 </td>
                 <td tuiTd [style.maxWidth.%]="10">
-                    
+                    <tui-loader [size]="'s'" class="loader" [showLoader]="item.updating" [style.width.%]="100"></tui-loader>
                 </td>
             </tr>
             <tr *ngFor="let volume of item.volumes" [class.locked]="volume.lockedBy?.id" tuiDropdownContext [tuiDropdown]="contextMenuVolume" #dropdownVolume="tuiDropdown">
@@ -89,6 +90,40 @@
         <div class="button-wrapper">
             <tui-loader class="loader" [overlay]="true" [showLoader]="savingGroupEdit">
                 <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveGroupEdit()">{{ 'edit-group-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="reorder-dialog" (click)="reorderDialogClick($event)" #reorderDialog>
+    <div class="window" [class.show]="showReorderDialog">
+        <div class="title">{{ 'reorder-dialog.title' | translate }}</div>
+        <div class="volume-wrapper" cdkDropList (cdkDropListDropped)="volumeDrop($event)">
+            <div *ngFor="let vol of reorderVolumes" class="volume" cdkDrag cdkDragPreviewContainer="parent">
+                <span>{{ vol.name }}<span *ngIf="vol.special == true"> - {{ vol.special_name }}</span></span>
+                <img [src]="`/img/flags/${toLoc(vol.language)}.png`">
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="autoOrderVolumes()">{{ 'reorder-dialog.auto' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="savingOrder">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveVolumeOrder()">{{ 'reorder-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="reorder-group-dialog" (click)="reorderGroupDialogClick($event)" #reorderGroupDialog>
+    <div class="window" [class.show]="showReorderGroupDialog">
+        <div class="title">{{ 'reorder-group-dialog.title' | translate }}</div>
+        <div class="volume-wrapper" cdkDropList (cdkDropListDropped)="groupDrop($event)">
+            <div *ngFor="let group of reorderGroups" class="volume" cdkDrag cdkDragPreviewContainer="parent">
+                <span>{{ group.name }}</span>
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="savingGroupOrder">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveGroupOrder()">{{ 'reorder-group-dialog.save' | translate }}</button>
             </tui-loader>
         </div>
     </div>
