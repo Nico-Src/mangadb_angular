@@ -152,7 +152,14 @@
             "auto-reorder": "Auto Reorder"
         },
         "add": "Add Volume",
-        "add-group": "Add Group"
+        "add-group": "Add Group",
+        "delete-question": "Are you sure you want to delete this volume? This action cannot be undone.",
+        "delete-success": "Volume deleted successfully."
+    },
+
+    "group": {
+        "delete-question": "Are you sure you want to delete this group. This action cannot be undone.",
+        "delete-success": "Group deleted successfully."
     },
 
     "series": {
@@ -227,7 +234,7 @@
         "tags": "Tags",
         "scrape": "Scrape",
         "add": "Add Series",
-        "delete-question": "Are you sure you want to delete this series. This action cannot be undone.",
+        "delete-question": "Are you sure you want to delete this series? This action cannot be undone.",
         "delete-success": "Series deleted successfully."
     },
 
@@ -723,6 +730,7 @@
 
     "add-publisher-dialog": {
         "title": "Add Publisher",
+        "publisher": "Publisher",
         "add": "Add",
         "search": "Search"
     },
@@ -730,6 +738,7 @@
     "add-contributor-dialog": {
         "title": "Add Contributor",
         "add": "Add",
+        "contributor": "Contributor",
         "search": "Search"
     },
 
@@ -772,5 +781,27 @@
         "title": "Reorder Volume Groups",
         "save": "Save",
         "success": "Group Order updated successfully."
+    },
+
+    "add-group-dialog": {
+        "title": "Add Group",
+        "add": "Add",
+        "name": "Name",
+        "series": "Series",
+        "success": "Group added successfully.",
+        "exists-already": "Group with name exists already in your selected series."
+    },
+
+    "add-volume-dialog": {
+        "title": "Add Volume",
+        "add": "Add",
+        "name": "Name",
+        "group": "Group",
+        "edition": "Edition",
+        "language": "Language",
+        "success": "Volume(s) added successfully.",
+        "range-start-bigger": "Range start must be smaller than end.",
+        "range-start-small": "Range start must be bigger than 0.",
+        "range-too-big": "Not enough matching groups found."
     }
 }

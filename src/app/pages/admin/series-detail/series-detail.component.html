@@ -273,18 +273,18 @@
 <div class="relation-dialog" (click)="relationDialogClick($event)" #relationDialog>
     <div class="window" [class.show]="showRelationDialog">
         <div class="title">{{ 'add-relation-dialog.title' | translate }}</div>
-        <label>
-            {{ 'add-relation-dialog.search' | translate }}
-            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="relationSearchKeyDown($event)">
-                <input tuiTextfield [(ngModel)]="relationSearch">
-            </tui-textfield>
-        </label>
-        <tui-data-list class="series-list" [emptyContent]="test" auto-animate>
-            <div *ngFor="let item of searchedRelations" tuiOption (click)="selectRelation(item)">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
-                <span class="series-name">{{item.name}} - {{item.type}}</span>
-            </div>
-        </tui-data-list>
+        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="seriesContent" [stringify]="stringifySeries" [tuiTextfieldSize]="'m'">
+            {{ 'edit-group-dialog.series' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            [{{ item.type }}] {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
         <div class="button-wrapper">
             <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addRelation()">{{ 'add-relation-dialog.add' | translate }}</button>
         </div>
@@ -294,18 +294,18 @@
 <div class="publisher-dialog" (click)="publisherDialogClick($event)" #publisherDialog>
     <div class="window" [class.show]="showPublisherDialog">
         <div class="title">{{ 'add-publisher-dialog.title' | translate }}</div>
-        <label>
-            {{ 'add-publisher-dialog.search' | translate }}
-            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="publisherSearchKeyDown($event)">
-                <input tuiTextfield [(ngModel)]="publisherSearch">
-            </tui-textfield>
-        </label>
-        <tui-data-list class="series-list" [emptyContent]="test" auto-animate>
-            <div *ngFor="let item of searchedPublishers" tuiOption (click)="selectPublisher(item)">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
-                <span class="series-name">{{item.name}}</span>
-            </div>
-        </tui-data-list>
+        <tui-combo-box [(ngModel)]="addPublisherItem" [valueContent]="publisherContent" [stringify]="stringifyPublisher" [tuiTextfieldSize]="'m'">
+            {{ 'add-publisher-dialog.publisher' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedPublishers | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
         <div class="button-wrapper">
             <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addPublisher()">{{ 'add-publisher-dialog.add' | translate }}</button>
         </div>
@@ -315,18 +315,18 @@
 <div class="contributor-dialog" (click)="contributorDialogClick($event)" #contributorDialog>
     <div class="window" [class.show]="showContributorDialog">
         <div class="title">{{ 'add-contributor-dialog.title' | translate }}</div>
-        <label>
-            {{ 'add-contributor-dialog.search' | translate }}
-            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="contributorSearchKeyDown($event)">
-                <input tuiTextfield [(ngModel)]="contributorSearch">
-            </tui-textfield>
-        </label>
-        <tui-data-list class="series-list" [emptyContent]="test" auto-animate>
-            <div *ngFor="let item of searchedContributors" tuiOption (click)="selectContributor(item)">
-                <input tuiCheckbox type="checkbox" [(ngModel)]="item.selected"/>
-                <span class="series-name">{{item.name}}</span>
-            </div>
-        </tui-data-list>
+        <tui-combo-box [(ngModel)]="addContributorItem" [valueContent]="contributorContent" [stringify]="stringifyContributor" [tuiTextfieldSize]="'m'">
+            {{ 'add-contributor-dialog.contributor' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedContributors | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
         <div class="button-wrapper">
             <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addContributor()">{{ 'add-contributor-dialog.add' | translate }}</button>
         </div>
@@ -404,6 +404,24 @@
     <div class="language-item">
         <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #seriesContent let-item>
+    <div class="series-item">
+        <span class="series-name">[{{ item.type }}] {{ item.name }}</span>
+    </div>
+</ng-template>
+
+<ng-template #publisherContent let-item>
+    <div class="publisher-item">
+        <span class="publisher-name">{{ item.name }}</span>
+    </div>
+</ng-template>
+
+<ng-template #contributorContent let-item>
+    <div class="contributor-item">
+        <span class="contributor-name">{{ item.name }}</span>
     </div>
 </ng-template>
 

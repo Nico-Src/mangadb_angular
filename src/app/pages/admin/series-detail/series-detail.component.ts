@@ -7,10 +7,10 @@ import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiAlertService, TuiButton, TuiDataList, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { Location, NgFor, NgIf } from '@angular/common';
 import { MangaCover } from '../../../manga-cover/manga-cover.component';
-import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CDN_BASE, CONTRIBUTOR_TYPES, errorAlert, getOriginByLang, getTranslation, LANGS, langToLocale, localeToLang, SCRAPER_BASE, SERIES_PUBLICATION_STATUSES, SERIES_RELATION_TYPES, SERIES_TYPES, successAlert } from '../../../../globals';
-import { TuiCheckbox, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
+import { TuiCheckbox, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerMinus, tablerPlus, tablerX } from '@ng-icons/tabler-icons';
 import { NgAutoAnimateDirective } from 'ng-auto-animate';
@@ -18,10 +18,34 @@ import { TUI_EDITOR_DEFAULT_EXTENSIONS, TUI_EDITOR_DEFAULT_TOOLS, TUI_EDITOR_EXT
 import { SideBarService } from '../../../../services/sidebar.service';
 import { HttpClient } from '@angular/common/http';
 import { matFaceOutline } from '@ng-icons/material-icons/outline';
+import { TuiLet, TuiStringHandler } from '@taiga-ui/cdk';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
+interface SeriesItem {
+    type: string;
+    name: string;
+};
+
+interface PublisherItem {
+    name: string;
+};
+
+interface ContributorItem {
+    name: string;
+};
+
+const STRINGIFY_SERIES: TuiStringHandler<SeriesItem> = (item: SeriesItem) =>
+    `[${item.type}] ${item.name}`;
+
+const STRINGIFY_PUBLISHER: TuiStringHandler<PublisherItem> = (item: PublisherItem) =>
+    `${item.name}`;
+
+const STRINGIFY_CONTRIBUTOR: TuiStringHandler<ContributorItem> = (item: ContributorItem) =>
+    `${item.name}`;
 
 @Component({
     selector: 'app-admin-series-detail',
-    imports: [TranslatePipe,TuiButton,NgIf,NgFor,MangaCover,TuiEditor,TuiTabs,TuiDataList,NgAutoAnimateDirective,TuiCheckbox,TuiTextfield,TuiLoader,NgIcon,TuiTextfieldControllerModule,TuiSelectModule,ReactiveFormsModule,FormsModule,TuiSwitch],
+    imports: [TranslatePipe,TuiButton,NgIf,NgFor,MangaCover,TuiEditor,TuiTabs,TuiComboBoxModule,ScrollingModule,TuiLet,TuiFilterByInputPipe,TuiDataList,TuiTextfield,TuiLoader,NgIcon,TuiTextfieldControllerModule,TuiSelectModule,ReactiveFormsModule,FormsModule,TuiSwitch],
     templateUrl: './series-detail.component.html',
     styleUrl: './series-detail.component.less',
     providers: [
@@ -33,6 +57,9 @@ import { matFaceOutline } from '@ng-icons/material-icons/outline';
             import('@taiga-ui/editor').then(({setup}) => setup({injector})),
           ],
         },
+        tuiItemsHandlersProvider({stringify: STRINGIFY_SERIES}),
+        tuiItemsHandlersProvider({stringify: STRINGIFY_PUBLISHER}),
+        tuiItemsHandlersProvider({stringify: STRINGIFY_CONTRIBUTOR}),
     ],
     viewProviders: [provideIcons({tablerX,tablerPlus,tablerMinus,matFaceOutline})]
 })
@@ -41,6 +68,11 @@ export class AdminSeriesDetailComponent {
     private readonly alerts = inject(TuiAlertService);
     private readonly api = inject(APIService);
     readonly cdn_url = CDN_BASE;
+
+    stringifySeries = STRINGIFY_SERIES;
+    stringifyPublisher = STRINGIFY_PUBLISHER;
+    stringifyContributor = STRINGIFY_CONTRIBUTOR;
+
     series:any = null;
     allSeries:any = [];
     allPublishers:any = [];
@@ -67,25 +99,16 @@ export class AdminSeriesDetailComponent {
     showRelationDialog:boolean = false;
     addRelationItem:any = null;
     @ViewChild('relationDialog') relationDialog:any;
-    relationSearch: any = '';
-    searchedRelations:any = [];
-    selectedRelation:any = null;
     relationTypes:any = SERIES_RELATION_TYPES;
 
     seriesPublicationStatuses:any = SERIES_PUBLICATION_STATUSES;
     showPublisherDialog:boolean = false;
     addPublisherItem:any = null;
     @ViewChild('publisherDialog') publisherDialog:any;
-    publisherSearch: any = '';
-    searchedPublishers:any = [];
-    selectedPublisher:any = null;
 
     showContributorDialog:boolean = false;
     addContributorItem:any = null;
     @ViewChild('contributorDialog') contributorDialog:any;
-    contributorSearch: any = '';
-    searchedContributors:any = [];
-    selectedContributor:any = null;
     contributorTypes:any = CONTRIBUTOR_TYPES;
 
     showTagDialog:boolean = false;
@@ -106,6 +129,21 @@ export class AdminSeriesDetailComponent {
 
         this.addLock(id);
         this.loadSeries(id);
+    }
+
+    // get series array cast to series item
+    get typedSeries(): SeriesItem[] {
+        return this.allSeries as SeriesItem[];
+    }
+
+    // get publisher array cast to publisher item
+    get typedPublishers(): PublisherItem[] {
+        return this.allPublishers as PublisherItem[];
+    }
+
+    // get contributor array cast to contributor item
+    get typedContributors(): ContributorItem[] {
+        return this.allContributors as ContributorItem[];
     }
 
     // load series data
@@ -429,8 +467,7 @@ export class AdminSeriesDetailComponent {
     relationDialogClick(e:any){
         if (e.target === this.relationDialog.nativeElement) {
             this.showRelationDialog = false;
-            this.searchedRelations = [];
-            this.relationSearch = '';
+            this.addRelationItem = null;
         }
     }
 
@@ -443,8 +480,7 @@ export class AdminSeriesDetailComponent {
     publisherDialogClick(e:any){
         if (e.target === this.publisherDialog.nativeElement) {
             this.showPublisherDialog = false;
-            this.searchedPublishers = [];
-            this.publisherSearch = '';
+            this.addPublisherItem = null;
         }
     }
 
@@ -457,8 +493,7 @@ export class AdminSeriesDetailComponent {
     contributorDialogClick(e:any){
         if (e.target === this.contributorDialog.nativeElement) {
             this.showContributorDialog = false;
-            this.searchedContributors = [];
-            this.contributorSearch = '';
+            this.addContributorItem = null;
         }
     }
 
@@ -525,68 +560,17 @@ export class AdminSeriesDetailComponent {
         }
     }
 
-    // keydown event handler for relation search
-    relationSearchKeyDown(e:any){
-        if(e.key == 'Enter' && this.relationSearch.length >= 3){
-            this.searchedRelations = this.allSeries.filter((s:any)=>s.name.toLowerCase().includes(this.relationSearch.toLowerCase()));
-        }
-    }
-
-    // select relation
-    selectRelation(item:any){
-        for(const item of this.allSeries){
-            item.selected = false;
-        }
-
-        if(item) item.selected = true;
-    }
-
-    // keydown event handler for publisher search
-    publisherSearchKeyDown(e:any){
-        if(e.key == 'Enter' && this.publisherSearch.length >= 3){
-            this.searchedPublishers = this.allPublishers.filter((p:any)=>p.name.toLowerCase().includes(this.publisherSearch.toLowerCase()));
-        }
-    }
-
-    // select publisher
-    selectPublisher(item:any){
-        for(const item of this.allPublishers){
-            item.selected = false;
-        }
-
-        if(item) item.selected = true;
-    }
-
-    // keydown event handler for contributor search
-    contributorSearchKeyDown(e:any){
-        if(e.key == 'Enter' && this.contributorSearch.length >= 3){
-            this.searchedContributors = this.allContributors.filter((p:any)=>p.name.toLowerCase().includes(this.contributorSearch.toLowerCase()));
-        }
-    }
-
-    // select contributor
-    selectContributor(item:any){
-        for(const item of this.allContributors){
-            item.selected = false;
-        }
-
-        if(item) item.selected = true;
-    }
-
     // add relation
     addRelation(){
-        const relationItem = this.allSeries.find((s:any)=>s.selected);
-        if(!relationItem) return;
+        if(!this.addRelationItem) return;
         this.editSeries.relations.push({
             id: -1,
-            relation_id: relationItem.id,
-            name: relationItem.name,
+            relation_id: this.addRelationItem.id,
+            name: this.addRelationItem.name,
             relation_type: SERIES_RELATION_TYPES.find(c => c.key === 'Spin-Off')
         });
         this.showRelationDialog = false;
-        this.searchedRelations = [];
-        this.relationSearch = '';
-        this.selectRelation(null);
+        this.addRelationItem = null;
     }
 
     // remove relation
@@ -621,8 +605,7 @@ export class AdminSeriesDetailComponent {
 
     // add publisher
     addPublisher(){
-        const publisherItem = this.allPublishers.find((s:any)=>s.selected);
-        if(!publisherItem) return;
+        if(!this.addPublisherItem) return;
         this.editSeries.publishers.push({
             id: -1,
             chapter: 0,
@@ -633,33 +616,28 @@ export class AdminSeriesDetailComponent {
             end: '0',
             language: this.availableLanguages.find(l => l.value === 'en'),
             status: this.seriesPublicationStatuses.find((s:any) => s.key === 'Ongoing'),
-            publisher_id: publisherItem.id,
-            name: publisherItem.name
+            publisher_id: this.addPublisherItem.id,
+            name: this.addPublisherItem.name
         });
         this.showPublisherDialog = false;
-        this.searchedPublishers = [];
-        this.publisherSearch = '';
-        this.selectPublisher(null);
+        this.addPublisherItem = null;
     }
 
     // add contributor
     addContributor(){
-        const contributorItem = this.allContributors.find((s:any)=>s.selected);
-        if(!contributorItem) return;
+        if(!this.addContributorItem) return;
 
         this.editSeries.contributors.push({
             id: -1,
-            first_name: contributorItem.first_name,
-            last_name: contributorItem.last_name,
-            contributor_id: contributorItem.id,
-            image: contributorItem.image,
+            first_name: this.addContributorItem.first_name,
+            last_name: this.addContributorItem.last_name,
+            contributor_id: this.addContributorItem.id,
+            image: this.addContributorItem.image,
             type: this.contributorTypes[0]
         })
 
         this.showContributorDialog = false;
-        this.searchedContributors = [];
-        this.contributorSearch = '';
-        this.selectContributor(null);
+        this.addContributorItem = null;
     }
 
     // remove contributor

@@ -81,7 +81,7 @@
                 <span>{{name.label}}</span>
             </div>
         </div>
-        <tui-combo-box [(ngModel)]="addVolumeItem.group" [valueContent]="groupContent" (ngModelChange)="addVolumeGroupChanged($event)" [stringify]="stringifyGroup">
+        <tui-combo-box [(ngModel)]="addVolumeItem.group" [valueContent]="groupContent" (ngModelChange)="addVolumeGroupChanged($event)" [stringify]="stringifyGroup" [tuiTextfieldSize]="'m'">
             {{ 'add-volume-dialog.group' | translate }}
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedGroups | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
@@ -93,7 +93,7 @@
                 </cdk-virtual-scroll-viewport>
             </ng-container>
         </tui-combo-box>
-        <tui-combo-box [(ngModel)]="addVolumeItem.edition" [valueContent]="editionContent" [style.marginTop.px]="10" [stringify]="stringifyEdition">
+        <tui-combo-box [(ngModel)]="addVolumeItem.edition" [valueContent]="editionContent" [style.marginTop.px]="10" [stringify]="stringifyEdition" [tuiTextfieldSize]="'m'">
             {{ 'add-volume-dialog.edition' | translate }}
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedEditions | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
@@ -128,7 +128,7 @@
                 <input tuiTextfield [(ngModel)]="addGroupItem.name">
             </tui-textfield>
         </label>
-        <tui-combo-box [(ngModel)]="addGroupItem.series" [valueContent]="seriesContent" [stringify]="stringifySeries">
+        <tui-combo-box [(ngModel)]="addGroupItem.series" [valueContent]="seriesContent" [stringify]="stringifySeries" [tuiTextfieldSize]="'m'">
             {{ 'add-group-dialog.series' | translate }}
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
@@ -157,7 +157,7 @@
                 <input tuiTextfield [(ngModel)]="editGroupItem.name">
             </tui-textfield>
         </label>
-        <tui-combo-box [(ngModel)]="editGroupItem.series" *ngIf="editGroupItem" [valueContent]="seriesContent" [stringify]="stringifySeries">
+        <tui-combo-box [(ngModel)]="editGroupItem.series" *ngIf="editGroupItem" [valueContent]="seriesContent" [stringify]="stringifySeries" [tuiTextfieldSize]="'m'">
             {{ 'edit-group-dialog.series' | translate }}
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
