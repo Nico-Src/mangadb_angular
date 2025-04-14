@@ -10,7 +10,7 @@
         </tui-select>
         <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
         <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'volume.add' | translate }}</button>
-        <button size="s" tuiButton type="button" class="save" appearance="accent"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'volume.add-group' | translate }}</button>
+        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddGroupDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'volume.add-group' | translate }}</button>
     </div>
 </div>
 
@@ -46,7 +46,7 @@
             <tr *ngFor="let volume of item.volumes" [class.locked]="volume.lockedBy?.id" tuiDropdownContext [tuiDropdown]="contextMenuVolume" #dropdownVolume="tuiDropdown">
                 <ng-template #contextMenuVolume>
                     <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
-                        <button *ngFor="let menuItem of volumeMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdownVolume.toggle(false)">
+                        <button *ngFor="let menuItem of volumeMenuItems" tuiOption type="button" (click)="menuItem.action(volume); dropdownVolume.toggle(false)">
                             <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
                             <span>{{ `volume.context.${menuItem.title}` | translate }}</span>
                         </button>
@@ -66,6 +66,88 @@
     </tbody>
 </table>
 
+<div class="add-dialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window" [class.show]="showAddDialog">
+        <div class="title">{{ 'add-volume-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-volume-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addVolumeItem.name">
+            </tui-textfield>
+        </label>
+        <div class="volume-names">
+            <div class="name" *ngFor="let name of localizedVolumeNames" (click)="addVolumeItem.name = name.label">
+                <img [src]="`/img/flags/${name.key}.png`">
+                <span>{{name.label}}</span>
+            </div>
+        </div>
+        <tui-combo-box [(ngModel)]="addVolumeItem.group" [valueContent]="groupContent" (ngModelChange)="addVolumeGroupChanged($event)" [stringify]="stringifyGroup">
+            {{ 'add-volume-dialog.group' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedGroups | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            {{ item.name }} - {{ item.s_name }} [{{item.s_type}}]
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
+        <tui-combo-box [(ngModel)]="addVolumeItem.edition" [valueContent]="editionContent" [style.marginTop.px]="10" [stringify]="stringifyEdition">
+            {{ 'add-volume-dialog.edition' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedEditions | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            {{ item.name }} - {{ item.language }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
+        <label [style.marginTop.px]="10" [style.display]="'block'">
+            {{ 'add-volume-dialog.language' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addVolumeItem.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLangs"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingVolume">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addVolume()">{{ 'add-volume-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="add-group-dialog" (click)="addGroupDialogClick($event)" #addGroupDialog>
+    <div class="window" [class.show]="showAddGroupDialog">
+        <div class="title">{{ 'add-group-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-group-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addGroupItem.name">
+            </tui-textfield>
+        </label>
+        <tui-combo-box [(ngModel)]="addGroupItem.series" [valueContent]="seriesContent" [stringify]="stringifySeries">
+            {{ 'add-group-dialog.series' | translate }}
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            [{{ item.type }}] {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingGroup">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addGroup()">{{ 'add-group-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
 <div class="edit-group-dialog" (click)="editGroupDialogClick($event)" #editGroupDialog>
     <div class="window" [class.show]="showEditGroupDialog">
         <div class="title">{{ 'edit-group-dialog.title' | translate }}</div>
@@ -75,7 +157,7 @@
                 <input tuiTextfield [(ngModel)]="editGroupItem.name">
             </tui-textfield>
         </label>
-        <tui-combo-box [(ngModel)]="editGroupItem.series" *ngIf="editGroupItem" [valueContent]="seriesContent">
+        <tui-combo-box [(ngModel)]="editGroupItem.series" *ngIf="editGroupItem" [valueContent]="seriesContent" [stringify]="stringifySeries">
             {{ 'edit-group-dialog.series' | translate }}
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
@@ -135,9 +217,28 @@
     </div>
 </ng-template>
 
+<ng-template #groupContent let-item>
+    <div class="group-item">
+        <span class="group-name">{{ item.name }} - {{ item.s_name }} [{{ item.s_type }}]</span>
+    </div>
+</ng-template>
+
+<ng-template #editionContent let-item>
+    <div class="edition-item">
+        <span class="edition-name">{{ item.name }} - {{ item.language }}</span>
+    </div>
+</ng-template>
+
 <ng-template #orderContent let-item>
     <div class="order-item">
         <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
         <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>

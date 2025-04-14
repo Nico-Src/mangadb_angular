@@ -6,7 +6,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiTable, TuiTableCell } from '@taiga-ui/addon-table';
-import { TuiAlertService, TuiButton, TuiDataList, TuiLoader, TuiTextfield } from '@taiga-ui/core';
+import { TuiAlertService, TuiButton, TuiDataList, TuiHintHost, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -16,24 +16,42 @@ import { TuiCell } from '@taiga-ui/layout';
 import { TuiFade, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiPagination, } from '@taiga-ui/kit';
 import { solarGlobal, solarMagicStick3 } from '@ng-icons/solar-icons/outline';
 import { solarGlobalBold } from '@ng-icons/solar-icons/bold';
-import { CDN_BASE, errorAlert, getTranslation, LANGS, SERIES_TYPES, successAlert, langToLocale } from '../../../../globals';
+import { CDN_BASE, errorAlert, getTranslation, LANGS, SERIES_TYPES, successAlert, langToLocale, localeToLang } from '../../../../globals';
 import { TuiLet, TuiStringHandler } from '@taiga-ui/cdk';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
+import { EdgesGeometry } from 'three';
 
 interface SeriesItem {
     type: string;
     name: string;
 };
 
+interface EditionItem {
+    name: string;
+    language: string;
+};
+
+interface GroupItem {
+    name: string;
+    s_name: string;
+    s_type: string;
+};
+
 const STRINGIFY_SERIES: TuiStringHandler<SeriesItem> = (item: SeriesItem) =>
     `[${item.type}] ${item.name}`;
+
+const STRINGIFY_EDITION: TuiStringHandler<EditionItem> = (item: EditionItem) =>
+    `${item.name} - ${item.language}`;
+
+const STRINGIFY_GROUP: TuiStringHandler<GroupItem> = (item: GroupItem) =>
+    `${item.name} - ${item.s_name} [${item.s_type}]`;
 
 @Component({
     selector: 'app-admin-volumes',
     imports: [NgFor,NgIf,TuiTable,TuiTextfield,CdkDropList,CdkDrag,ScrollingModule,TuiComboBoxModule,TuiFilterByInputPipe,TuiLet,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './volumes.component.html',
     styleUrl: './volumes.component.less',
-    providers: [tuiItemsHandlersProvider({stringify: STRINGIFY_SERIES})],
+    providers: [tuiItemsHandlersProvider({stringify: STRINGIFY_SERIES}),tuiItemsHandlersProvider({stringify: STRINGIFY_EDITION}),tuiItemsHandlersProvider({stringify: STRINGIFY_GROUP})],
     viewProviders: [provideIcons({tablerSortAscendingLetters,tablerArrowsMove,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit,tablerPlus,tablerTrash,tablerMenuOrder,tablerReorder,solarMagicStick3})]
 })
 
@@ -50,23 +68,37 @@ export class AdminVolumesComponent {
     currentPage:number = 0;
     maxPages:number= 10;
     loading:boolean = true;
+    stringifySeries = STRINGIFY_SERIES;
+    stringifyEdition = STRINGIFY_EDITION;
+    stringifyGroup = STRINGIFY_GROUP;
     orders:any = [
         {key: 'series-title', value: 'series-title-asc', icon: 'tablerSortAscendingLetters'},
         {key: 'series-title', value: 'series-title-desc', icon: 'tablerSortDescendingLetters'},
     ]
     selectedOrder: any = this.orders[0];
     series: SeriesItem[] = [];
+    editions: EditionItem[] = [];
+    allGroups: GroupItem[] = [];
     groups: any = [];
     groupMenuItems = [
         {title: 'edit', icon: 'tablerEdit', action: this.editGroup.bind(this)},
         {title: 'reorder', icon: 'tablerReorder', action: this.openReorderDialog.bind(this)},
         {title: 'reorder-groups', icon: 'tablerMenuOrder', action: this.openReorderGroupDialog.bind(this)},
         {title: 'auto-reorder', icon: 'solarMagicStick3', action: this.autoOrderSeries.bind(this)},
-        {title: 'delete', icon: 'tablerTrash', action: (group:any)=>{}},
+        {title: 'delete', icon: 'tablerTrash', action: this.deleteGroup.bind(this)},
     ];
     volumeMenuItems = [
         {title: 'edit', icon: 'tablerEdit', action: this.editVolume.bind(this)},
         {title: 'delete', icon: 'tablerTrash', action: this.confirmDeleteVolume.bind(this)},
+    ];
+    localizedVolumeNames:any = [
+        {key: 'de', label: 'Band 1'},
+        {key: 'en', label: 'Volume 1'},
+        {key: 'fr', label: 'Tome 1'},
+        {key: 'es', label: 'Libro 1'},
+        {key: 'it', label: 'Libro 1'},
+        {key: 'jpn', label: '第1巻'},
+        {key: 'kor', label: '볼륨 1'},
     ];
     @ViewChild('dropdown') dropdown:any;
 
@@ -90,6 +122,11 @@ export class AdminVolumesComponent {
     @ViewChild('reorderGroupDialog') reorderGroupDialog:any;
     savingGroupOrder:boolean = false;
     reorderGroups:any = [];
+
+    showAddGroupDialog:boolean = false;
+    @ViewChild('addGroupDialog') addGroupDialog:any;
+    addingGroup:boolean = false;
+    addGroupItem:any = {name: '', series: this.typedSeries[0]};
     constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute) { }
     
     ngOnInit() {
@@ -106,6 +143,7 @@ export class AdminVolumesComponent {
         });
 
         this.loadSeries();
+        this.loadAllVolumeGroups();
         this.updateQueryParams();
     }
 
@@ -142,7 +180,17 @@ export class AdminVolumesComponent {
         return this.series as SeriesItem[];
     }
 
-    // load all volume groups (+ their volumes)
+    // get edition array cast to edition item
+    get typedEditions(): EditionItem[] {
+        return this.editions as EditionItem[];
+    }
+
+    // get groups array cast to group item
+    get typedGroups(): GroupItem[] {
+        return this.allGroups as GroupItem[];
+    }
+
+    // load volume groups (+ their volumes)
     loadGroups(showLoader:boolean=true){
         const PAGE_LIMIT = 50;
         if(showLoader) this.loading = true;
@@ -158,8 +206,33 @@ export class AdminVolumesComponent {
         });
     }
 
-     // keydown handler for search input
-     searchKeyDown(event: KeyboardEvent) {
+    // change handler for add volume series
+    addVolumeGroupChanged(e:any){
+        if(!e?.s_id){
+            this.editions = [];
+            this.addVolumeItem.edition = null;
+            return;
+        }
+        this.loadEditions(e.s_id);
+    }
+
+    // load editions for series
+    loadEditions(seriesId:number){
+        this.api.request<any>(HttpMethod.GET, `series/editions/${seriesId}`, {}).subscribe((res:any)=>{
+            this.editions = res;
+            if(this.editions.length == 0) this.addVolumeItem.edition = null;
+        });
+    }
+
+    // load all volume groups
+    loadAllVolumeGroups(){
+        this.api.request<any>(HttpMethod.POST, `admin-volumes/names`, {order: 'series-title-asc'}).subscribe((res:any)=>{
+            this.allGroups = res.groups;
+        });
+    }
+
+    // keydown handler for search input
+    searchKeyDown(event: KeyboardEvent) {
         if(event.key === 'Enter') {
             // check if search is different from previous search
             if(this.search !== this.prevSearch) {
@@ -298,6 +371,13 @@ export class AdminVolumesComponent {
     }
 
     // if backdrop of dialog is clicked close it
+    addGroupDialogClick(e:any){
+        if (e.target === this.addGroupDialog.nativeElement) {
+            this.showAddGroupDialog = false;
+        }
+    }
+
+    // if backdrop of dialog is clicked close it
     reorderGroupDialogClick(e:any){
         if (e.target === this.reorderGroupDialog.nativeElement) {
             this.showReorderGroupDialog = false;
@@ -307,6 +387,11 @@ export class AdminVolumesComponent {
     // open add dialog
     openAddDialog(){
         this.showAddDialog = true;
+    }
+
+    // open add group dialog
+    openAddGroupDialog(){
+        this.showAddGroupDialog = true;
     }
 
     // open reorder group dialog (fetch groups of series)
@@ -371,13 +456,143 @@ export class AdminVolumesComponent {
         });
     }
 
-    // add volume
-    addVolume(){
-        
+    // add group
+    addGroup(){
+        if(!this.addGroupItem?.name || !this.addGroupItem?.series) return;
+        this.addingGroup = true;
+        this.api.request<string>(HttpMethod.POST, `admin-volumes/add-group`, {name: this.addGroupItem.name, series: this.addGroupItem.series.id}, 'text').subscribe(async(res:any)=>{
+            const msg = await getTranslation(this.translate, `add-group-dialog.success`);
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.loadGroups(false);
+            this.loadAllVolumeGroups();
+            this.addingGroup = false;
+        }, async (err:any)=>{
+            if(err.status == 409){
+                const msg = await getTranslation(this.translate, `add-group-dialog.exists-already`);
+                errorAlert(this.alerts, msg, undefined, this.translate);
+            } else {
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            }
+            this.addingGroup = false;
+        });
     }
 
-    // delete series
+    // delete group
+    async deleteGroup(group:any){
+        const msg = await getTranslation(this.translate, `group.delete-question`);
+        const confirmDelete = confirm(msg);
+        if(confirmDelete){
+            this.api.request<string>(HttpMethod.DELETE, `admin-volumes/delete-group/${group.id}`, {}, 'text').subscribe(async(res:any)=>{
+                const msg = await getTranslation(this.translate, `group.delete-success`);
+                successAlert(this.alerts, msg, undefined, this.translate);
+                this.loadGroups(false);
+            }, (err:any)=>{
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            });
+        }
+    }
+
+    // add volume
+    async addVolume(){
+        if(!this.addVolumeItem.name || this.addVolumeItem.name.trim() === "") return;
+        this.addingVolume = true;
+        // check if name includes a range (Band {1-10})
+        if(this.addVolumeItem.name.includes('{') && this.addVolumeItem.name.includes('}')){
+            const prefix = this.addVolumeItem.name.split('{')[0].trim();
+            // get suffix if there is one
+            const suffix = this.addVolumeItem.name[this.addVolumeItem.name.length-1] === '}' ? '' : this.addVolumeItem.name.split('}')[1].trim();
+            const range = this.addVolumeItem.name.split('{')[1].split('}')[0].split('-');
+            const startingGroup:any = this.allGroups.find((g:any)=>g.id === this.addVolumeItem.group.id);
+            let matchingGroups:any = [];
+            // remove all numbers and spaces from group name
+            const series = startingGroup.s_name;
+            const guide = startingGroup.name.replace(/[0-9]/g,'').replace(/\s/g,'') + series + startingGroup.s_type;
+            // find all matching groups
+            matchingGroups = this.allGroups.filter((group:any)=>{
+                const ser = group.s_name;
+                const name = group.name.replace(/[0-9]/g,'').replace(/\s/g,'') + ser  + group.s_type;
+                return name == guide;
+            });
+            // order them by label naturally (Vol. 1, Vol. 2, Vol. 10, ...)
+            matchingGroups.sort((a:any,b:any)=>{
+                // extract number out of label with regex
+                const aNumber = parseInt(a.name.replace(/[^\d]/g,''));
+                const bNumber = parseInt(b.name.replace(/[^\d]/g,''));
+                return aNumber - bNumber;
+            });
+            // check if the range start is smaller than the range end
+            if(parseInt(range[0]) > parseInt(range[1])){
+                this.addingVolume = false;
+                const msg = await getTranslation(this.translate, `add-volume-dialog.range-start-bigger`);
+                errorAlert(this.alerts, msg, undefined, this.translate);
+                return;
+            }
+            // check if the range start is smaller than 1
+            if(parseInt(range[0]) < 1){
+                this.addingVolume = false;
+                const msg = await getTranslation(this.translate, `add-volume-dialog.range-start-small`);
+                errorAlert(this.alerts, msg, undefined, this.translate);
+                return;
+            }
+            // check if the range start is already bigger than the number of matching groups (or if there arent enough)
+            if(parseInt(range[0]) > matchingGroups.length || matchingGroups.length < parseInt(range[1])){
+                this.addingVolume = false;
+                const msg = await getTranslation(this.translate, `add-volume-dialog.range-too-big`);
+                errorAlert(this.alerts, msg, undefined, this.translate);
+                return;
+            }
+            // iterate over all groups and create volumes
+            for(let i = parseInt(range[0]); i <= parseInt(range[1]); i++){
+                let name = `${prefix} ${i}`;
+                if(this.addVolumeItem.language.value === "jpn") name = `${prefix}${i}${suffix}`;
+                await this.addSingleVolume(name, matchingGroups[i-1].id, this.addVolumeItem.edition?.id, localeToLang(this.addVolumeItem.language.value));
+            }
+
+            // show success and reload data
+            const msg = await getTranslation(this.translate, `add-volume-dialog.success`);
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.addingVolume = false;
+            this.showAddDialog = false;
+            this.loadGroups(false);
+            this.loadAllVolumeGroups();
+            return;
+        }
+
+        await this.addSingleVolume(this.addVolumeItem.name, this.addVolumeItem.group.id, this.addVolumeItem.edition?.id, localeToLang(this.addVolumeItem.language.value));
+        const msg = await getTranslation(this.translate, `add-volume-dialog.success`);
+        successAlert(this.alerts, msg, undefined, this.translate);
+        this.addingVolume = false;
+        this.showAddDialog = false;
+        this.loadGroups(false);
+        this.loadAllVolumeGroups();
+    }
+
+    // add single volume to database
+    addSingleVolume(name:string,group:number,edition:any,language:string){
+        return new Promise((resolve)=>{
+            this.api.request<string>(HttpMethod.POST, `admin-volumes/add-volume`, {name,group,edition,language}, 'text').subscribe((res:any)=>{
+                resolve(true);
+            }, (err:any)=>{
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+                resolve(false)
+            });
+        });
+    }
+
+    // delete volume
     async confirmDeleteVolume(vol:any){
         if(!vol) return;
+        const msg = await getTranslation(this.translate, `volume.delete-question`);
+        const confirmDelete = confirm(msg);
+        // if user wants to delete volume send delete request
+        if(confirmDelete){
+            this.api.request<string>(HttpMethod.DELETE, `admin-volumes/delete-volume/${vol.id}`, {}, 'text').subscribe(async(res:any)=>{
+                const msg = await getTranslation(this.translate, `volume.delete-success`);
+                successAlert(this.alerts, msg, undefined, this.translate);
+                this.loadGroups(false);
+            }, (err:any)=>{
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            });
+        }
     }
 }
