@@ -14,12 +14,12 @@
     </div>
 </div>
 
-<table tuiTable [size]="tableSize" [style.width.%]="100" class="volumes-table">
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="volumes-table" [class.loading]="loading">
     <thead>
         <tr>
-            <th tuiTh [style.width.%]="25">{{ 'series.name' | translate }}</th>
-            <th tuiTh [style.width.%]="65">Series</th>
-            <th tuiTh [style.width.%]="10" [style.textAlign]="'center'">Language</th>
+            <th tuiTh [style.width.%]="25">{{ 'tables.volume.name' | translate }}</th>
+            <th tuiTh [style.width.%]="65">{{ 'tables.volume.series' | translate }}</th>
+            <th tuiTh [style.width.%]="10" [style.textAlign]="'center'">{{ 'tables.volume.language' | translate }}</th>
         </tr>
     </thead>
     <tbody tuiTbody>

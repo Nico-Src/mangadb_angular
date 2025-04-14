@@ -344,6 +344,14 @@
         }
     },
 
+    "tables": {
+        "volume": {
+            "name": "Name",
+            "series": "Serie",
+            "language": "Sprache"
+        }
+    },
+
     "__SECTION__PAGES__": "",
 
     "home": {

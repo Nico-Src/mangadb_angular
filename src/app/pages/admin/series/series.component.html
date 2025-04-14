@@ -13,13 +13,13 @@
     </div>
 </div>
 
-<table tuiTable [size]="tableSize" [style.width.%]="100" class="series-table">
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="series-table" [class.loading]="loading">
     <thead>
         <tr>
-            <th tuiTh [style.width.%]="54">Name</th>
-            <th tuiTh [style.width.%]="8">Type</th>
-            <th tuiTh [style.width.%]="30">Slug</th>
-            <th tuiTh [style.width.%]="8" [style.textAlign]="'center'">Visibility</th>
+            <th tuiTh [style.width.%]="54">{{ 'tables.series.name' | translate }}</th>
+            <th tuiTh [style.width.%]="8">{{ 'tables.series.type' | translate }}</th>
+            <th tuiTh [style.width.%]="30">{{ 'tables.series.slug' | translate }}</th>
+            <th tuiTh [style.width.%]="8" [style.textAlign]="'center'">{{ 'tables.series.visibility' | translate }}</th>
         </tr>
     </thead>
     <tbody tuiTbody>

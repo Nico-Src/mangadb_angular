@@ -515,6 +515,20 @@
         "item-removed": "Item removed from List successfully."
     },
 
+    "tables": {
+        "volume": {
+            "name": "Name",
+            "series": "Series",
+            "language": "Language"
+        },
+        "series": {
+            "name": "Name",
+            "type": "Type",
+            "slug": "Slug",
+            "visibility": "Visibility"
+        }
+    },
+
     "__SECTION__PAGES__": "",
 
     "home": {
