@@ -1,4 +1,4 @@
-<img *ngIf="!needsNSFWPlaceholder() && !needsNSFW18Placeholder() && id > 0" class="image" [style.aspectRatio]="fit !== 'cover' && aspectRatio ? aspectRatio : undefined" [tuiSkeleton]="loading" [class.blur]="blur" [class.cover]="fit === 'cover'" tuiLoading="lazy" [src]="src ? `${cdn_base}/${src}/${res}` : `${cdn_base}/volumes/cover/${id}/${coverType}/${res}`" (load)="loading = false">
+<img *ngIf="!needsNSFWPlaceholder() && !needsNSFW18Placeholder() && id > 0" class="image" [style.aspectRatio]="fit !== 'cover' && aspectRatio ? aspectRatio : undefined" [tuiSkeleton]="loading" [class.blur]="blur" [class.cover]="fit === 'cover'" tuiLoading="lazy" [src]="src ? `${cdn_base}/${src}/${res}?hash=${imageHash}` : `${cdn_base}/volumes/cover/${id}/${coverType}/${res}?hash=${imageHash}`" (load)="loading = false">
 <div class="placeholder" [class.bg]="hasTransparentBg" *ngIf="needsNSFWPlaceholder() && !blur">
     <ng-icon class="icon" name="tablerRating16Plus"></ng-icon>
     <div class="hint">{{ 'volume.nsfw-hint' | translate }}</div>

@@ -33,6 +33,7 @@ export class MangaCover {
     @Input() coverType: string = 'front';
     @Input() hasTransparentBg: boolean = false;
     @Input() showGalleryBtn: boolean = false;
+    @Input() imageHash:string = '';
     @Output() openGallery: EventEmitter<any> = new EventEmitter();
     needsNSFWPlaceholder = signal(false);
     needsNSFW18Placeholder = signal(false);
