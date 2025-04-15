@@ -1,0 +1,82 @@
+<div class="banner-wrapper">
+    <div class="banner" *ngIf="volume">
+        <manga-cover *ngIf="volume?.id" [id]="volume.id" [nsfw]="false" [nsfw18]="false" fit="cover" [blur]="true" [aspectRatio]="volume.aspect_ratio"></manga-cover>
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="content" *ngIf="volume" [class.loading]="loading">
+        <div class="top-wrapper">
+            <div class="images">
+                <div class="cover-wrapper">
+                    <manga-cover *ngIf="volume?.id && !frontImage" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'"></manga-cover>
+                    <img *ngIf="frontImage" [src]="frontBase64">
+                </div>
+                <div class="cover-wrapper">
+                    <manga-cover *ngIf="volume?.id" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [coverType]="'spine'"></manga-cover>
+                </div>
+                <div class="cover-wrapper">
+                    <manga-cover *ngIf="volume?.id" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [coverType]="'back'"></manga-cover>
+                </div>
+            </div>
+            <div class="inputs">
+                <div class="wrapper">
+                    <label tuiInputFiles>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="frontImage" (ngModelChange)="imageUpdate($event,'front')" (reject)="imageRejected($event,'front')"/>
+                        <ng-template let-dragged>
+                            {{ 'volume.upload-hint' | translate }}
+                        </ng-template>
+                    </label>
+                    <tui-files class="file">
+                        <tui-file state="normal" [file]="frontImage" (remove)="imageRemoved($event,'front')" *ngIf="frontImage"/>
+                    </tui-files>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="uploadingImage">
+                        <button size="s" tuiButton type="button" class="upload" [disabled]="!frontImage" appearance="accent" (click)="uploadImage('front')"><ng-icon name="tablerUpload" class="icon"></ng-icon>{{ 'volume.upload' | translate }}</button>
+                    </tui-loader>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="deletingImage">
+                        <button size="s" tuiButton type="button" class="cancel" *ngIf="volume.cover_path" appearance="accent" (click)="deleteImage('front')"><ng-icon name="tablerTrash" class="icon"></ng-icon>{{ 'volume.context.delete' | translate }}</button>
+                    </tui-loader>
+                </div>
+                <div class="wrapper">
+                    <label tuiInputFiles>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="spineImage" (ngModelChange)="imageUpdate($event,'spine')" (reject)="imageRejected($event,'spine')"/>
+                        <ng-template let-dragged>
+                            {{ 'volume.upload-hint' | translate }}
+                        </ng-template>
+                    </label>
+                    <tui-files class="file">
+                        <tui-file state="normal" [file]="spineImage" (remove)="imageRemoved($event,'spine')" *ngIf="spineImage"/>
+                    </tui-files>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="uploadingImage">
+                        <button size="s" tuiButton type="button" class="upload" [disabled]="!spineImage" appearance="accent" (click)="uploadImage('spine')"><ng-icon name="tablerUpload" class="icon"></ng-icon>{{ 'volume.upload' | translate }}</button>
+                    </tui-loader>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="deletingImage">
+                        <button size="s" tuiButton type="button" class="cancel" *ngIf="volume.spine_cover_path" appearance="accent" (click)="deleteImage('spine')"><ng-icon name="tablerTrash" class="icon"></ng-icon>{{ 'volume.context.delete' | translate }}</button>
+                    </tui-loader>
+                </div>
+                <div class="wrapper">
+                    <label tuiInputFiles>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="backImage" (ngModelChange)="imageUpdate($event,'back')" (reject)="imageRejected($event,'back')"/>
+                        <ng-template let-dragged>
+                            {{ 'volume.upload-hint' | translate }}
+                        </ng-template>
+                    </label>
+                    <tui-files class="file">
+                        <tui-file state="normal" [file]="backImage" (remove)="imageRemoved($event,'back')" *ngIf="backImage"/>
+                    </tui-files>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="uploadingImage">
+                        <button size="s" tuiButton type="button" class="upload" [disabled]="!backImage" appearance="accent" (click)="uploadImage('back')"><ng-icon name="tablerUpload" class="icon"></ng-icon>{{ 'volume.upload' | translate }}</button>
+                    </tui-loader>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="deletingImage">
+                        <button size="s" tuiButton type="button" class="cancel" *ngIf="volume.back_cover_path" appearance="accent" (click)="deleteImage('back')"><ng-icon name="tablerTrash" class="icon"></ng-icon>{{ 'volume.context.delete' | translate }}</button>
+                    </tui-loader>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
