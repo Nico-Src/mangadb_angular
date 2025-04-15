@@ -38,7 +38,7 @@
             position: absolute;
             inset: 0; top: 0; bottom: unset !important;
             margin:auto;
-            z-index: 2;
+            z-index: 1;
             top: 70px;
             height: fit-content;
             width: 100%;
@@ -60,6 +60,40 @@
                 justify-content: center;
                 flex-direction: column;
                 gap: 10px;
+
+                [tuiSwitch]{
+                    --tui-background-accent-1: rgb(var(--accent-color));
+                    --tui-background-accent-1-hover: rgb(var(--mid-accent));
+                    --tui-background-accent-1-pressed: rgb(var(--dark-accent));
+                }
+
+                .header-title{
+                    width: 70%;
+                    color: #202020;
+                    font-weight: 400;
+                    font-size: 20px;
+                    margin-top: 10px;
+                    padding: 0px 5px;
+                    padding-right: 0px !important;
+                    padding-bottom: 4px !important;
+                    border-bottom: 2px solid #ccc;
+                    display:flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    --tui-background-accent-2: rgb(var(--accent-color));
+                    --tui-background-accent-2-hover: rgb(var(--mid-accent));
+                    --tui-background-accent-2-pressed: rgb(var(--dark-accent));
+
+                    button{
+                        margin-left: 10px;
+
+                        .icon{
+                            font-size: 16px;
+                            transform: translateY(-2px);
+                        }
+                    }
+                }
 
                 .inputs{
                     align-items: flex-start !important;
@@ -105,6 +139,79 @@
                     }
                 }
 
+                .details{
+                    flex: 1;
+                    height: fit-content;
+                    display:flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    flex-direction: column;
+                    min-height: 50px;
+                    margin-top: 15px;
+    
+                    .wrapper{
+                        width: 70%;
+                        display:flex;
+                        justify-content: space-between;
+                        align-items: flex-end;
+                        gap: 10px;
+                        margin-bottom: 10px;
+
+                        label{flex: 1;}
+
+                        ::ng-deep [tuiAppearance][data-appearance=textfield][data-mode~=readonly]{opacity: 0.75;}
+                        ::ng-deep [tuiWrapper][data-appearance=textfield], ::ng-deep [tuiAppearance][data-appearance=textfield]{box-shadow: none !important; background: #ccc !important;}
+                        ::ng-deep [tuiWrapper][data-appearance=textfield]._focused._focused:after, ::ng-deep [tuiAppearance][data-appearance=textfield]._focused._focused:after{color: transparent !important;}
+                        ::ng-deep .report-description textarea{font-size: 14px !important;}
+                        ::ng-deep [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){outline-color: transparent !important;}
+
+                        .switch-input{
+                            display:flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: fit-content;
+                            gap: 10px;
+                            flex: unset !important;
+                        }
+                    }
+
+                    .link-wrapper{
+                        width: 70%;
+                        height:fit-content;
+                        display:flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 10px;
+                        flex-wrap: wrap;
+                        margin-top: 10px;
+    
+                        .link{
+                            background-color: #ccc;
+                            border-radius: 4px;
+                            width: 100%;
+                            padding: 5px 10px;
+                            color: #505050;
+                            display:flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            word-break: break-all;
+
+                            .remove-icon{
+                                color: #808080;
+                                transition: color var(--transition-duration) ease;
+                                transform: translateY(-2px);
+                                cursor: pointer;
+                                font-size: 16px;
+                                margin: 0 4px;
+            
+                                &:hover{
+                                    color: #000;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 .cover-wrapper{
                     flex-shrink: 0;
                     height: 330px;
@@ -125,16 +232,17 @@
         }
 
         .editor{
-            width: 100%;
+            width: 70%;
             --tui-background-accent-1: rgb(var(--accent-color)) !important;
             --tui-background-accent-2: rgb(var(--accent-color)) !important;
         }
 
         .html-preview{
-            width: 100%;
+            width: 70%;
             background-color: #ccc;
             border-radius: 6px;
             padding: 6px 10px;
+            margin-top: 10px;
 
             textarea{
                 background-color: transparent;
@@ -150,10 +258,16 @@
         .button-wrapper{
             width: 100%;
             display:flex;
-            justify-content: flex-end;
+            justify-content: center;
             align-items: center;
             gap: 10px;
             margin-top: 10px;
+
+            .icon{
+                font-size: 18px;
+                transform: translateY(-2px);
+                overflow: visible;
+            }
 
             --tui-background-accent-2: rgb(var(--accent-color));
             --tui-background-accent-2-hover: rgb(var(--mid-accent));

@@ -7,14 +7,16 @@
         <div class="top-wrapper">
             <div class="images">
                 <div class="cover-wrapper">
-                    <manga-cover *ngIf="volume?.id && !frontImage" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'"></manga-cover>
+                    <manga-cover *ngIf="volume?.id && !frontImage" [imageHash]="imageHash" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'"></manga-cover>
                     <img *ngIf="frontImage" [src]="frontBase64">
                 </div>
                 <div class="cover-wrapper">
-                    <manga-cover *ngIf="volume?.id" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [coverType]="'spine'"></manga-cover>
+                    <manga-cover *ngIf="volume?.id && !spineImage" [imageHash]="imageHash" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [coverType]="'spine'"></manga-cover>
+                    <img *ngIf="spineImage" [src]="spineBase64">
                 </div>
                 <div class="cover-wrapper">
-                    <manga-cover *ngIf="volume?.id" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [coverType]="'back'"></manga-cover>
+                    <manga-cover *ngIf="volume?.id && !backImage" [imageHash]="imageHash" [id]="volume.id" [nsfw]="false" [nsfw18]="false" [res]="'high'" [coverType]="'back'"></manga-cover>
+                    <img *ngIf="backImage" [src]="backBase64">
                 </div>
             </div>
             <div class="inputs">
@@ -70,7 +72,179 @@
                     </tui-loader>
                 </div>
             </div>
+            <div class="details" *ngIf="editVolume">
+                <div class="header-title">
+                    <span>Details</span>
+                </div>
+                <div class="wrapper" [style.marginTop.px]="10">
+                    <label class="switch-input">
+                        {{ "volume.nsfw" | translate }}
+                        <input tuiSwitch type="checkbox" [(ngModel)]="editVolume.nsfw" [size]="'m'"/>
+                    </label>
+                    <label class="switch-input">
+                        {{ "volume.nsfw18" | translate }}
+                        <input tuiSwitch type="checkbox" [(ngModel)]="editVolume.nsfw18" [size]="'m'"/>
+                    </label>
+                    <label class="switch-input">
+                        {{ "volume.special-edition" | translate }}
+                        <input tuiSwitch type="checkbox" [(ngModel)]="editVolume.special" [size]="'m'"/>
+                    </label>
+                    <label class="switch-input">
+                        {{ "volume.3d" | translate }}
+                        <input tuiSwitch type="checkbox" [(ngModel)]="editVolume.three_d" [size]="'m'"/>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'volume.name' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.name">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'language.label' | translate }}
+                        <tui-select tuiTextfieldSize="s" [(ngModel)]="editVolume.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                            <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLangs"></tui-data-list-wrapper>
+                        </tui-select>
+                    </label>
+                    <label>
+                        {{ 'volume.slug' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.slug" [readOnly]="true">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label [style.flex]="1">
+                        {{ "volume.binding.label" | translate }}
+                        <tui-select tuiTextfieldSize="s" [(ngModel)]="editVolume.type" [valueContent]="typeContent" [tuiTextfieldLabelOutside]="true">
+                            <tui-data-list-wrapper *tuiDataList [itemContent]="typeContent" [items]="volumeBindingTypes"></tui-data-list-wrapper>
+                        </tui-select>
+                    </label>
+                    <label [style.flex]="3">
+                        {{ "add-volume-dialog.group" | translate }}
+                        <tui-combo-box [(ngModel)]="editVolume.group" [valueContent]="groupContent" [stringify]="stringifyGroup" [tuiTextfieldSize]="'s'">
+                            <ng-container *tuiDataList>
+                                <cdk-virtual-scroll-viewport *tuiLet="typedGroups | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                                    <tui-data-list #list [size]="'s'">
+                                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                                            {{ item.name }} - {{ item.s_name }} [{{item.s_type}}]
+                                        </button>
+                                    </tui-data-list>
+                                </cdk-virtual-scroll-viewport>
+                            </ng-container>
+                        </tui-combo-box>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'add-volume-dialog.edition' | translate }}
+                        <tui-combo-box [style.flex]="1" [tuiTextfieldLabelOutside]="true" [(ngModel)]="editVolume.edition" [tuiTextfieldCleaner]="true" [valueContent]="editionContent" [stringify]="stringifyEdition" [tuiTextfieldSize]="'s'">
+                            <ng-container *tuiDataList>
+                                <cdk-virtual-scroll-viewport *tuiLet="typedEditions | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                                    <tui-data-list #list [size]="'s'">
+                                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                                            {{ item.name }} - {{ item.language }}
+                                        </button>
+                                    </tui-data-list>
+                                </cdk-virtual-scroll-viewport>
+                            </ng-container>
+                        </tui-combo-box>
+                    </label>
+                    <label *ngIf="editVolume.special">
+                        {{ 'volume.special-name' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.special_name">
+                        </tui-textfield>
+                    </label>
+                    <label [style.flex]="1">
+                        {{ "volume.release_date" | translate }}
+                        <tui-input-date [style.flex]="1" [(ngModel)]="editVolume.release_date" tuiTextfieldSize="s"></tui-input-date>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        ISBN-10
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.isbn10">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        ISBN-13
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.isbn13">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'volume.dimensions' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.measures">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'volume.pages' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.pages">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'volume.rating' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.rating">
+                        </tui-textfield>
+                    </label>
+                    <label [style.flex]="4">
+                        {{ 'volume.copyright' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.copyright">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'volume.extras' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editVolume.extras">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <tui-editor [(ngModel)]="editVolume.description" [tools]="tools" class="editor"></tui-editor>
+                <div class="html-preview">
+                    <textarea [(ngModel)]="editVolume.description"></textarea>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'volume.links' | translate }}</span>
+                    <button size="xs" tuiButton type="button" class="next" (click)="addLink()" appearance="accent" *ngIf="volume"><ng-icon name="tablerPlus" class="icon"></ng-icon></button>
+                </div>
+                <div class="link-wrapper" v-auto-animate>
+                    <div class="link" *ngFor="let link of editVolume.links">{{ link.url }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeLink(link)"></ng-icon></div>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'volume.media' | translate }}</span>
+                </div>
+                <!--<div class="media-wrapper" v-auto-animate>
+                    <div class="media-item" v-for="media in editVolume.media" :key="media.id">
+                        <span class="id">{{ media.id }}</span>
+                        <q-btn size="10px" color="red" round class="remove-btn" @click="removeMediaItem(media.id)">
+                            <Icon name="ic:twotone-minus" size="16px"/>
+                        </q-btn>
+                        <img crossorigin="anonymous" :src="`${$config.cdn_url}/media/image/${media.id}/scaled`">
+                    </div>
+                </div>-->
+            </div>
         </div>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" [disabled]="saving" appearance="accent" (click)="removeLock()" *ngIf="volume">{{ 'series.free-lock' | translate }}</button>
+            <button size="s" tuiButton type="button" class="prev" [disabled]="saving || !volume?.prev" (click)="prevVolume()" appearance="accent" *ngIf="volume"><ng-icon name="tablerChevronLeft" class="icon"></ng-icon></button>
+            <button size="s" tuiButton type="button" class="next" [disabled]="saving || !volume?.next" (click)="nextVolume()" appearance="accent" *ngIf="volume"><ng-icon name="tablerChevronRight" class="icon"></ng-icon></button>
+            <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" *ngIf="volume">{{ 'series.scrape' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="saving">
+                <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" (click)="saveEdit()" *ngIf="volume">{{ 'series.save' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div class="placeholder" style="width: 100%; height: 20px;"></div>
     </div>
 </div>
 
@@ -78,5 +252,23 @@
     <div class="language-item">
         <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #typeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `volume.binding.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #groupContent let-item>
+    <div class="group-item">
+        <span class="group-name">{{ item.name }} - {{ item.s_name }} [{{ item.s_type }}]</span>
+    </div>
+</ng-template>
+
+<ng-template #editionContent let-item>
+    <div class="edition-item">
+        <span class="edition-name">{{ item.name }} - {{ item.language }}</span>
     </div>
 </ng-template>

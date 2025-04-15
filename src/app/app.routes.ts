@@ -20,6 +20,7 @@ import { AdminSeriesComponent } from './pages/admin/series/series.component';
 import { AdminSeriesDetailComponent } from './pages/admin/series-detail/series-detail.component';
 import { EditGuard } from '../guards/editGuard';
 import { AdminVolumesComponent } from './pages/admin/volumes/volumes.component';
+import { AdminVolumeDetailComponent } from './pages/admin/volume-detail/volume-detail.component';
 
 export const routes: Routes = [
     {
@@ -125,6 +126,15 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/volumes/:id',
+        component: AdminVolumeDetailComponent,
+        canActivate: [RoleGuard,EditGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR],
+            route: 'volume'
         }
     },
     // auto redirect

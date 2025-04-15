@@ -136,6 +136,17 @@ export const READ_STATUS_PRIORITY_OPTIONS = [
     {key: 'low'},{key: 'mid'},{key: 'high'}
 ];
 
+export const VOLUME_BINDING_TYPES = [
+    {key: 'Softcover', name: 'Softcover'},
+    {key: 'Hardcover', name: 'Hardcover'}
+];
+
+export enum COVER{
+    FRONT='front',
+    BACK='back',
+    SPINE='spine'
+}
+
 // show error alert
 export const errorAlert = async (alerts: TuiAlertService, message: string, label: string = 'server.status.error', translate: any): Promise<void> => {
     const translatedLabel = await getTranslation(translate, label);

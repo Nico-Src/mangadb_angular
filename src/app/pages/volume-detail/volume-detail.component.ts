@@ -216,8 +216,8 @@ export class VolumeDetailComponent {
         this.showReportViewDialog = true;
     }
 
-     // load reports from api
-     loadReports(){
+    // load reports from api
+    loadReports(){
         this.api.request<any>(HttpMethod.GET, `reports/volume/${this.volume?.id}`, {}).subscribe((res)=>{
             this.reports = res;
             this.reportsLoading = false;
