@@ -255,7 +255,7 @@ export class AdminVolumesComponent {
 
     // edit volume
     editVolume(volume:any){
-        this.router.navigate(['admin','volume',volume.id]);
+        this.router.navigate(['admin','volumes',volume.id]);
     }
 
     // auto order volumes of current group
