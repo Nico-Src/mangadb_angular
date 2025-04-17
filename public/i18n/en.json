@@ -831,5 +831,9 @@
         "range-start-bigger": "Range start must be smaller than end.",
         "range-start-small": "Range start must be bigger than 0.",
         "range-too-big": "Not enough matching groups found."
+    },
+
+    "add-media-dialog":{
+        "title": "Add Media"
     }
 }

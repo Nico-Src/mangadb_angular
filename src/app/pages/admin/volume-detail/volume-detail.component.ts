@@ -90,6 +90,16 @@ export class AdminVolumeDetailComponent {
     volumeBindingTypes:any = VOLUME_BINDING_TYPES;
     availableLangs:any = LANGS;
 
+    showMediaDialog:boolean = false;
+    @ViewChild('mediaDialog') mediaDialog:any;
+    media:any = [];
+    mediaSearch:string = '';
+
+    showScrapeDialog:boolean = false;
+    scraping:boolean = false;
+    scraperUrl:string = '';
+    @ViewChild('scrapeDialog') scrapeDialog:any;
+
     readonly tools = TUI_EDITOR_DEFAULT_TOOLS;
 
     constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute, private location: Location, private http: HttpClient) { }
@@ -170,21 +180,21 @@ export class AdminVolumeDetailComponent {
 
     // save changes to database
     saveEdit(){
-        if(!this.editVolume || this.saving === true) return;
+        if(!this.editVolume || this.saving === true || !this.editVolume.language?.value) return;
         this.saving = true;
 
-        /*const added_links = []; const removed_links = [];
-        for(const link of editVolume.value.links) if(link.id === -1) added_links.push(link);
-        for(const link of volume.value.links) if(!editVolume.value.links.find(l => l.id == link.id)) removed_links.push(link);
+        const added_links = []; const removed_links = [];
+        for(const link of this.editVolume.links) if(link.id === -1) added_links.push(link);
+        for(const link of this.volume.links) if(!this.editVolume.links.find((l:any) => l.id == link.id)) removed_links.push(link);
 
         const added_media = []; const removed_media = [];
-        for(const med of editVolume.value.media) if(!volume.value.media.find(l => l.id == med.id)) added_media.push(med);
-        for(const med of volume.value.media) if(!editVolume.value.media.find(l => l.id == med.id)) removed_media.push(med);*/
+        for(const med of this.editVolume.media) if(!this.volume.media.find((l:any) => l.id == med.id)) added_media.push(med);
+        for(const med of this.volume.media) if(!this.editVolume.media.find((l:any) => l.id == med.id)) removed_media.push(med);
 
-        /*if(editVolume.value.description){
-            editVolume.value.description = editVolume.value.description.replaceAll("<div>", "<br>");
-            editVolume.value.description = editVolume.value.description.replaceAll("</div>", "");
-        }*/
+        if(this.editVolume.description){
+            this.editVolume.description = this.editVolume.description.replaceAll("<div>", "<br>");
+            this.editVolume.description = this.editVolume.description.replaceAll("</div>", "");
+        }
 
         this.editVolume.release_date = this.editVolume.release_date.toString().split('.').reverse().join('-');
 
@@ -210,8 +220,8 @@ export class AdminVolumeDetailComponent {
             release_date: this.editVolume.release_date,
             special_name: this.editVolume.special_name,
             type: this.editVolume.type.key,
-            added_links: [], removed_links: [],
-            added_media: [], removed_media: []
+            added_links, removed_links,
+            added_media, removed_media
         }, 'text').subscribe(async (res:any)=>{
             this.saving = false;
             const msg = await getTranslation(this.translate, `volume.save-success`);
@@ -264,7 +274,7 @@ export class AdminVolumeDetailComponent {
         // show scraper with ctrl + k
         if(e.ctrlKey && e.key === 'k'){
             e.preventDefault();
-            //this.openScrapeDialog();
+            this.openScrapeDialog();
         }
 
         // left arrow
@@ -395,6 +405,39 @@ export class AdminVolumeDetailComponent {
         }
     }
 
+    // if backdrop of dialog is clicked close it
+    mediaDialogClick(e:any){
+        if (e.target === this.mediaDialog.nativeElement) {
+            this.showMediaDialog = false;
+        }
+    }
+
+    // open media dialog
+    openMediaDialog(){
+        this.showMediaDialog = true;
+        this.media = [];
+        this.mediaSearch = '';
+    }
+
+    // if backdrop of dialog is clicked close it
+    scrapeDialogClick(e:any){
+        if (e.target === this.scrapeDialog.nativeElement) {
+            this.showScrapeDialog = false;
+        }
+    }
+
+    // open scrape dialog
+    openScrapeDialog(){
+        this.showScrapeDialog = true;
+    }
+
+    // keydown event handler for scraping
+    scrapeSearchKeyDown(e:any){
+        if(e.key == 'Enter' && this.scraperUrl.length >= 10){
+            this.scrape();
+        }
+    }
+
     // delete cover of given type
     async deleteImage(type:string){
         this.deletingImage = true;
@@ -438,7 +481,139 @@ export class AdminVolumeDetailComponent {
     addLink(){
         // TODO Translate
         const link = prompt("URL:");
-        if(link?.trim() == "") return;
+        if(!link || link?.trim() == "") return;
         this.editVolume.links.push({id: -1, url: link});
+    }
+
+    // add media item
+    addMedia(media:any){
+        this.editVolume.media.push(media);
+    }
+
+    // remove media item
+    removeMedia(e:any,media:any){
+        e.preventDefault();
+        this.editVolume.media = this.editVolume.media.filter((m:any) => m.id !== media.id);
+    }
+
+    // keydown event handler for scraping
+    mediaSearchKeyDown(e:any){
+        if(e.key == 'Enter'){
+            this.loadMedia();
+        }
+    }
+
+    // load media
+    loadMedia(){
+        this.api.request<any>(HttpMethod.POST, `media`, {order:'added-desc',search: this.mediaSearch.trim()}).subscribe((res:any)=>{
+            this.media = res.media;
+            for(const item of this.media){
+                if(item.tags.includes(',')) item.tags = item.tags.split(',');
+                else item.tags = [item.tags];
+            }
+        });
+    }
+
+    scrape(){
+        this.scraping = true;
+
+        this.http.post(`${SCRAPER_BASE}/getAmazonData`, {link: this.scraperUrl}).subscribe((res:any)=>{
+            const data = res;
+            // exract number out of string
+            const age = data.age === undefined ? undefined : parseInt(data.age.match(/\d+/)[0]);
+            let measures = ""; // 12.6 x 1.7 x 18.5 cm
+            // split and remove cm from measures if available
+            if(data.measures != undefined){
+                if(data.measures.includes('inches')){
+                    // convert to cm
+                    const parts = data.measures.replace('inches','').split('x');
+                    let count = 0;
+                    for(const part of parts){
+                        if(count === 0){
+                            measures += (parseFloat(part) * 2.54).toFixed(2);
+                        } else {
+                            measures += ' x ' + (parseFloat(part) * 2.54).toFixed(2);
+                        }
+                        count++;
+                    }
+                }
+            }
+            const measureParts = data.measures === undefined ? [] : data.measures.replace('cm','').split('x');
+            let count = 0;
+            for(const part of measureParts){
+                if(count === 0){
+                    const numberParts = part.trim().split('.');
+                    // check if number has a decimal point or not
+                    if(numberParts.length === 1){
+                        // if number is greater than 9 padEnd with 0
+                        // else add 1 zero in front and pad end with 0
+                        let number = parseInt(numberParts[0]) > 9
+                                    ? numberParts[0].padEnd(4,'0') 
+                                    : numberParts[0].padStart(2,'0').padEnd(4,'0');
+                        if(!number.includes('.')){
+                            // add decimal point in between the 4 digits
+                            number = number.slice(0,2) + '.' + number.slice(2,4);
+                        }
+                        measures += number;
+                    } else {
+                        // pad numbers
+                        const number = numberParts[0].padStart(2,'0') + '.' + numberParts[1].padEnd(2,'0');
+                        measures += number;
+                    }
+                }
+                else {
+                    const numberParts = part.trim().split('.');
+                    // check if number has a decimal point or not
+                    if(numberParts.length === 1){
+                        // if number is greater than 9 padEnd with 0
+                        // else add 1 zero in front and pad end with 0
+                        let number = parseInt(numberParts[0]) > 9
+                                    ? numberParts[0].padEnd(4,'0') 
+                                    : numberParts[0].padStart(2,'0').padEnd(4,'0');
+                        if(!number.includes('.')){
+                            // add decimal point in between the 4 digits
+                            number = number.slice(0,2) + '.' + number.slice(2,4);
+                        }
+                        measures += ' x ' + number;
+                    } else {
+                        // pad numbers
+                        const number = numberParts[0].padStart(2,'0') + '.' + numberParts[1].padEnd(2,'0');
+                        measures += ' x ' + number;
+                    }
+                }
+                count++;
+            }
+
+            // get locale and language of amazon data
+            let locale = 'de';
+            let language = 'German';
+
+            if(data.link.includes("amazon.es")){
+                locale = 'es';
+                language = 'Spanish';
+            } else if(data.link.includes("amazon.fr")){
+                locale = 'fr';
+                language = 'French';
+            } else if(data.link.includes("amazon.it")){
+                locale = 'it';
+                language = 'Italian';
+            } else if(data.link.includes("amazon.co.jp")){
+                language = 'Japanese';
+            } else if(data.link.includes("amazon.com")){
+                language = 'English';
+            }
+
+            if(this.editVolume.links.filter((l:any) => l.url == data.link).length === 0) this.editVolume.links.push({id: -1,url: data.link}); // eslint-disable-line
+            if(data.measures) this.editVolume.measures = measures;
+            if(age) this.editVolume.rating = age;
+            if(data.description) this.editVolume.description = data.description.replace(/<\/?p[^>]*>/g, "");
+            if(data.isbn10) this.editVolume.isbn10 = data.isbn10;
+            if(data.isbn13) this.editVolume.isbn13 = data.isbn13;
+            if(data.pages) this.editVolume.pages = data.pages;
+            this.editVolume.language = this.availableLangs.find((l:any) => l.value == langToLocale(language)); // eslint-disable-line
+            this.scraping = false;
+        }, (err:any)=>{
+            this.scraping = false;
+        });
     }
 }
