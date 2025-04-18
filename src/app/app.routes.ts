@@ -22,6 +22,7 @@ import { EditGuard } from '../guards/editGuard';
 import { AdminVolumesComponent } from './pages/admin/volumes/volumes.component';
 import { AdminVolumeDetailComponent } from './pages/admin/volume-detail/volume-detail.component';
 import { AdminPublishersComponent } from './pages/admin/publishers/publishers.component';
+import { AdminPublisherDetailComponent } from './pages/admin/publisher-detail/publisher-detail.component';
 
 export const routes: Routes = [
     {
@@ -144,6 +145,15 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/publishers/:id',
+        component: AdminPublisherDetailComponent,
+        canActivate: [RoleGuard,EditGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR],
+            route: 'volume'
         }
     },
     // auto redirect

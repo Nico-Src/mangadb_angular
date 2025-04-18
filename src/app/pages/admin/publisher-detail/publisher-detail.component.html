@@ -1,0 +1,124 @@
+<div class="banner-wrapper">
+    <div class="banner" *ngIf="publisher">
+        <img *ngIf="publisher?.id && !image" [src]="`${cdn_url}/publisher/image/${publisher?.id}/scaled?hash=${imageHash}`" tuiLoading="lazy">
+        <img *ngIf="image" [src]="base64" tuiLoading="lazy">
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="content" *ngIf="publisher" [class.loading]="loading">
+        <div class="top-wrapper">
+            <div class="cover-wrapper">
+                <img *ngIf="publisher?.id && !image" [src]="`${cdn_url}/publisher/image/${publisher?.id}/scaled?hash=${imageHash}`" tuiLoading="lazy">
+                <img *ngIf="image" [src]="base64" tuiLoading="lazy">
+            </div>
+            <div class="wrapper">
+                <label tuiInputFiles>
+                    <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="image" (ngModelChange)="imageUpdate($event,'front')" (reject)="imageRejected($event,'front')"/>
+                    <ng-template let-dragged>
+                        {{ 'volume.upload-hint' | translate }}
+                    </ng-template>
+                </label>
+                <tui-files class="file">
+                    <tui-file state="normal" [file]="image" (remove)="imageRemoved($event,'front')" *ngIf="image"/>
+                </tui-files>
+                <tui-loader class="loader" [overlay]="true" [showLoader]="uploadingImage">
+                    <button size="s" tuiButton type="button" class="upload" [disabled]="!image" appearance="accent" (click)="uploadImage()"><ng-icon name="tablerUpload" class="icon"></ng-icon>{{ 'volume.upload' | translate }}</button>
+                </tui-loader>
+                <tui-loader class="loader" [overlay]="true" [showLoader]="deletingImage">
+                    <button size="s" tuiButton type="button" class="cancel" *ngIf="publisher.image" appearance="accent" (click)="deleteImage()"><ng-icon name="tablerTrash" class="icon"></ng-icon>{{ 'volume.context.delete' | translate }}</button>
+                </tui-loader>
+            </div>
+            <div class="details" *ngIf="editPublisher">
+                <div class="header-title">
+                    <span>Details</span> <!-- TODO Translate -->
+                </div>
+                <div class="wrapper" [style.marginTop.px]="10">
+                    <label>
+                        {{ 'volume.name' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editPublisher.name">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'volume.slug' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editPublisher.slug" [readOnly]="true">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'publisher.short-name' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editPublisher.short_name">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'publisher.website' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editPublisher.website">
+                        </tui-textfield>
+                    </label>
+                    <label [style.flex]="1">
+                        <div class="label-wrapper">
+                            <span>{{ "publisher.founded" | translate }}</span>
+                            <div class="unknown" (click)="setDateUnknown()">{{ 'date.unknown' | translate }}</div>
+                        </div>
+                        <tui-input-date [style.flex]="1" [min]="min_day" [(ngModel)]="editPublisher.founding_date" tuiTextfieldSize="s"></tui-input-date>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'publisher.image-source' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editPublisher.image_source">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'publisher.headquarter' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editPublisher.headquarter">
+                        </tui-textfield>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" [disabled]="saving" appearance="accent" (click)="removeLock()" *ngIf="publisher">{{ 'publisher.free-lock' | translate }}</button>
+            <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" (click)="openScrapeDialog()" *ngIf="publisher">{{ 'publisher.scrape' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="saving">
+                <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" (click)="saveEdit()" *ngIf="publisher">{{ 'publisher.save' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div class="placeholder" style="width: 100%; height: 20px;"></div>
+    </div>
+</div>
+
+<div class="scrape-dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
+    <div class="window" [class.show]="showScrapeDialog">
+        <div class="title">{{ 'scrape-dialog.title' | translate }}</div>
+        <label>
+            {{ 'scrape-dialog.url' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="scrapeSearchKeyDown($event)">
+                <input tuiTextfield [(ngModel)]="scraperUrl" [readOnly]="scraping">
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="scraping">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="scrape()">{{ 'scrape-dialog.scrape' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #typeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `volume.binding.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
