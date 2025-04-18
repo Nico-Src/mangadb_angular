@@ -512,7 +512,15 @@
         "context": {
             "edit": "Edit",
             "delete": "Delete"
-        }
+        },
+        "free-lock": "Unlock",
+        "save": "Save",
+        "scrape": "Scrape",
+        "image-source": "Image Source",
+        "headquarter": "Headquarter",
+        "short-name": "Short Name",
+        "aliases": "Aliases",
+        "new-alias": "New Alias"
     },
 
     "lists": {

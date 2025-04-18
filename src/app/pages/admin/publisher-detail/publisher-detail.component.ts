@@ -22,9 +22,16 @@ import { TuiLet, TuiStringHandler } from '@taiga-ui/cdk';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TuiDay } from '@taiga-ui/cdk/date-time';
 
+interface PublisherItem {
+    name: string;
+};
+
+const STRINGIFY_PUBLISHER: TuiStringHandler<PublisherItem> = (item: PublisherItem) =>
+    `${item.name}`;
+
 @Component({
     selector: 'app-admin-publisher-detail',
-    imports: [TranslatePipe,TuiButton,NgIf,NgFor,MangaCover,TuiEditor,TuiInputDateModule,TuiFiles,TuiTabs,TuiComboBoxModule,ScrollingModule,TuiLet,TuiFilterByInputPipe,TuiDataList,TuiTextfield,TuiLoader,NgIcon,TuiTextfieldControllerModule,TuiSelectModule,ReactiveFormsModule,FormsModule,TuiSwitch],
+    imports: [TranslatePipe,TuiButton,NgIf,NgFor,TuiEditor,TuiFilterByInputPipe,TuiLet,TuiInputDateModule,TuiFiles,TuiTabs,TuiComboBoxModule,ScrollingModule,TuiDataList,TuiTextfield,TuiLoader,NgIcon,TuiTextfieldControllerModule,TuiSelectModule,ReactiveFormsModule,FormsModule],
     templateUrl: './publisher-detail.component.html',
     styleUrl: './publisher-detail.component.less',
     providers: [
@@ -36,6 +43,7 @@ import { TuiDay } from '@taiga-ui/cdk/date-time';
             import('@taiga-ui/editor').then(({setup}) => setup({injector})),
           ],
         },
+        tuiItemsHandlersProvider({stringify: STRINGIFY_PUBLISHER}),
         tuiDateFormatProvider({mode: 'YMD', separator: '/'})
     ],
     viewProviders: [provideIcons({tablerX,tablerPlus,tablerMinus,matFaceOutline,tablerUpload,tablerTrash,tablerChevronRight,tablerChevronLeft})]
@@ -46,9 +54,12 @@ export class AdminPublisherDetailComponent {
     private readonly api = inject(APIService);
     readonly cdn_url = CDN_BASE;
 
+    stringifyPublisher = STRINGIFY_PUBLISHER;
+
     min_day = new TuiDay(1,0,1);
 
     publisher:any = null;
+    publishers:any = [];
     editPublisher:any = null;
     loading:boolean = true;
     availableLanguages = LANGS;
@@ -65,7 +76,16 @@ export class AdminPublisherDetailComponent {
     scraperUrl:string = '';
     @ViewChild('scrapeDialog') scrapeDialog:any;
 
+    showRelationDialog:boolean = false;
+    addRelationItem:any = null;
+    @ViewChild('relationDialog') relationDialog:any;
     publisherRelationTypes:any = PUBLISHER_RELATION_TYPES;
+
+    descriptionTabIndex:number = 0;
+    selectedDescription:any = null;
+    showDescriptionDialog:boolean = false;
+    addDescriptionItem:any = {description: '',language: this.availableLanguages[0],source: ''};
+    @ViewChild('descriptionDialog') descriptionDialog:any;
 
     readonly tools = TUI_EDITOR_DEFAULT_TOOLS;
 
@@ -88,6 +108,11 @@ export class AdminPublisherDetailComponent {
         this.loadPublisher(id);
     }
 
+    // get publisher array cast to publisher item
+    get typedPublishers(): PublisherItem[] {
+        return this.publishers as PublisherItem[];
+    }
+
     // load series data
     loadPublisher(id:any){
         const prevScrollTop = this.sidebar.scrollTop();
@@ -100,7 +125,10 @@ export class AdminPublisherDetailComponent {
             this.editPublisher = JSON.parse(JSON.stringify(this.publisher));
             const dateParts = this.editPublisher.founding_date.toString().split('-').map((p:string) => parseInt(p));
             this.editPublisher.founding_date = new TuiDay(dateParts[0],dateParts[1]-1,dateParts[2]);
-            console.log(this.publisher)
+            // set selected description if there is one
+            if(this.editPublisher.descriptions.length > 0) this.descriptionTabChanged(this.descriptionTabIndex);
+            
+            this.loadPublishers();
 
             setTimeout(()=>{
                 this.sidebar.setScrollTop(prevScrollTop);
@@ -109,12 +137,45 @@ export class AdminPublisherDetailComponent {
         });
     }
 
+    loadPublishers(){
+        this.api.request<any>(HttpMethod.POST, `admin-publishers`, {order: 'name-asc'}).subscribe((res:any)=>{
+            this.publishers = res.publishers;
+        });
+    }
+
     // save changes to database
     saveEdit(){
         if(!this.editPublisher || this.saving === true) return;
         this.saving = true;
+
+        const added_aliases = []; const removed_aliases = [];
+        for(const alias of this.editPublisher.aliases) if(alias.id === -1) added_aliases.push(alias);
+        for(const alias of this.publisher.aliases) if(!this.editPublisher.aliases.find((a:any) => a.id == alias.id)) removed_aliases.push(alias);
+
+        const modified_relations = []; const added_relations = []; const removed_relations = [];
+        for(const rel of this.editPublisher.relations){
+            const relation = this.publisher.relations.find((d:any) => d.id == rel.id);
+            // new items have an negative id
+            if(rel.id === -1) added_relations.push(rel);
+            // check if something has changed
+            else if(relation && rel.relation_type.key !== relation.relation_type.key) modified_relations.push(rel);
+        }
+        // check if relations were removed
+        for(const rel of this.publisher.relations) if(!this.editPublisher.relations.find((d:any) => d.id == rel.id)) removed_relations.push(rel);
+
+        const modified_descriptions = []; const added_descriptions = []; const removed_descriptions = [];
+        for(const desc of this.editPublisher.descriptions){
+            const description = this.publisher.descriptions.find((d:any) => d.id == desc.id);
+            // new items have an negative id
+            if(desc.id === -1) added_descriptions.push(desc);
+            // check if something has changed
+            else if(description && desc.description !== description.description || desc.source !== description.source) modified_descriptions.push(desc);
+        }
+        // check if descriptions were removed
+        for(const desc of this.publisher.descriptions) if(!this.editPublisher.descriptions.find((d:any) => d.id == desc.id)) removed_descriptions.push(desc);
+
         this.editPublisher.founding_date = this.editPublisher.founding_date.toString().split('.').reverse().join('-');
-        console.log(this.editPublisher)
+        
         this.api.request<string>(HttpMethod.POST, `admin-publishers/edit/${this.editPublisher.id}`, {
             name: this.editPublisher.name,
             short_name: this.editPublisher.short_name,
@@ -122,9 +183,9 @@ export class AdminPublisherDetailComponent {
             image_source: this.editPublisher.image_source,
             headquarter: this.editPublisher.headquarter,
             founding_date: this.editPublisher.founding_date,
-            added_aliases: [], removed_aliases: [],
-            added_descriptions: [], removed_descriptions: [], modified_descriptions: [],
-            added_relations: [], removed_relations: [], modified_relations: []
+            added_aliases, removed_aliases,
+            added_descriptions, removed_descriptions, modified_descriptions,
+            added_relations, removed_relations, modified_relations
         }, 'text').subscribe(async (res:any)=>{
             this.saving = false;
             const msg = await getTranslation(this.translate, `volume.save-success`);
@@ -239,6 +300,19 @@ export class AdminPublisherDetailComponent {
         }
     }
 
+    // if backdrop of dialog is clicked close it
+    relationDialogClick(e:any){
+        if (e.target === this.relationDialog.nativeElement) {
+            this.showRelationDialog = false;
+            this.addRelationItem = null;
+        }
+    }
+
+    // open description dialog
+    openRelationDialog(){
+        this.showRelationDialog = true;
+    }
+
     // delete cover of given type
     async deleteImage(){
         this.deletingImage = true;
@@ -268,5 +342,83 @@ export class AdminPublisherDetailComponent {
         }, (err:any)=>{
             this.scraping = false;
         });
+    }
+
+    removeAlias(alias:any){
+        const index = this.editPublisher.aliases.indexOf(alias);
+        if (index >= 0) {
+            this.editPublisher.aliases.splice(index, 1);
+        }
+    }
+
+    addAlias(){
+        const alias = prompt(`Add Alias:`); // TODO translate
+        if(alias && alias?.trim() !== ""){
+            this.editPublisher.aliases.push({id: -1, name: alias});
+        }
+    }
+
+    addRelation(){
+        if(!this.addRelationItem || this.editPublisher.relations.find((c:any) => c.relation_id === this.addRelationItem.id)) return;
+        this.editPublisher.relations.push({
+            id: -1,
+            relation_id: this.addRelationItem.id,
+            name: this.addRelationItem.name,
+            relation_type: this.publisherRelationTypes.find((c:any) => c.key === 'imprint'),
+            image: this.addRelationItem?.image
+        });
+        this.showRelationDialog = false;
+        this.addRelationItem = undefined;
+    }
+
+    removeRelation(e:any,relation:PublisherItem){
+        e.preventDefault();
+        this.editPublisher.relations = this.editPublisher.relations.filter((c:PublisherItem) => c.name !== relation.name);
+    }
+
+    // if backdrop of dialog is clicked close it
+    descriptionDialogClick(e:any){
+        if (e.target === this.descriptionDialog.nativeElement) {
+            this.showDescriptionDialog = false;
+        }
+    }
+
+    // open description dialog
+    openDescriptionDialog(){
+        this.showDescriptionDialog = true;
+    }
+
+    // add description
+    async addDescription(){
+        const lang = localeToLang(this.addDescriptionItem.language.value);
+        if(this.editPublisher.descriptions.find((d:any) => d.language === lang)){
+            const msg = await getTranslation(this.translate, `add-description-dialog.exists`);
+            errorAlert(this.alerts, msg, undefined, this.translate);
+            return;
+        }
+    
+        this.editPublisher.descriptions.push({
+            id: -1, description: '', source: '', language: lang
+        });
+    
+        this.showDescriptionDialog = false;
+    }
+
+    // remove description
+    removeDescription(e:any,desc:any){
+        e.preventDefault();
+        this.editPublisher.descriptions = this.editPublisher.descriptions.filter((d:any) => d.language !== desc.language);
+        if(this.editPublisher.descriptions.length > 0){
+            this.selectedDescription = this.editPublisher.descriptions[0];
+            this.descriptionTabIndex = 0;
+        } else {
+            this.selectedDescription = undefined;
+            this.descriptionTabIndex = 0;
+        }
+    }
+
+    descriptionTabChanged(e:any){
+        if(e > this.editPublisher.descriptions.length - 1) return;
+        this.selectedDescription = this.editPublisher.descriptions[e];
     }
 }

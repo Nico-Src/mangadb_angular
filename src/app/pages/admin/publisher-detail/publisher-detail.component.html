@@ -80,6 +80,55 @@
                         </tui-textfield>
                     </label>
                 </div>
+                <div class="header-title">
+                    <span>{{ `publisher.aliases` | translate }}</span>
+                </div>
+                <div class="alias-wrapper">
+                    <div class="alias" *ngFor="let alias of editPublisher.aliases">
+                        {{ alias.name }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeAlias(alias)"></ng-icon>
+                    </div>
+                    <div class="alias add" (click)="addAlias()">
+                        <ng-icon name="tablerPlus" class="icon"></ng-icon>&nbsp;{{ 'publisher.new-alias' | translate }}
+                    </div>
+                </div>
+                <div class="header-title">
+                    <span>{{ `publisher.relations` | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openRelationDialog()" *ngIf="publisher">{{ 'series.new-relation' | translate }}</button>
+                </div>
+                <div class="relation-wrapper">
+                    <div class="relation-item" *ngFor="let relation of editPublisher?.relations" (contextmenu)="removeRelation($event,relation)">
+                        <div class="image">
+                            <img crossorigin="anonymous" [src]="`${cdn_url}/publisher/image/${relation.relation_id}/scaled`">
+                        </div>
+                        <div class="details">
+                            <div class="name">{{ relation.name }}</div>
+                            <label>
+                                <tui-select tuiTextfieldSize="s" [(ngModel)]="relation.relation_type" [valueContent]="relationTypeContent" [tuiTextfieldLabelOutside]="true">
+                                    <tui-data-list-wrapper *tuiDataList [itemContent]="relationTypeContent" [items]="publisherRelationTypes"></tui-data-list-wrapper>
+                                </tui-select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'series.descriptions' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openDescriptionDialog()" *ngIf="publisher">{{ 'series.new-description' | translate }}</button>
+                </div>
+                <tui-tabs [(activeItemIndex)]="descriptionTabIndex" [size]="'m'" class="description-tabs" (activeItemIndexChange)="descriptionTabChanged($event)">
+                    <button tuiTab type="button" *ngFor="let desc of editPublisher.descriptions" (contextmenu)="removeDescription($event,desc)">
+                        {{ `language.${toLocale(desc.language)}` | translate }}
+                    </button>
+                </tui-tabs>
+                <tui-editor *ngIf="selectedDescription?.description != undefined" [(ngModel)]="selectedDescription.description" [tools]="tools" class="editor"></tui-editor>
+                <div class="html-preview" *ngIf="selectedDescription?.description != undefined">
+                    <textarea [(ngModel)]="selectedDescription.description"></textarea>
+                </div>
+                <label *ngIf="selectedDescription?.description != undefined" class="desc-source">
+                    {{ 'series.source' | translate }}
+                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                        <input tuiTextfield [(ngModel)]="selectedDescription.source">
+                    </tui-textfield>
+                </label>
             </div>
         </div>
         <div class="button-wrapper">
@@ -90,6 +139,26 @@
             </tui-loader>
         </div>
         <div class="placeholder" style="width: 100%; height: 20px;"></div>
+    </div>
+</div>
+
+<div class="relation-dialog" (click)="relationDialogClick($event)" #relationDialog>
+    <div class="window" [class.show]="showRelationDialog">
+        <div class="title">{{ 'add-relation-dialog.title' | translate }}</div>
+        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="publisherContent" [stringify]="stringifyPublisher" [tuiTextfieldSize]="'m'">
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedPublishers | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addRelation()">{{ 'add-relation-dialog.add' | translate }}</button>
+        </div>
     </div>
 </div>
 
@@ -110,10 +179,37 @@
     </div>
 </div>
 
+<div class="description-dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
+    <div class="window" [class.show]="showDescriptionDialog">
+        <div class="title">{{ 'add-description-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-description-dialog.language' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addDescriptionItem.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLanguages"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addDescription()">{{ 'add-description-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
 <ng-template #languageContent let-item>
     <div class="language-item">
         <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #relationTypeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `publisher.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #publisherContent let-item>
+    <div class="publisher-item">
+        <span class="publisher-name">{{ item.name }}</span>
     </div>
 </ng-template>
 

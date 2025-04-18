@@ -141,6 +141,13 @@ export const VOLUME_BINDING_TYPES = [
     {key: 'Hardcover', name: 'Hardcover'}
 ];
 
+export const PUBLISHER_RELATION_TYPES = [
+    {key: 'imprint', name: 'Imprint'},
+    {key: 'parent', name: 'Parent'},
+    {key: 'joint venture', name: 'Joint Venture'},
+    {key: 'subsidiary', name: 'Subsidiary'}
+];
+
 export enum COVER{
     FRONT='front',
     BACK='back',
