@@ -4,17 +4,15 @@ import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
-import { TuiTable, TuiTableCell } from '@taiga-ui/addon-table';
+import { TuiTable } from '@taiga-ui/addon-table';
 import { TuiAlertService, TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerEdit, tablerLock, tablerPlus, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
-import { TuiCell } from '@taiga-ui/layout';
-import { TuiFade, TuiPagination } from '@taiga-ui/kit';
+import { TuiPagination } from '@taiga-ui/kit';
 import { solarGlobal } from '@ng-icons/solar-icons/outline';
-import { solarGlobalBold } from '@ng-icons/solar-icons/bold';
 import { CDN_BASE, errorAlert, getTranslation, SERIES_TYPES, successAlert } from '../../../../globals';
 
 @Component({
@@ -72,13 +70,14 @@ export class AdminSeriesComponent {
         this.updateQueryParams();
     }
 
+    // update query params
     updateQueryParams(){
         // navigate router without reloading and without pushing to history
         this.router.navigate([], { queryParams: {order: this.selectedOrder.value, page: this.currentPage, search: this.search.trim() !== '' ? this.search : null}, queryParamsHandling: 'merge', replaceUrl: true });
         this.loadSeries();
     }
 
-
+    // load series data
     loadSeries(){
         const PAGE_LIMIT = 50;
         this.loading = true;
@@ -87,7 +86,6 @@ export class AdminSeriesComponent {
 
         this.api.request<any>(HttpMethod.POST, `admin-series`, {order: this.selectedOrder.value, limit: PAGE_LIMIT,offset,search:this.search}).subscribe((res:any)=>{
             this.series = res.series;
-            console.log(this.series)
             this.maxPages = res.max;
             this.loading = false;
         }, (err:any)=>{
@@ -139,7 +137,7 @@ export class AdminSeriesComponent {
             this.addingSeries = false;
             this.showAddDialog = false;
         }, async (err:any)=>{
-            if(err.status == 409){
+            if(err.status == 409){ // exists-already
                 const msg = await getTranslation(this.translate, `add-series-dialog.exists-already`);
                 errorAlert(this.alerts, msg, undefined, this.translate);
             } else {

@@ -22,7 +22,7 @@
             <div class="inputs">
                 <div class="wrapper">
                     <label tuiInputFiles>
-                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="frontImage" (ngModelChange)="imageUpdate($event,'front')" (reject)="imageRejected($event,'front')"/>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="frontImage" (ngModelChange)="imageUpdate($event,'front')"/>
                         <ng-template let-dragged>
                             {{ 'volume.upload-hint' | translate }}
                         </ng-template>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="wrapper">
                     <label tuiInputFiles>
-                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="spineImage" (ngModelChange)="imageUpdate($event,'spine')" (reject)="imageRejected($event,'spine')"/>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="spineImage" (ngModelChange)="imageUpdate($event,'spine')"/>
                         <ng-template let-dragged>
                             {{ 'volume.upload-hint' | translate }}
                         </ng-template>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="wrapper">
                     <label tuiInputFiles>
-                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="backImage" (ngModelChange)="imageUpdate($event,'back')" (reject)="imageRejected($event,'back')"/>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="backImage" (ngModelChange)="imageUpdate($event,'back')"/>
                         <ng-template let-dragged>
                             {{ 'volume.upload-hint' | translate }}
                         </ng-template>
@@ -246,11 +246,11 @@
     </div>
 </div>
 
-<div class="media-dialog" (click)="mediaDialogClick($event)" #mediaDialog>
+<div class="media-dialog dialog" (click)="mediaDialogClick($event)" #mediaDialog>
     <div class="window" [class.show]="showMediaDialog">
         <div class="title">{{ 'add-media-dialog.title' | translate }}</div>
         <label [style.flex]="4">
-            {{ 'add-contributor-dialog.search' | translate }}
+            {{ 'browse-series.search.placeholder' | translate }}
             <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="mediaSearchKeyDown($event)">
                 <input tuiTextfield [(ngModel)]="mediaSearch">
             </tui-textfield>
@@ -265,7 +265,7 @@
 </div>
 
 
-<div class="scrape-dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
+<div class="scrape-dialog dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
     <div class="window" [class.show]="showScrapeDialog">
         <div class="title">{{ 'scrape-dialog.title' | translate }}</div>
         <label>

@@ -1,7 +1,6 @@
 import { Component, HostListener, inject, Injector, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiAlertService, TuiButton, TuiDataList, TuiLoader, TuiTextfield } from '@taiga-ui/core';
@@ -10,10 +9,9 @@ import { MangaCover } from '../../../manga-cover/manga-cover.component';
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CDN_BASE, CONTRIBUTOR_TYPES, errorAlert, getOriginByLang, getTranslation, LANGS, langToLocale, localeToLang, SCRAPER_BASE, SERIES_PUBLICATION_STATUSES, SERIES_RELATION_TYPES, SERIES_TYPES, successAlert } from '../../../../globals';
-import { TuiCheckbox, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
+import { TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerMinus, tablerPlus, tablerX } from '@ng-icons/tabler-icons';
-import { NgAutoAnimateDirective } from 'ng-auto-animate';
 import { TUI_EDITOR_DEFAULT_EXTENSIONS, TUI_EDITOR_DEFAULT_TOOLS, TUI_EDITOR_EXTENSIONS, TuiEditor } from '@taiga-ui/editor';
 import { SideBarService } from '../../../../services/sidebar.service';
 import { HttpClient } from '@angular/common/http';
@@ -151,7 +149,6 @@ export class AdminSeriesDetailComponent {
         const prevScrollTop = this.sidebar.scrollTop();
         this.loading = true;
         this.api.request<any>(HttpMethod.GET, `admin-series/id/${id}`, {}).subscribe((res:any)=>{
-            console.log(res)
             // convert strings to their select values ('relation_type' | string => object (from relationTypes in this case))
             for(const relation of res.relations){
                 if(typeof relation.relation_type === 'string') relation.relation_type = this.relationTypes.find((t:any) => t.key === relation.relation_type);
@@ -314,18 +311,21 @@ export class AdminSeriesDetailComponent {
         });
     }
 
+    // add edit lock
     addLock(id:any){
         this.api.request<string>(HttpMethod.POST, `admin/lock`,{route:'series',id:id},'text').subscribe((res:any)=>{},(err)=>{
             this.location.back();
         });
     }
 
+    // remove edit lock
     removeLock(){
         this.api.request<string>(HttpMethod.DELETE, `admin/remove-lock`, {route:'series',id:this.series.id},'text').subscribe((res:any)=>{
             this.location.back();
         });
     }
 
+    // convert language to locale
     toLocale(lang:string){
         return langToLocale(lang);
     }
@@ -345,8 +345,11 @@ export class AdminSeriesDetailComponent {
         }
     }
 
+    // event handler for changing description tab
     descriptionTabChanged(e:any){
+        // check if index is in range
         if(e > this.editSeries.descriptions.length - 1) return;
+        // select description
         this.selectedDescription = this.editSeries.descriptions[e];
     }
 
@@ -369,6 +372,7 @@ export class AdminSeriesDetailComponent {
         }
     }
 
+    // scrape url
     scrape(){
         this.scraping = true;
 
@@ -386,6 +390,7 @@ export class AdminSeriesDetailComponent {
                 case 'it': language = 'Italian'; break;
                 case 'jp': language = 'Japanese'; break;
             }
+            // if description for language is not yet in series add it
             if(!this.editSeries.descriptions.find((d:any) => d.language === language)){
                 this.editSeries.descriptions.push({
                     id: -1,
@@ -394,6 +399,7 @@ export class AdminSeriesDetailComponent {
                     source: res.source.trim(),
                 });
             }
+            // add tags
             for(const tag of res.tags){
                 if(tag === 'Action' || tag === 'Actiondrama') this.addTagObj(this.allTags.find((t:any) => t.name === 'Action'));
                 if(tag === 'Abenteuer') this.addTagObj(this.allTags.find((t:any) => t.name === 'Adventure'));
@@ -534,6 +540,7 @@ export class AdminSeriesDetailComponent {
     // add description
     async addDescription(){
         const lang = localeToLang(this.addDescriptionItem.language.value);
+        // check if there is a description for language already
         if(this.editSeries.descriptions.find((d:any) => d.language === lang)){
             const msg = await getTranslation(this.translate, `add-description-dialog.exists`);
             errorAlert(this.alerts, msg, undefined, this.translate);
@@ -681,6 +688,7 @@ export class AdminSeriesDetailComponent {
         this.editSeries.tags.sort((a:any, b:any) => a.name.localeCompare(b.name));
     }
 
+    // add tag
     addTag(){
         if(!this.addTagItem || this.editSeries.tags.find((t:any) => t.tag_id === this.addTagItem.id)) return;
     
@@ -698,6 +706,7 @@ export class AdminSeriesDetailComponent {
         this.showTagDialog = false;
     }
     
+    // add tag with object
     addTagObj(tag:any){
         if(!tag || this.editSeries.tags.find((t:any) => t.tag_id === tag.id)) return;
     

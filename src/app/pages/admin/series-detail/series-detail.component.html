@@ -234,7 +234,7 @@
     </div>
 </div>
 
-<div class="alias-dialog" (click)="aliasDialogClick($event)" #aliasDialog>
+<div class="alias-dialog dialog" (click)="aliasDialogClick($event)" #aliasDialog>
     <div class="window" [class.show]="showAliasDialog">
         <div class="title">{{ 'add-alias-dialog.title' | translate }}</div>
         <label>
@@ -255,7 +255,7 @@
     </div>
 </div>
 
-<div class="description-dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
+<div class="description-dialog dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
     <div class="window" [class.show]="showDescriptionDialog">
         <div class="title">{{ 'add-description-dialog.title' | translate }}</div>
         <label>
@@ -270,11 +270,10 @@
     </div>
 </div>
 
-<div class="relation-dialog" (click)="relationDialogClick($event)" #relationDialog>
+<div class="relation-dialog dialog" (click)="relationDialogClick($event)" #relationDialog>
     <div class="window" [class.show]="showRelationDialog">
         <div class="title">{{ 'add-relation-dialog.title' | translate }}</div>
-        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="seriesContent" [stringify]="stringifySeries" [tuiTextfieldSize]="'m'">
-            {{ 'edit-group-dialog.series' | translate }}
+        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="seriesContent" [stringify]="stringifySeries" [tuiTextfieldSize]="'s'">
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedSeries | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
                     <tui-data-list #list [size]="'s'">
@@ -291,11 +290,10 @@
     </div>
 </div>
 
-<div class="publisher-dialog" (click)="publisherDialogClick($event)" #publisherDialog>
+<div class="publisher-dialog dialog" (click)="publisherDialogClick($event)" #publisherDialog>
     <div class="window" [class.show]="showPublisherDialog">
         <div class="title">{{ 'add-publisher-dialog.title' | translate }}</div>
-        <tui-combo-box [(ngModel)]="addPublisherItem" [valueContent]="publisherContent" [stringify]="stringifyPublisher" [tuiTextfieldSize]="'m'">
-            {{ 'add-publisher-dialog.publisher' | translate }}
+        <tui-combo-box [(ngModel)]="addPublisherItem" [valueContent]="publisherContent" [stringify]="stringifyPublisher" [tuiTextfieldSize]="'s'">
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedPublishers | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
                     <tui-data-list #list [size]="'s'">
@@ -312,11 +310,10 @@
     </div>
 </div>
 
-<div class="contributor-dialog" (click)="contributorDialogClick($event)" #contributorDialog>
+<div class="contributor-dialog dialog" (click)="contributorDialogClick($event)" #contributorDialog>
     <div class="window" [class.show]="showContributorDialog">
         <div class="title">{{ 'add-contributor-dialog.title' | translate }}</div>
-        <tui-combo-box [(ngModel)]="addContributorItem" [valueContent]="contributorContent" [stringify]="stringifyContributor" [tuiTextfieldSize]="'m'">
-            {{ 'add-contributor-dialog.contributor' | translate }}
+        <tui-combo-box [(ngModel)]="addContributorItem" [valueContent]="contributorContent" [stringify]="stringifyContributor" [tuiTextfieldSize]="'s'">
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedContributors | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
                     <tui-data-list #list [size]="'s'">
@@ -333,7 +330,7 @@
     </div>
 </div>
 
-<div class="tag-dialog" (click)="tagDialogClick($event)" #tagDialog>
+<div class="tag-dialog dialog" (click)="tagDialogClick($event)" #tagDialog>
     <div class="window" [class.show]="showTagDialog">
         <div class="title">{{ 'add-tag-dialog.title' | translate }}</div>
         <label>
@@ -347,7 +344,7 @@
     </div>
 </div>
 
-<div class="scrape-dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
+<div class="scrape-dialog dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
     <div class="window" [class.show]="showScrapeDialog">
         <div class="title">{{ 'scrape-dialog.title' | translate }}</div>
         <label>

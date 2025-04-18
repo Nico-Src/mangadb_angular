@@ -1,19 +1,16 @@
 import { Component, HostListener, inject, Injector, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiAlertService, TuiButton, TuiDataList, tuiDateFormatProvider, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { Location, NgFor, NgIf } from '@angular/common';
-import { MangaCover } from '../../../manga-cover/manga-cover.component';
 import { TuiComboBoxModule, TuiInputDateModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CDN_BASE, CONTRIBUTOR_TYPES, COVER, errorAlert, getOriginByLang, getTranslation, LANGS, langToLocale, localeToLang, PUBLISHER_RELATION_TYPES, SCRAPER_BASE, SERIES_PUBLICATION_STATUSES, SERIES_RELATION_TYPES, SERIES_TYPES, successAlert, UNKNOWN_DATE, VOLUME_BINDING_TYPES } from '../../../../globals';
-import { TuiCheckbox, TuiFiles, TuiFilterByInputPipe, TuiInputFiles, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
+import { CDN_BASE, errorAlert, getTranslation, LANGS, langToLocale, localeToLang, PUBLISHER_RELATION_TYPES, successAlert } from '../../../../globals';
+import { TuiFiles, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiTabs } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerChevronLeft, tablerChevronRight, tablerMinus, tablerPlus, tablerTrash, tablerUpload, tablerX } from '@ng-icons/tabler-icons';
-import { NgAutoAnimateDirective } from 'ng-auto-animate';
 import { TUI_EDITOR_DEFAULT_EXTENSIONS, TUI_EDITOR_DEFAULT_TOOLS, TUI_EDITOR_EXTENSIONS, TuiEditor } from '@taiga-ui/editor';
 import { SideBarService } from '../../../../services/sidebar.service';
 import { HttpClient } from '@angular/common/http';
@@ -119,6 +116,7 @@ export class AdminPublisherDetailComponent {
         this.loading = true;
         this.api.request<any>(HttpMethod.GET, `admin-publishers/id/${id}`, {}).subscribe((res:any)=>{
             this.publisher = res;
+            // convert string to object
             for(const relation of this.publisher.relations){
                 if(typeof relation.relation_type === "string") relation.relation_type = this.publisherRelationTypes.find((t:any) => t.key === relation.relation_type);
             }
@@ -137,6 +135,7 @@ export class AdminPublisherDetailComponent {
         });
     }
 
+    // load all publishers for relation select
     loadPublishers(){
         this.api.request<any>(HttpMethod.POST, `admin-publishers`, {order: 'name-asc'}).subscribe((res:any)=>{
             this.publishers = res.publishers;
@@ -197,18 +196,21 @@ export class AdminPublisherDetailComponent {
         });
     }
 
+    // add edit lock
     addLock(id:any){
         this.api.request<string>(HttpMethod.POST, `admin/lock`,{route:'publisher',id:id},'text').subscribe((res:any)=>{},(err)=>{
             this.location.back();
         });
     }
 
+    // remove edit lock
     removeLock(redirect:boolean = true){
         this.api.request<string>(HttpMethod.DELETE, `admin/remove-lock`, {route:'publisher',id:this.publisher.id},'text').subscribe((res:any)=>{
             if(redirect) this.location.back();
         });
     }
 
+    // convert lang to locale
     toLocale(lang:string){
         return langToLocale(lang);
     }
@@ -219,12 +221,6 @@ export class AdminPublisherDetailComponent {
         if(e.ctrlKey && e.key === 's'){
             e.preventDefault();
             this.saveEdit();
-        }
-
-        // show scraper with ctrl + k
-        if(e.ctrlKey && e.key === 'k'){
-            e.preventDefault();
-            this.openScrapeDialog();
         }
     }
 
@@ -243,13 +239,10 @@ export class AdminPublisherDetailComponent {
         }
     }
 
+    // set founding date to unknown
     setDateUnknown(){
         const dateParts = '1001-01-01'.toString().split('-').map((p:string) => parseInt(p));
         this.editPublisher.founding_date = new TuiDay(dateParts[0],dateParts[1]-1,dateParts[2])
-    }
-
-    imageRejected(e:any,type:string){
-        console.log(e)
     }
 
     // reset image when image is removed
@@ -288,18 +281,6 @@ export class AdminPublisherDetailComponent {
         }
     }
 
-    // open scrape dialog
-    openScrapeDialog(){
-        this.showScrapeDialog = true;
-    }
-
-    // keydown event handler for scraping
-    scrapeSearchKeyDown(e:any){
-        if(e.key == 'Enter' && this.scraperUrl.length >= 10){
-            this.scrape();
-        }
-    }
-
     // if backdrop of dialog is clicked close it
     relationDialogClick(e:any){
         if (e.target === this.relationDialog.nativeElement) {
@@ -332,18 +313,7 @@ export class AdminPublisherDetailComponent {
         this.imageHash = (Math.random() + 1).toString(36).slice(2);
     }
 
-    scrape(){
-        this.scraping = true;
-
-        this.http.post(`${SCRAPER_BASE}/getAmazonData`, {link: this.scraperUrl}).subscribe((res:any)=>{
-            const data = res;
-            
-            this.scraping = false;
-        }, (err:any)=>{
-            this.scraping = false;
-        });
-    }
-
+    // remove alias
     removeAlias(alias:any){
         const index = this.editPublisher.aliases.indexOf(alias);
         if (index >= 0) {
@@ -351,6 +321,7 @@ export class AdminPublisherDetailComponent {
         }
     }
 
+    // add alias
     addAlias(){
         const alias = prompt(`Add Alias:`); // TODO translate
         if(alias && alias?.trim() !== ""){
@@ -358,7 +329,9 @@ export class AdminPublisherDetailComponent {
         }
     }
 
+    // add relation
     addRelation(){
+        // check if everything is correct
         if(!this.addRelationItem || this.editPublisher.relations.find((c:any) => c.relation_id === this.addRelationItem.id)) return;
         this.editPublisher.relations.push({
             id: -1,
@@ -371,6 +344,7 @@ export class AdminPublisherDetailComponent {
         this.addRelationItem = undefined;
     }
 
+    // remove relation
     removeRelation(e:any,relation:PublisherItem){
         e.preventDefault();
         this.editPublisher.relations = this.editPublisher.relations.filter((c:PublisherItem) => c.name !== relation.name);
@@ -391,6 +365,7 @@ export class AdminPublisherDetailComponent {
     // add description
     async addDescription(){
         const lang = localeToLang(this.addDescriptionItem.language.value);
+        // check if there is already a description for the given language
         if(this.editPublisher.descriptions.find((d:any) => d.language === lang)){
             const msg = await getTranslation(this.translate, `add-description-dialog.exists`);
             errorAlert(this.alerts, msg, undefined, this.translate);
@@ -408,6 +383,7 @@ export class AdminPublisherDetailComponent {
     removeDescription(e:any,desc:any){
         e.preventDefault();
         this.editPublisher.descriptions = this.editPublisher.descriptions.filter((d:any) => d.language !== desc.language);
+        // modify index and object based on if there are still descriptions left after removing
         if(this.editPublisher.descriptions.length > 0){
             this.selectedDescription = this.editPublisher.descriptions[0];
             this.descriptionTabIndex = 0;
@@ -417,8 +393,11 @@ export class AdminPublisherDetailComponent {
         }
     }
 
+    // event handler for changing description tab
     descriptionTabChanged(e:any){
+        // check if index is in range
         if(e > this.editPublisher.descriptions.length - 1) return;
+        // select description
         this.selectedDescription = this.editPublisher.descriptions[e];
     }
 }

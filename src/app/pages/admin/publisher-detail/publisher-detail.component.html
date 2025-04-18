@@ -12,7 +12,7 @@
             </div>
             <div class="wrapper">
                 <label tuiInputFiles>
-                    <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="image" (ngModelChange)="imageUpdate($event,'front')" (reject)="imageRejected($event,'front')"/>
+                    <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="image" (ngModelChange)="imageUpdate($event,'front')"/>
                     <ng-template let-dragged>
                         {{ 'volume.upload-hint' | translate }}
                     </ng-template>
@@ -133,7 +133,6 @@
         </div>
         <div class="button-wrapper">
             <button size="s" tuiButton type="button" class="cancel" [disabled]="saving" appearance="accent" (click)="removeLock()" *ngIf="publisher">{{ 'publisher.free-lock' | translate }}</button>
-            <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" (click)="openScrapeDialog()" *ngIf="publisher">{{ 'publisher.scrape' | translate }}</button>
             <tui-loader class="loader" [overlay]="true" [showLoader]="saving">
                 <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" (click)="saveEdit()" *ngIf="publisher">{{ 'publisher.save' | translate }}</button>
             </tui-loader>
@@ -142,10 +141,10 @@
     </div>
 </div>
 
-<div class="relation-dialog" (click)="relationDialogClick($event)" #relationDialog>
+<div class="relation-dialog dialog" (click)="relationDialogClick($event)" #relationDialog>
     <div class="window" [class.show]="showRelationDialog">
         <div class="title">{{ 'add-relation-dialog.title' | translate }}</div>
-        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="publisherContent" [stringify]="stringifyPublisher" [tuiTextfieldSize]="'m'">
+        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="publisherContent" [stringify]="stringifyPublisher" [tuiTextfieldSize]="'s'">
             <ng-container *tuiDataList>
                 <cdk-virtual-scroll-viewport *tuiLet="typedPublishers | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
                     <tui-data-list #list [size]="'s'">
@@ -162,24 +161,7 @@
     </div>
 </div>
 
-<div class="scrape-dialog" (click)="scrapeDialogClick($event)" #scrapeDialog>
-    <div class="window" [class.show]="showScrapeDialog">
-        <div class="title">{{ 'scrape-dialog.title' | translate }}</div>
-        <label>
-            {{ 'scrape-dialog.url' | translate }}
-            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input" (keydown)="scrapeSearchKeyDown($event)">
-                <input tuiTextfield [(ngModel)]="scraperUrl" [readOnly]="scraping">
-            </tui-textfield>
-        </label>
-        <div class="button-wrapper">
-            <tui-loader class="loader" [overlay]="true" [showLoader]="scraping">
-                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="scrape()">{{ 'scrape-dialog.scrape' | translate }}</button>
-            </tui-loader>
-        </div>
-    </div>
-</div>
-
-<div class="description-dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
+<div class="description-dialog dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
     <div class="window" [class.show]="showDescriptionDialog">
         <div class="title">{{ 'add-description-dialog.title' | translate }}</div>
         <label>

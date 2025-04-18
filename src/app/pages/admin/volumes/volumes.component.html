@@ -74,7 +74,7 @@
     </tbody>
 </table>
 
-<div class="add-dialog" (click)="addDialogClick($event)" #addDialog>
+<div class="add-dialog dialog" (click)="addDialogClick($event)" #addDialog>
     <div class="window" [class.show]="showAddDialog">
         <div class="title">{{ 'add-volume-dialog.title' | translate }}</div>
         <label>
@@ -127,7 +127,7 @@
     </div>
 </div>
 
-<div class="add-group-dialog" (click)="addGroupDialogClick($event)" #addGroupDialog>
+<div class="add-group-dialog dialog" (click)="addGroupDialogClick($event)" #addGroupDialog>
     <div class="window" [class.show]="showAddGroupDialog">
         <div class="title">{{ 'add-group-dialog.title' | translate }}</div>
         <label>
@@ -156,7 +156,7 @@
     </div>
 </div>
 
-<div class="edit-group-dialog" (click)="editGroupDialogClick($event)" #editGroupDialog>
+<div class="edit-group-dialog dialog" (click)="editGroupDialogClick($event)" #editGroupDialog>
     <div class="window" [class.show]="showEditGroupDialog">
         <div class="title">{{ 'edit-group-dialog.title' | translate }}</div>
         <label *ngIf="editGroupItem">
@@ -185,7 +185,7 @@
     </div>
 </div>
 
-<div class="reorder-dialog" (click)="reorderDialogClick($event)" #reorderDialog>
+<div class="reorder-dialog dialog" (click)="reorderDialogClick($event)" #reorderDialog>
     <div class="window" [class.show]="showReorderDialog">
         <div class="title">{{ 'reorder-dialog.title' | translate }}</div>
         <div class="volume-wrapper" cdkDropList (cdkDropListDropped)="volumeDrop($event)">
@@ -203,7 +203,7 @@
     </div>
 </div>
 
-<div class="reorder-group-dialog" (click)="reorderGroupDialogClick($event)" #reorderGroupDialog>
+<div class="reorder-group-dialog dialog" (click)="reorderGroupDialogClick($event)" #reorderGroupDialog>
     <div class="window" [class.show]="showReorderGroupDialog">
         <div class="title">{{ 'reorder-group-dialog.title' | translate }}</div>
         <div class="volume-wrapper" cdkDropList (cdkDropListDropped)="groupDrop($event)">

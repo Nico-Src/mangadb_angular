@@ -5,21 +5,18 @@ import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
-import { TuiTable, TuiTableCell } from '@taiga-ui/addon-table';
-import { TuiAlertService, TuiButton, TuiDataList, TuiHintHost, TuiLoader, TuiTextfield } from '@taiga-ui/core';
+import { TuiTable } from '@taiga-ui/addon-table';
+import { TuiAlertService, TuiButton, TuiDataList, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerArrowsMove, tablerEdit, tablerLock, tablerMenuOrder, tablerPlus, tablerRating16Plus, tablerRating18Plus, tablerReorder, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
+import { tablerArrowsMove, tablerEdit, tablerLock, tablerMenuOrder, tablerPlus, tablerReorder, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
-import { TuiCell } from '@taiga-ui/layout';
-import { TuiFade, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiPagination, } from '@taiga-ui/kit';
+import { TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiPagination, } from '@taiga-ui/kit';
 import { solarGlobal, solarMagicStick3 } from '@ng-icons/solar-icons/outline';
-import { solarGlobalBold } from '@ng-icons/solar-icons/bold';
-import { CDN_BASE, errorAlert, getTranslation, LANGS, SERIES_TYPES, successAlert, langToLocale, localeToLang } from '../../../../globals';
+import { CDN_BASE, errorAlert, getTranslation, LANGS, successAlert, langToLocale, localeToLang } from '../../../../globals';
 import { TuiLet, TuiStringHandler } from '@taiga-ui/cdk';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
-import { EdgesGeometry } from 'three';
 
 interface SeriesItem {
     type: string;
@@ -147,6 +144,7 @@ export class AdminVolumesComponent {
         this.updateQueryParams();
     }
 
+    // update query params
     updateQueryParams(){
         // navigate router without reloading and without pushing to history
         this.router.navigate([], { queryParams: {order: this.selectedOrder.value, page: this.currentPage, search: this.search.trim() !== '' ? this.search : null}, queryParamsHandling: 'merge', replaceUrl: true });

@@ -1,7 +1,6 @@
 import { Component, HostListener, inject, Injector, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiAlertService, TuiButton, TuiDataList, tuiDateFormatProvider, TuiLoader, TuiTextfield } from '@taiga-ui/core';
@@ -9,11 +8,10 @@ import { Location, NgFor, NgIf } from '@angular/common';
 import { MangaCover } from '../../../manga-cover/manga-cover.component';
 import { TuiComboBoxModule, TuiInputDateModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CDN_BASE, CONTRIBUTOR_TYPES, COVER, errorAlert, getOriginByLang, getTranslation, LANGS, langToLocale, localeToLang, SCRAPER_BASE, SERIES_PUBLICATION_STATUSES, SERIES_RELATION_TYPES, SERIES_TYPES, successAlert, VOLUME_BINDING_TYPES } from '../../../../globals';
-import { TuiCheckbox, TuiFiles, TuiFilterByInputPipe, TuiInputFiles, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
+import { CDN_BASE, COVER, errorAlert, getTranslation, LANGS, langToLocale, localeToLang, SCRAPER_BASE, successAlert, VOLUME_BINDING_TYPES } from '../../../../globals';
+import { TuiFiles, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerChevronLeft, tablerChevronRight, tablerMinus, tablerPlus, tablerTrash, tablerUpload, tablerX } from '@ng-icons/tabler-icons';
-import { NgAutoAnimateDirective } from 'ng-auto-animate';
 import { TUI_EDITOR_DEFAULT_EXTENSIONS, TUI_EDITOR_DEFAULT_TOOLS, TUI_EDITOR_EXTENSIONS, TuiEditor } from '@taiga-ui/editor';
 import { SideBarService } from '../../../../services/sidebar.service';
 import { HttpClient } from '@angular/common/http';
@@ -140,7 +138,6 @@ export class AdminVolumeDetailComponent {
             // set binding type and language
             if(typeof this.volume.type === "string") this.volume.type = this.volumeBindingTypes.find((b:any) => b.key === this.volume.type);
             if(typeof this.volume.language === "string") this.volume.language = this.availableLangs.find((l:any) => l.value === langToLocale(this.volume.language));
-            //volume.value.release_date = volume.value.release_date.replaceAll('-','/');
             // if the copyright is null, set it to the last copyright in the series
             if(this.volume.copyright == null || this.volume.copyright == "NULL" || this.volume.copyright == "null"){ // eslint-disable-line
                 this.volume.copyright = this.volume.lastCopyright;
@@ -149,7 +146,6 @@ export class AdminVolumeDetailComponent {
             this.editVolume = JSON.parse(JSON.stringify(this.volume));
             const dateParts = this.editVolume.release_date.toString().split('-').map((p:string) => parseInt(p));
             this.editVolume.release_date = new TuiDay(dateParts[0],dateParts[1]-1,dateParts[2]);
-            console.log(this.editVolume)
 
             this.loadGroups();
             this.loadEditions();
@@ -233,18 +229,21 @@ export class AdminVolumeDetailComponent {
         });
     }
 
+    // add edit lock
     addLock(id:any){
         this.api.request<string>(HttpMethod.POST, `admin/lock`,{route:'volume',id:id},'text').subscribe((res:any)=>{},(err)=>{
             this.location.back();
         });
     }
 
+    // remove edit lock
     removeLock(redirect:boolean = true){
         this.api.request<string>(HttpMethod.DELETE, `admin/remove-lock`, {route:'volume',id:this.volume.id},'text').subscribe((res:any)=>{
             if(redirect) this.location.back();
         });
     }
 
+    // redirect to next volume (if there is one)
     nextVolume(){
         if(this.volume.next){
             this.removeLock(false);
@@ -252,6 +251,7 @@ export class AdminVolumeDetailComponent {
         }
     }
     
+    // redirect to prev volume (if there is one)
     prevVolume(){
         if(this.volume.prev){
             this.removeLock(false);
@@ -259,6 +259,7 @@ export class AdminVolumeDetailComponent {
         }
     }
 
+    // convert language to locale
     toLocale(lang:string){
         return langToLocale(lang);
     }
@@ -311,10 +312,6 @@ export class AdminVolumeDetailComponent {
 
             reader.readAsDataURL(file);
         }
-    }
-
-    imageRejected(e:any,type:string){
-        console.log(e)
     }
 
     // reset image when image is removed
@@ -514,6 +511,7 @@ export class AdminVolumeDetailComponent {
         });
     }
 
+    // scrape url
     scrape(){
         this.scraping = true;
 
