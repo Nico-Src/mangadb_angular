@@ -1,0 +1,74 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'publisher.add' | translate }}</button>
+    </div>
+</div>
+
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="publishers-table" [class.loading]="loading">
+    <thead>
+        <tr>
+            <th tuiTh [style.width.%]="35">{{ 'tables.publisher.name' | translate }}</th>
+            <th tuiTh [style.width.%]="65">{{ 'tables.publisher.slug' | translate }}</th>
+        </tr>
+    </thead>
+    <tbody tuiTbody>
+        <ng-container *ngFor="let item of publishers">
+            <tr tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+                <ng-template #contextMenu>
+                    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                        <button *ngFor="let menuItem of publisherMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
+                            <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                            <span>{{ `publisher.context.${menuItem.title}` | translate }}</span>
+                        </button>
+                    </tui-data-list>
+                </ng-template>
+                <td tuiTd [style.maxWidth.%]="35">
+                    {{ item.name }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="65">
+                    {{ item.slug }}
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+
+<div class="add-dialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window" [class.show]="showAddDialog">
+        <div class="title">{{ 'add-publisher-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-publisher-dialog.name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addPublisherItem.name">
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingPublisher">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addPublisher()">{{ 'add-publisher-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>

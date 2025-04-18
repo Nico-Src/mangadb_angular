@@ -80,7 +80,7 @@
     <ng-icon name="lucideBook" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.admin-volumes' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/admin-publishers']" [class.active]="router.url === '/admin/publishers'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-publishers' | translate) ">
+<div class="item" [routerLink]="['/admin/publishers']" [class.active]="router.url.startsWith('/admin/publishers')" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-publishers' | translate) ">
     <ng-icon name="heroBuildingOffice2" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.admin-publishers' | translate }}</span>
 </div>

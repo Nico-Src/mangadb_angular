@@ -63,7 +63,8 @@
         "imprint": "Imprint",
         "admin-dashboard": "Admin-Dashboard",
         "admin-series": "Admin-Series",
-        "admin-volumes": "Admin-Volumes"
+        "admin-volumes": "Admin-Volumes",
+        "admin-publishers": "Admin-Publishers"
     },
 
     "sidebar": {
@@ -506,7 +507,12 @@
         "imprint": "Imprint",
         "parent": "Parent",
         "joint venture": "Joint Venture",
-        "subsidiary": "Subsidiary"
+        "subsidiary": "Subsidiary",
+        "add": "Add Publisher",
+        "context": {
+            "edit": "Edit",
+            "delete": "Delete"
+        }
     },
 
     "lists": {
@@ -540,6 +546,10 @@
             "type": "Type",
             "slug": "Slug",
             "visibility": "Visibility"
+        },
+        "publisher": {
+            "name": "Name",
+            "slug": "Slug"
         }
     },
 
@@ -752,22 +762,22 @@
 
     "add-relation-dialog": {
         "title": "Add Relation",
-        "add": "Add",
-        "search": "Search"
+        "add": "Add"
     },
 
     "add-publisher-dialog": {
         "title": "Add Publisher",
         "publisher": "Publisher",
         "add": "Add",
-        "search": "Search"
+        "success": "Publisher added successfully.",
+        "delete-success": "Publisher deleted successfully.",
+        "name": "Name"
     },
 
     "add-contributor-dialog": {
         "title": "Add Contributor",
         "add": "Add",
-        "contributor": "Contributor",
-        "search": "Search"
+        "contributor": "Contributor"
     },
 
     "add-tag-dialog": {
