@@ -37,6 +37,14 @@
                 <td tuiTd [style.maxWidth.%]="65">
                     {{ item.slug }}
                 </td>
+                <div class="edit-placeholder" *ngIf="item.lockedBy?.id">
+                    <div class="name">{{ item.name }}</div>
+                    <div class="by">
+                        <span>{{ 'series.currently-edited' | translate }}</span>
+                        <div class="username">{{ item.lockedBy.username }}</div>
+                        <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${item.lockedBy.id}/scaled`">
+                    </div>
+                </div>
             </tr>
         </ng-container>
     </tbody>

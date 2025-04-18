@@ -15,14 +15,11 @@ import { NgFor, NgIf } from '@angular/common';
 import { TuiCell } from '@taiga-ui/layout';
 import { TuiFade, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiPagination, } from '@taiga-ui/kit';
 import { solarGlobal, solarMagicStick3 } from '@ng-icons/solar-icons/outline';
-import { solarGlobalBold } from '@ng-icons/solar-icons/bold';
 import { CDN_BASE, errorAlert, getTranslation, LANGS, SERIES_TYPES, successAlert, langToLocale, localeToLang } from '../../../../globals';
-import { TuiLet, TuiStringHandler } from '@taiga-ui/cdk';
-import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-admin-publishers',
-    imports: [NgFor,NgIf,TuiTable,TuiTextfield,CdkDropList,CdkDrag,ScrollingModule,TuiComboBoxModule,TuiFilterByInputPipe,TuiLet,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
+    imports: [NgFor,NgIf,TuiTable,TuiTextfield,ScrollingModule,TuiComboBoxModule,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './publishers.component.html',
     styleUrl: './publishers.component.less',
     providers: [],
@@ -96,6 +93,7 @@ export class AdminPublishersComponent {
         const offset = this.currentPage * PAGE_LIMIT;
         this.api.request<any>(HttpMethod.POST, `admin-publishers`, {order: this.selectedOrder.value,limit: PAGE_LIMIT,offset,search:this.search}).subscribe((res:any)=>{
             this.publishers = res.publishers;
+            console.log(this.publishers)
             this.maxPages = res.max;
             this.loading = false;
         });
@@ -146,7 +144,7 @@ export class AdminPublishersComponent {
     }
 
     editPublisher(pub:any){
-
+        this.router.navigate(['admin','publishers',pub.id]);
     }
 
     // delete publishers
