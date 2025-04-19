@@ -139,7 +139,7 @@
 <volume-gallery-dialog [volume]="volume" #galleryDialog></volume-gallery-dialog>
 <volume-list-dialog [volume]="volume" #listDialog></volume-list-dialog>
 
-<div class="report-dialog" (click)="reportDialogClick($event)" #reportDialog>
+<div class="report-dialog dialog" (click)="reportDialogClick($event)" #reportDialog>
     <div class="window" [class.show]="showReportDialog">
         <div class="title">{{ 'report-dialog.title' | translate }}</div>
         <label>
@@ -164,7 +164,7 @@
         </div>
     </div>
 </div>
-<div class="report-dialog" (click)="reportViewDialogClick($event)" #reportViewDialog>
+<div class="report-dialog dialog" (click)="reportViewDialogClick($event)" #reportViewDialog>
     <div class="window" [class.show]="showReportViewDialog">
         <div class="title">{{ 'report-dialog.view-title' | translate }}</div>
         <tui-accordion class="container">

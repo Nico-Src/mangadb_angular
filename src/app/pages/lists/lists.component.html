@@ -61,8 +61,8 @@
     </div>
 </div>
 
-<div class="add-dialog" [class.show]="showAddDialog" (click)="addDialogClick($event)" #addDialog>
-    <div class="window">
+<div class="add-dialog dialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window" [class.show]="showAddDialog">
         <div class="title">{{ 'add-list-dialog.title' | translate }}</div>
         <label>
             {{ 'add-list-dialog.name' | translate }}
@@ -85,8 +85,8 @@
     </div>
 </div>
 
-<div class="edit-dialog" [class.show]="showEditDialog" (click)="editDialogClick($event)" #editDialog>
-    <div class="window">
+<div class="edit-dialog dialog" (click)="editDialogClick($event)" #editDialog>
+    <div class="window" [class.show]="showEditDialog">
         <div class="title">{{ 'edit-list-dialog.title' | translate }}</div>
         <label>
             {{ 'add-list-dialog.name' | translate }}
@@ -109,8 +109,8 @@
     </div>
 </div>
 
-<div class="delete-dialog" [class.show]="showDeleteDialog" (click)="deleteDialogClick($event)" #deleteDialog>
-    <div class="window">
+<div class="delete-dialog dialog" (click)="deleteDialogClick($event)" #deleteDialog>
+    <div class="window" [class.show]="showDeleteDialog">
         <div class="title">{{ 'delete-list-dialog.title' | translate }}</div>
         <div class="desc">{{ 'delete-list-dialog.desc' | translate }}</div>
         <div class="button-wrapper">

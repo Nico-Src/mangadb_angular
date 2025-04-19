@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<div class="edit-dialog" (click)="editPriceDialogClick($event)" #editPriceDialog>
+<div class="edit-dialog dialog" (click)="editPriceDialogClick($event)" #editPriceDialog>
     <div class="window" [class.show]="showEditPriceDialog">
         <div class="title">{{ 'edit-dialog.price-title' | translate }}</div>
         <tui-textfield *ngIf="editPriceObj" tuiTextfieldSize="s">
@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div class="edit-dialog" (click)="editBuyDateDialogClick($event)" #editBuyDateDialog>
+<div class="edit-dialog dialog" (click)="editBuyDateDialogClick($event)" #editBuyDateDialog>
     <div class="window" [class.show]="showEditBuyDateDialog">
         <div class="title">{{ 'edit-dialog.date-title' | translate }}</div>
         <tui-input-date [(ngModel)]="editBuyDateObj.date" *ngIf="editBuyDateObj" tuiTextfieldSize="s"></tui-input-date>

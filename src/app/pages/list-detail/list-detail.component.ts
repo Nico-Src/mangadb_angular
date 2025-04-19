@@ -8,10 +8,9 @@ import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy'
 import { TuiAlertService, TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { TuiPagination, TuiSegmented, TuiTile, TuiTiles } from '@taiga-ui/kit';
+import { TuiSegmented, TuiTile, TuiTiles } from '@taiga-ui/kit';
 import { NgFor, NgIf } from '@angular/common';
-import { MangaCover } from '../../manga-cover/manga-cover.component';
-import { ago, errorAlert, getTranslation, langToLocale, readableDate, successAlert, UNKNOWN_DATE } from '../../../globals';
+import { errorAlert, getTranslation, successAlert } from '../../../globals';
 import { MangaSeriesColumnComponent } from '../../manga-series-column/manga-series-column.component';
 import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-grid.component';
 import { MangaSeriesListComponent } from '../../manga-series-list/manga-series-list.component';

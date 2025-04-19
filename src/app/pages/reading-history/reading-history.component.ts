@@ -12,7 +12,7 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { tablerProgress, tablerSortAscending, tablerSortAscendingLetters, tablerSortAscendingNumbers, tablerSortDescending, tablerSortDescendingLetters, tablerSortDescendingNumbers, tablerView360Arrow } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
-import { ago, getTranslation, langToLocale, readableDate, UNKNOWN_DATE } from '../../../globals';
+import { ago, langToLocale, readableDate, UNKNOWN_DATE } from '../../../globals';
 import { matPriorityHighOutline, matStarOutline, matStarOutlineOutline } from '@ng-icons/material-icons/outline';
 
 @Component({

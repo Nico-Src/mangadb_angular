@@ -1,12 +1,12 @@
-import { Component, computed, ElementRef, HostListener, inject, input, Input, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, ViewChild } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { TuiAppearance, TuiLoader, TuiAlertService, TuiTextfield, tuiDateFormatProvider, TuiHint, TuiScrollbar, TuiButton } from '@taiga-ui/core';
-import { TuiAccordion, TuiCarousel, TuiElasticContainer, TuiFade, TuiPagination, TuiSegmented, TuiSkeleton } from '@taiga-ui/kit';
+import { TuiLoader, TuiAlertService, TuiTextfield, tuiDateFormatProvider, TuiHint, TuiButton } from '@taiga-ui/core';
+import { TuiAccordion, TuiFade } from '@taiga-ui/kit';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { APIService, HttpMethod } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
-import { CDN_BASE, readableDate, UNKNOWN_DATE, ANNOUNCED_DATE, localeToLang, LANGS, langToLocale, errorAlert, successAlert, getTranslation, REPORT_TYPES, ago } from '../../../globals';
+import { CDN_BASE, readableDate, langToLocale, errorAlert, successAlert, getTranslation, REPORT_TYPES, ago } from '../../../globals';
 import { TuiSelectModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';

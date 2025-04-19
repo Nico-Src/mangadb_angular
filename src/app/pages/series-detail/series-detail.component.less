@@ -821,43 +821,6 @@
 }
 
 .report-dialog,.reading-dialog{
-    display:flex;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    inset: 0;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0,0,0,.3);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 5;
-    transition: opacity var(--transition-duration) ease;
-
-    &:not(:has(.show)){
-        ::ng-deep *{
-            pointer-events: none !important;
-        }
-    }
-
-    ::ng-deep .t-loader{
-        stroke: rgb(var(--mid-accent));
-    }
-
-    ::ng-deep .error .t-loader{
-        stroke: rgb(197, 100, 100) !important;
-    }
-
-    ::ng-deep [tuiWrapper][data-appearance=textfield], ::ng-deep [tuiAppearance][data-appearance=textfield]{box-shadow: none !important; background: #eee !important;}
-    ::ng-deep [tuiWrapper][data-appearance=textfield]._focused._focused:after, ::ng-deep [tuiAppearance][data-appearance=textfield]._focused._focused:after{color: transparent !important;}
-    ::ng-deep .report-description textarea{font-size: 14px !important;}
-    ::ng-deep [tuiAppearance][data-appearance=textfield]:focus-visible:not([data-focus=false]){outline-color: transparent !important;}
-
-    .select-label{
-        margin-bottom: 4px;
-        display:block;
-    }
-
     tui-accordion ::ng-deep{
         .t-title{
             display:flex;
@@ -875,6 +838,7 @@
 
             .description{
                 padding: 10px 15px;
+                margin: 0 !important;
             }
 
             .status{
@@ -917,61 +881,5 @@
                 }
             }
         }
-    }
-
-    &:has(.show){
-        opacity: 1;
-        pointer-events: all;
-
-        .window{
-            transform: scale(1);
-        }
-    }
-
-    .window{
-        width: 500px;
-        height: fit-content;
-        min-height: 50px;
-        padding: 20px;
-        border-radius: 6px;
-        transition: transform var(--transition-duration) ease;
-        will-change: transform;
-        transform: scale(0.9);
-        background-color: white;
-
-        .title{
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #222;
-        }
-
-        .button-wrapper{
-            display:flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-
-            --tui-background-accent-2: rgb(var(--accent-color));
-            --tui-background-accent-2-hover: rgb(var(--mid-accent));
-            --tui-background-accent-2-pressed: rgb(var(--dark-accent));
-        }
-    }
-}
-
-.language-item{
-    display:flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 7.5px;
-
-    .language-image{
-        height: 14px;
-        border-radius: 4px;
-    }
-
-    .language-name{
-        font-size: 12px !important;
     }
 }

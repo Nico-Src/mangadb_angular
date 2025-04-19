@@ -8,10 +8,9 @@ import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy'
 import { TuiAlertService, TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { TuiPagination } from '@taiga-ui/kit';
 import { NgFor, NgIf } from '@angular/common';
 import { MangaCover } from '../../manga-cover/manga-cover.component';
-import { ago, CDN_BASE, errorAlert, getTranslation, langToLocale, readableDate, successAlert, UNKNOWN_DATE } from '../../../globals';
+import { ago, CDN_BASE, errorAlert, getTranslation, langToLocale, successAlert } from '../../../globals';
 import { NgAutoAnimateDirective } from 'ng-auto-animate';
 import { PluralTranslatePipe } from '../../../pipes/pluralTranslate';
 import { tablerEdit, tablerList, tablerPlus, tablerTrash } from '@ng-icons/tabler-icons';

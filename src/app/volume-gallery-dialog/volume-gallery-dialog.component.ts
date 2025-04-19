@@ -1,9 +1,9 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { TuiButton, TuiAppearance, TuiLoader, TuiAlertService, TuiTextfield } from '@taiga-ui/core';
+import { TuiButton, TuiLoader, TuiAlertService, TuiTextfield } from '@taiga-ui/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { errorAlert, successAlert, getTranslation, CDN_BASE } from '../../globals';
+import { errorAlert, CDN_BASE } from '../../globals';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { TuiSegmented, TuiSlider } from '@taiga-ui/kit';
 import { MangaCover } from '../manga-cover/manga-cover.component';

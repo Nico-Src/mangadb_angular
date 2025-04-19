@@ -1,8 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { TranslateService, TranslatePipe, _ } from "@ngx-translate/core";
-import { HttpClient } from "@angular/common/http";
 import { errorAlert, getTranslation, successAlert } from "../../../globals";
-import { Meta, Title } from "@angular/platform-browser";
+import { Title } from "@angular/platform-browser";
 import { TuiIcon, TuiTextfield, TuiButton, TuiLoader, TuiHint } from '@taiga-ui/core';
 import { TuiTextfieldControllerModule } from '@taiga-ui/legacy'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
