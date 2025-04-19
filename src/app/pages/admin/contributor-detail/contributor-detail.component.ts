@@ -7,7 +7,7 @@ import { TuiAlertService, TuiButton, TuiDataList, tuiDateFormatProvider, TuiLoad
 import { Location, NgFor, NgIf } from '@angular/common';
 import { TuiComboBoxModule, TuiInputDateModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CDN_BASE, errorAlert, getTranslation, LANGS, langToLocale, localeToLang, PUBLISHER_RELATION_TYPES, successAlert } from '../../../../globals';
+import { CDN_BASE, CONTRIBUTOR_GENDERS, CONTRIBUTOR_RELATION_TYPES, CONTRIBUTOR_TYPES, errorAlert, getTranslation, LANGS, langToLocale, localeToLang, PUBLISHER_RELATION_TYPES, successAlert } from '../../../../globals';
 import { TuiFiles, TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiTabs } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerChevronLeft, tablerChevronRight, tablerMinus, tablerPlus, tablerTrash, tablerUpload, tablerX } from '@ng-icons/tabler-icons';
@@ -19,18 +19,18 @@ import { TuiLet, TuiStringHandler } from '@taiga-ui/cdk';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TuiDay } from '@taiga-ui/cdk/date-time';
 
-interface PublisherItem {
+interface ContributorItem {
     name: string;
 };
 
-const STRINGIFY_PUBLISHER: TuiStringHandler<PublisherItem> = (item: PublisherItem) =>
+const STRINGIFY_CONTRIBUTOR: TuiStringHandler<ContributorItem> = (item: ContributorItem) =>
     `${item.name}`;
 
 @Component({
-    selector: 'app-admin-publisher-detail',
+    selector: 'app-admin-contributor-detail',
     imports: [TranslatePipe,TuiButton,NgIf,NgFor,TuiEditor,TuiFilterByInputPipe,TuiLet,TuiInputDateModule,TuiFiles,TuiTabs,TuiComboBoxModule,ScrollingModule,TuiDataList,TuiTextfield,TuiLoader,NgIcon,TuiTextfieldControllerModule,TuiSelectModule,ReactiveFormsModule,FormsModule],
-    templateUrl: './publisher-detail.component.html',
-    styleUrl: './publisher-detail.component.less',
+    templateUrl: './contributor-detail.component.html',
+    styleUrl: './contributor-detail.component.less',
     providers: [
         {
           provide: TUI_EDITOR_EXTENSIONS,
@@ -40,24 +40,24 @@ const STRINGIFY_PUBLISHER: TuiStringHandler<PublisherItem> = (item: PublisherIte
             import('@taiga-ui/editor').then(({setup}) => setup({injector})),
           ],
         },
-        tuiItemsHandlersProvider({stringify: STRINGIFY_PUBLISHER}),
+        tuiItemsHandlersProvider({stringify: STRINGIFY_CONTRIBUTOR}),
         tuiDateFormatProvider({mode: 'YMD', separator: '/'})
     ],
     viewProviders: [provideIcons({tablerX,tablerPlus,tablerMinus,matFaceOutline,tablerUpload,tablerTrash,tablerChevronRight,tablerChevronLeft})]
 })
-export class AdminPublisherDetailComponent {
+export class AdminContributorDetailComponent {
     private readonly sidebar = inject(SideBarService);
     private readonly alerts = inject(TuiAlertService);
     private readonly api = inject(APIService);
     readonly cdn_url = CDN_BASE;
 
-    stringifyPublisher = STRINGIFY_PUBLISHER;
+    stringifyContributor = STRINGIFY_CONTRIBUTOR;
 
     min_day = new TuiDay(1,0,1);
 
-    publisher:any = null;
-    publishers:any = [];
-    editPublisher:any = null;
+    contributor:any = null;
+    contributors:any = [];
+    editContributor:any = null;
     loading:boolean = true;
     availableLanguages = LANGS;
     saving:boolean = false;
@@ -68,6 +68,13 @@ export class AdminPublisherDetailComponent {
     uploadingImage:boolean = false;
     deletingImage:boolean = false;
 
+    contributorTypes:any = CONTRIBUTOR_TYPES;
+    contributorGenders:any = CONTRIBUTOR_GENDERS;
+
+    showAliasDialog:boolean = false;
+    addAliasItem:any = {first_name: '', last_name: ''};
+    @ViewChild('aliasDialog') aliasDialog:any;
+
     showScrapeDialog:boolean = false;
     scraping:boolean = false;
     scraperUrl:string = '';
@@ -76,7 +83,7 @@ export class AdminPublisherDetailComponent {
     showRelationDialog:boolean = false;
     addRelationItem:any = null;
     @ViewChild('relationDialog') relationDialog:any;
-    publisherRelationTypes:any = PUBLISHER_RELATION_TYPES;
+    contributorRelationTypes:any = CONTRIBUTOR_RELATION_TYPES;
 
     descriptionTabIndex:number = 0;
     selectedDescription:any = null;
@@ -90,43 +97,44 @@ export class AdminPublisherDetailComponent {
 
     ngOnInit() {
         // set title
-        this.title.setTitle(`Edit Publisher | MangaDB`);
+        this.title.setTitle(`Edit Contributor | MangaDB`);
 
         const id = this.route.snapshot.paramMap.get('id');
 
         this.route.paramMap.subscribe(()=>{
-            if(!this.publisher?.id) return;
-            const pubId = this.route.snapshot.paramMap.get('id');
-            this.addLock(pubId);
-            this.loadPublisher(pubId);
+            if(!this.contributor?.id) return;
+            const conId = this.route.snapshot.paramMap.get('id');
+            this.addLock(conId);
+            this.loadContributor(conId);
         });
 
         this.addLock(id);
-        this.loadPublisher(id);
+        this.loadContributor(id);
     }
 
     // get publisher array cast to publisher item
-    get typedPublishers(): PublisherItem[] {
-        return this.publishers as PublisherItem[];
+    get typedContributors(): ContributorItem[] {
+        return this.contributors as ContributorItem[];
     }
 
-    // load series data
-    loadPublisher(id:any){
+    // load contributor data
+    loadContributor(id:any){
         const prevScrollTop = this.sidebar.scrollTop();
         this.loading = true;
-        this.api.request<any>(HttpMethod.GET, `admin-publishers/id/${id}`, {}).subscribe((res:any)=>{
-            this.publisher = res;
+        this.api.request<any>(HttpMethod.GET, `admin-contributors/id/${id}`, {}).subscribe((res:any)=>{
+            this.contributor = res;
+            console.log(this.contributor)
             // convert string to object
-            for(const relation of this.publisher.relations){
-                if(typeof relation.relation_type === "string") relation.relation_type = this.publisherRelationTypes.find((t:any) => t.key === relation.relation_type);
+            if(typeof this.contributor.type === "string") this.contributor.type = this.contributorTypes.find((c:any) => c.key === this.contributor.type);
+            if(typeof this.contributor.gender === "string") this.contributor.gender = this.contributorGenders.find((c:any) => c.key === this.contributor.gender);
+            for(const relation of this.contributor.relations){
+                if(typeof relation.relation_type === "string") relation.relation_type = this.contributorRelationTypes.find((t:any) => t.key === relation.relation_type);
             }
-            this.editPublisher = JSON.parse(JSON.stringify(this.publisher));
-            const dateParts = this.editPublisher.founding_date.toString().split('-').map((p:string) => parseInt(p));
-            this.editPublisher.founding_date = new TuiDay(dateParts[0],dateParts[1]-1,dateParts[2]);
+            this.editContributor = JSON.parse(JSON.stringify(this.contributor));
             // set selected description if there is one
-            if(this.editPublisher.descriptions.length > 0) this.descriptionTabChanged(this.descriptionTabIndex);
+            if(this.editContributor.descriptions.length > 0) this.descriptionTabChanged(this.descriptionTabIndex);
             
-            this.loadPublishers();
+            this.loadContributors();
 
             setTimeout(()=>{
                 this.sidebar.setScrollTop(prevScrollTop);
@@ -135,53 +143,53 @@ export class AdminPublisherDetailComponent {
         });
     }
 
-    // load all publishers for relation select
-    loadPublishers(){
-        this.api.request<any>(HttpMethod.POST, `admin-publishers`, {order: 'name-asc'}).subscribe((res:any)=>{
-            this.publishers = res.publishers;
+    // load all contributors for relation select
+    loadContributors(){
+        this.api.request<any>(HttpMethod.POST, `admin-contributors`, {order: 'name-asc'}).subscribe((res:any)=>{
+            for(const contributor of res.contributors){
+                contributor.name = `${contributor.last_name?.toUpperCase()} ${contributor.first_name}`.trim();
+            }
+            this.contributors = res.contributors;
         });
     }
 
     // save changes to database
     saveEdit(){
-        if(!this.editPublisher || this.saving === true) return;
+        if(!this.editContributor || this.saving === true) return;
         this.saving = true;
 
         const added_aliases = []; const removed_aliases = [];
-        for(const alias of this.editPublisher.aliases) if(alias.id === -1) added_aliases.push(alias);
-        for(const alias of this.publisher.aliases) if(!this.editPublisher.aliases.find((a:any) => a.id == alias.id)) removed_aliases.push(alias);
+        for(const alias of this.editContributor.aliases) if(alias.id === -1) added_aliases.push(alias);
+        for(const alias of this.contributor.aliases) if(!this.editContributor.aliases.find((a:any) => a.id == alias.id)) removed_aliases.push(alias);
 
         const modified_relations = []; const added_relations = []; const removed_relations = [];
-        for(const rel of this.editPublisher.relations){
-            const relation = this.publisher.relations.find((d:any) => d.id == rel.id);
+        for(const rel of this.editContributor.relations){
+            const relation = this.contributor.relations.find((d:any) => d.id == rel.id);
             // new items have an negative id
             if(rel.id === -1) added_relations.push(rel);
             // check if something has changed
             else if(relation && rel.relation_type.key !== relation.relation_type.key) modified_relations.push(rel);
         }
         // check if relations were removed
-        for(const rel of this.publisher.relations) if(!this.editPublisher.relations.find((d:any) => d.id == rel.id)) removed_relations.push(rel);
+        for(const rel of this.contributor.relations) if(!this.editContributor.relations.find((d:any) => d.id == rel.id)) removed_relations.push(rel);
 
         const modified_descriptions = []; const added_descriptions = []; const removed_descriptions = [];
-        for(const desc of this.editPublisher.descriptions){
-            const description = this.publisher.descriptions.find((d:any) => d.id == desc.id);
+        for(const desc of this.editContributor.descriptions){
+            const description = this.contributor.descriptions.find((d:any) => d.id == desc.id);
             // new items have an negative id
             if(desc.id === -1) added_descriptions.push(desc);
             // check if something has changed
             else if(description && desc.description !== description.description || desc.source !== description.source) modified_descriptions.push(desc);
         }
         // check if descriptions were removed
-        for(const desc of this.publisher.descriptions) if(!this.editPublisher.descriptions.find((d:any) => d.id == desc.id)) removed_descriptions.push(desc);
+        for(const desc of this.contributor.descriptions) if(!this.editContributor.descriptions.find((d:any) => d.id == desc.id)) removed_descriptions.push(desc);
 
-        this.editPublisher.founding_date = this.editPublisher.founding_date.toString().split('.').reverse().join('-');
-        
-        this.api.request<string>(HttpMethod.POST, `admin-publishers/edit/${this.editPublisher.id}`, {
-            name: this.editPublisher.name,
-            short_name: this.editPublisher.short_name,
-            website: this.editPublisher.website || '',
-            image_source: this.editPublisher.image_source,
-            headquarter: this.editPublisher.headquarter,
-            founding_date: this.editPublisher.founding_date,
+        this.api.request<string>(HttpMethod.POST, `admin-contributors/edit/${this.editContributor.id}`, {
+            first_name: this.editContributor.first_name,
+            last_name: this.editContributor.last_name,
+            gender: this.editContributor.gender.key,
+            type: this.editContributor.type.key,
+            links: this.editContributor.linksText,
             added_aliases, removed_aliases,
             added_descriptions, removed_descriptions, modified_descriptions,
             added_relations, removed_relations, modified_relations
@@ -189,7 +197,7 @@ export class AdminPublisherDetailComponent {
             this.saving = false;
             const msg = await getTranslation(this.translate, `volume.save-success`);
             successAlert(this.alerts, msg, undefined, this.translate);
-            this.loadPublisher(this.publisher.id);
+            this.loadContributor(this.contributor.id);
         }, (err:any)=>{
             this.saving = false;
             errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
@@ -198,14 +206,14 @@ export class AdminPublisherDetailComponent {
 
     // add edit lock
     addLock(id:any){
-        this.api.request<string>(HttpMethod.POST, `admin/lock`,{route:'publisher',id:id},'text').subscribe((res:any)=>{},(err)=>{
+        this.api.request<string>(HttpMethod.POST, `admin/lock`,{route:'contributor',id:id},'text').subscribe((res:any)=>{},(err)=>{
             this.location.back();
         });
     }
 
     // remove edit lock
     removeLock(redirect:boolean = true){
-        this.api.request<string>(HttpMethod.DELETE, `admin/remove-lock`, {route:'publisher',id:this.publisher.id},'text').subscribe((res:any)=>{
+        this.api.request<string>(HttpMethod.DELETE, `admin/remove-lock`, {route:'contributor',id:this.contributor.id},'text').subscribe((res:any)=>{
             if(redirect) this.location.back();
         });
     }
@@ -239,12 +247,6 @@ export class AdminPublisherDetailComponent {
         }
     }
 
-    // set founding date to unknown
-    setDateUnknown(){
-        const dateParts = '1001-01-01'.toString().split('-').map((p:string) => parseInt(p));
-        this.editPublisher.founding_date = new TuiDay(dateParts[0],dateParts[1]-1,dateParts[2])
-    }
-
     // reset image when image is removed
     imageRemoved(e:any,type:string){
         this.image = null;
@@ -260,12 +262,12 @@ export class AdminPublisherDetailComponent {
             this.uploadingImage = false;
             return;
         }
-        this.api.request<string>(HttpMethod.POST, `admin-publishers/update-image/${this.publisher.id}`, {image: this.base64}, 'text').subscribe(async(res:any)=>{
+        this.api.request<string>(HttpMethod.POST, `admin-contributors/update-avatar/${this.contributor.id}`, {image: this.base64}, 'text').subscribe(async(res:any)=>{
             this.uploadingImage = false;
             this.image = null;
             this.base64 = null;
             this.updateImageHash();
-            this.loadPublisher(this.publisher.id);
+            this.loadContributor(this.contributor.id);
             const msg = await getTranslation(this.translate, `admin.upload-success`);
             successAlert(this.alerts, msg, undefined, this.translate);
         }, (err:any)=>{
@@ -289,18 +291,30 @@ export class AdminPublisherDetailComponent {
         }
     }
 
-    // open description dialog
+    // open relation dialog
     openRelationDialog(){
         this.showRelationDialog = true;
+    }
+
+    // if backdrop of dialog is clicked close it
+    aliasDialogClick(e:any){
+        if (e.target === this.aliasDialog.nativeElement) {
+            this.showAliasDialog = false;
+        }
+    }
+
+    // open alias dialog
+    openAliasDialog(){
+        this.showAliasDialog = true;
     }
 
     // delete cover of given type
     async deleteImage(){
         this.deletingImage = true;
-        this.api.request<string>(HttpMethod.DELETE, `admin-publishers/delete-image/${this.publisher.id}`, {}, 'text').subscribe(async(res:any)=>{
+        this.api.request<string>(HttpMethod.DELETE, `admin-contributors/delete-avatar/${this.contributor.id}`, {}, 'text').subscribe(async(res:any)=>{
             this.deletingImage = false;
             this.updateImageHash();
-            this.loadPublisher(this.publisher.id);
+            this.loadContributor(this.contributor.id);
             const msg = await getTranslation(this.translate, `volume.image-delete-success`);
             successAlert(this.alerts, msg, undefined, this.translate);
         }, (err:any)=>{
@@ -315,29 +329,29 @@ export class AdminPublisherDetailComponent {
 
     // remove alias
     removeAlias(alias:any){
-        const index = this.editPublisher.aliases.indexOf(alias);
+        const index = this.editContributor.aliases.indexOf(alias);
         if (index >= 0) {
-            this.editPublisher.aliases.splice(index, 1);
+            this.editContributor.aliases.splice(index, 1);
         }
     }
 
     // add alias
     addAlias(){
-        const alias = prompt(`Add Alias:`); // TODO translate
-        if(alias && alias?.trim() !== ""){
-            this.editPublisher.aliases.push({id: -1, name: alias});
-        }
+        this.editContributor.aliases.push({id: -1, first_name: this.addAliasItem.first_name, last_name: this.addAliasItem.last_name});
+        this.addAliasItem.first_name = '';
+        this.addAliasItem.last_name = '';
+        this.showAliasDialog = false;
     }
 
     // add relation
     addRelation(){
         // check if everything is correct
-        if(!this.addRelationItem || this.editPublisher.relations.find((c:any) => c.relation_id === this.addRelationItem.id)) return;
-        this.editPublisher.relations.push({
+        if(!this.addRelationItem || this.editContributor.relations.find((c:any) => c.relation_id === this.addRelationItem.id)) return;
+        this.editContributor.relations.push({
             id: -1,
             relation_id: this.addRelationItem.id,
             name: this.addRelationItem.name,
-            relation_type: this.publisherRelationTypes.find((c:any) => c.key === 'imprint'),
+            relation_type: this.contributorRelationTypes.find((c:any) => c.key === 'member'),
             image: this.addRelationItem?.image
         });
         this.showRelationDialog = false;
@@ -345,9 +359,9 @@ export class AdminPublisherDetailComponent {
     }
 
     // remove relation
-    removeRelation(e:any,relation:PublisherItem){
+    removeRelation(e:any,relation:ContributorItem){
         e.preventDefault();
-        this.editPublisher.relations = this.editPublisher.relations.filter((c:PublisherItem) => c.name !== relation.name);
+        this.editContributor.relations = this.editContributor.relations.filter((c:ContributorItem) => c.name !== relation.name);
     }
 
     // if backdrop of dialog is clicked close it
@@ -366,27 +380,27 @@ export class AdminPublisherDetailComponent {
     async addDescription(){
         const lang = localeToLang(this.addDescriptionItem.language.value);
         // check if there is already a description for the given language
-        if(this.editPublisher.descriptions.find((d:any) => d.language === lang)){
+        if(this.editContributor.descriptions.find((d:any) => d.language === lang)){
             const msg = await getTranslation(this.translate, `add-description-dialog.exists`);
             errorAlert(this.alerts, msg, undefined, this.translate);
             return;
         }
     
-        this.editPublisher.descriptions.push({
+        this.editContributor.descriptions.push({
             id: -1, description: '', source: '', language: lang
         });
     
         this.showDescriptionDialog = false;
-        if(this.editPublisher.descriptions.length === 1) this.descriptionTabChanged(0);
+        if(this.editContributor.descriptions.length === 1) this.descriptionTabChanged(0);
     }
 
     // remove description
     removeDescription(e:any,desc:any){
         e.preventDefault();
-        this.editPublisher.descriptions = this.editPublisher.descriptions.filter((d:any) => d.language !== desc.language);
+        this.editContributor.descriptions = this.editContributor.descriptions.filter((d:any) => d.language !== desc.language);
         // modify index and object based on if there are still descriptions left after removing
-        if(this.editPublisher.descriptions.length > 0){
-            this.selectedDescription = this.editPublisher.descriptions[0];
+        if(this.editContributor.descriptions.length > 0){
+            this.selectedDescription = this.editContributor.descriptions[0];
             this.descriptionTabIndex = 0;
         } else {
             this.selectedDescription = undefined;
@@ -397,8 +411,8 @@ export class AdminPublisherDetailComponent {
     // event handler for changing description tab
     descriptionTabChanged(e:any){
         // check if index is in range
-        if(e > this.editPublisher.descriptions.length - 1) return;
+        if(e > this.editContributor.descriptions.length - 1) return;
         // select description
-        this.selectedDescription = this.editPublisher.descriptions[e];
+        this.selectedDescription = this.editContributor.descriptions[e];
     }
 }

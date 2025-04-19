@@ -92,12 +92,18 @@ export const SERIES_PUBLICATION_STATUSES = [
     {key: 'Cancelled', name: 'Cancelled'}
 ];
 
-export const CONTRIBUTOR_TYPES = [
+export const CONTRIBUTOR_ROLES = [
     {key: 'Author', name: 'Author'},
     {key: 'Artist', name: 'Artist'},
     {key: 'Character Designer', name: 'Character Designer'},
     {key: 'Original Creator', name: 'Original Creator'},
     {key: 'Artist/Author', name: 'Artist/Author'}
+];
+
+export const CONTRIBUTOR_TYPES = [
+    {key: 'person', name: 'Person'},
+    {key: 'group', name: 'Group'},
+    {key: 'company', name: 'Company'}
 ];
 
 export const REPORT_TYPES = [
@@ -146,6 +152,17 @@ export const PUBLISHER_RELATION_TYPES = [
     {key: 'parent', name: 'Parent'},
     {key: 'joint venture', name: 'Joint Venture'},
     {key: 'subsidiary', name: 'Subsidiary'}
+];
+
+export const CONTRIBUTOR_RELATION_TYPES = [
+    {key: 'member', name: 'Member'},
+    {key: 'member-of', name: 'Member of'}
+];
+
+export const CONTRIBUTOR_GENDERS = [
+    {key: 'male', name: 'Male'},
+    {key: 'female', name: 'Female'},
+    {key: 'unknown', name: 'Unknown'}
 ];
 
 export enum COVER{

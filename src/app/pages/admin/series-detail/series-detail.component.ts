@@ -8,7 +8,7 @@ import { Location, NgFor, NgIf } from '@angular/common';
 import { MangaCover } from '../../../manga-cover/manga-cover.component';
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CDN_BASE, CONTRIBUTOR_TYPES, errorAlert, getOriginByLang, getTranslation, LANGS, langToLocale, localeToLang, SCRAPER_BASE, SERIES_PUBLICATION_STATUSES, SERIES_RELATION_TYPES, SERIES_TYPES, successAlert } from '../../../../globals';
+import { CDN_BASE, CONTRIBUTOR_ROLES, errorAlert, getOriginByLang, getTranslation, LANGS, langToLocale, localeToLang, SCRAPER_BASE, SERIES_PUBLICATION_STATUSES, SERIES_RELATION_TYPES, SERIES_TYPES, successAlert } from '../../../../globals';
 import { TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiSwitch, TuiTabs } from '@taiga-ui/kit';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerMinus, tablerPlus, tablerX } from '@ng-icons/tabler-icons';
@@ -107,7 +107,7 @@ export class AdminSeriesDetailComponent {
     showContributorDialog:boolean = false;
     addContributorItem:any = null;
     @ViewChild('contributorDialog') contributorDialog:any;
-    contributorTypes:any = CONTRIBUTOR_TYPES;
+    contributorTypes:any = CONTRIBUTOR_ROLES;
 
     showTagDialog:boolean = false;
     addTagItem:any = null;
@@ -552,6 +552,7 @@ export class AdminSeriesDetailComponent {
         });
     
         this.showDescriptionDialog = false;
+        if(this.editSeries.descriptions.length === 1) this.descriptionTabChanged(0);
     }
 
     // remove description

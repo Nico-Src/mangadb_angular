@@ -1,0 +1,222 @@
+<div class="banner-wrapper">
+    <div class="banner" *ngIf="contributor">
+        <img *ngIf="contributor?.id && !image" [src]="`${cdn_url}/contributor/image/${contributor?.id}/scaled?hash=${imageHash}`" tuiLoading="lazy">
+        <img *ngIf="image" [src]="base64" tuiLoading="lazy">
+        <div class="banner-overlay"></div>
+    </div>
+    <div class="content" *ngIf="contributor" [class.loading]="loading">
+        <div class="top-wrapper">
+            <div class="cover-wrapper">
+                <img *ngIf="contributor?.id && !image" [src]="`${cdn_url}/contributor/image/${contributor?.id}/scaled?hash=${imageHash}`" tuiLoading="lazy">
+                <img *ngIf="image" [src]="base64" tuiLoading="lazy">
+            </div>
+            <div class="wrapper">
+                <label tuiInputFiles>
+                    <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="image" (ngModelChange)="imageUpdate($event,'front')"/>
+                    <ng-template let-dragged>
+                        {{ 'volume.upload-hint' | translate }}
+                    </ng-template>
+                </label>
+                <tui-files class="file">
+                    <tui-file state="normal" [file]="image" (remove)="imageRemoved($event,'front')" *ngIf="image"/>
+                </tui-files>
+                <tui-loader class="loader" [overlay]="true" [showLoader]="uploadingImage">
+                    <button size="s" tuiButton type="button" class="upload" [disabled]="!image" appearance="accent" (click)="uploadImage()"><ng-icon name="tablerUpload" class="icon"></ng-icon>{{ 'volume.upload' | translate }}</button>
+                </tui-loader>
+                <tui-loader class="loader" [overlay]="true" [showLoader]="deletingImage">
+                    <button size="s" tuiButton type="button" class="cancel" *ngIf="contributor.image" appearance="accent" (click)="deleteImage()"><ng-icon name="tablerTrash" class="icon"></ng-icon>{{ 'volume.context.delete' | translate }}</button>
+                </tui-loader>
+            </div>
+            <div class="details" *ngIf="editContributor">
+                <div class="header-title">
+                    <span>Details</span> <!-- TODO Translate -->
+                </div>
+                <div class="wrapper" [style.marginTop.px]="10">
+                    <label>
+                        {{ 'contributor.first-name' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editContributor.first_name">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'contributor.last-name' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editContributor.last_name">
+                        </tui-textfield>
+                    </label>
+                    <label>
+                        {{ 'contributor.slug' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editContributor.slug" [readOnly]="true">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'contributor.gender.label' | translate }}
+                        <tui-select tuiTextfieldSize="s" [(ngModel)]="editContributor.gender" [valueContent]="genderContent" [tuiTextfieldLabelOutside]="true">
+                            <tui-data-list-wrapper *tuiDataList [itemContent]="genderContent" [items]="contributorGenders"></tui-data-list-wrapper>
+                        </tui-select>
+                    </label>
+                    <label>
+                        {{ 'contributor.type.label' | translate }}
+                        <tui-select tuiTextfieldSize="s" [(ngModel)]="editContributor.type" [valueContent]="typeContent" [tuiTextfieldLabelOutside]="true">
+                            <tui-data-list-wrapper *tuiDataList [itemContent]="typeContent" [items]="contributorTypes"></tui-data-list-wrapper>
+                        </tui-select>
+                    </label>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        {{ 'contributor.links' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editContributor.linksText">
+                        </tui-textfield>
+                    </label>
+                </div>
+                <div class="header-title">
+                    <span>{{ `contributor.aliases` | translate }}</span>
+                </div>
+                <div class="alias-wrapper">
+                    <div class="alias" *ngFor="let alias of editContributor.aliases">
+                        {{ alias.last_name?.toUpperCase() }} {{ alias.first_name }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeAlias(alias)"></ng-icon>
+                    </div>
+                    <div class="alias add" (click)="openAliasDialog()">
+                        <ng-icon name="tablerPlus" class="icon"></ng-icon>&nbsp;{{ 'publisher.new-alias' | translate }}
+                    </div>
+                </div>
+                <div class="header-title">
+                    <span>{{ `publisher.relations` | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openRelationDialog()" *ngIf="contributor">{{ 'series.new-relation' | translate }}</button>
+                </div>
+                <div class="relation-wrapper">
+                    <div class="relation-item" *ngFor="let relation of editContributor?.relations" (contextmenu)="removeRelation($event,relation)">
+                        <div class="image">
+                            <img crossorigin="anonymous" [src]="`${cdn_url}/contributor/image/${relation.relation_id}/scaled`">
+                        </div>
+                        <div class="details">
+                            <div class="name">{{ relation.last_name?.toUpperCase() }} {{ relation.first_name }}</div>
+                            <label>
+                                <tui-select tuiTextfieldSize="s" [(ngModel)]="relation.relation_type" [valueContent]="relationTypeContent" [tuiTextfieldLabelOutside]="true">
+                                    <tui-data-list-wrapper *tuiDataList [itemContent]="relationTypeContent" [items]="contributorRelationTypes"></tui-data-list-wrapper>
+                                </tui-select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-title">
+                    <span>{{ 'series.descriptions' | translate }}</span>
+                    <button size="s" tuiButton type="button" class="add" appearance="accent" (click)="openDescriptionDialog()" *ngIf="contributor">{{ 'series.new-description' | translate }}</button>
+                </div>
+                <tui-tabs [(activeItemIndex)]="descriptionTabIndex" [size]="'m'" class="description-tabs" (activeItemIndexChange)="descriptionTabChanged($event)">
+                    <button tuiTab type="button" *ngFor="let desc of editContributor.descriptions" (contextmenu)="removeDescription($event,desc)">
+                        {{ `language.${toLocale(desc.language)}` | translate }}
+                    </button>
+                </tui-tabs>
+                <tui-editor *ngIf="selectedDescription?.description != undefined" [(ngModel)]="selectedDescription.description" [tools]="tools" class="editor"></tui-editor>
+                <div class="html-preview" *ngIf="selectedDescription?.description != undefined">
+                    <textarea [(ngModel)]="selectedDescription.description"></textarea>
+                </div>
+                <label *ngIf="selectedDescription?.description != undefined" class="desc-source">
+                    {{ 'series.source' | translate }}
+                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                        <input tuiTextfield [(ngModel)]="selectedDescription.source">
+                    </tui-textfield>
+                </label>
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="cancel" [disabled]="saving" appearance="accent" (click)="removeLock()" *ngIf="contributor">{{ 'publisher.free-lock' | translate }}</button>
+            <tui-loader class="loader" [overlay]="true" [showLoader]="saving">
+                <button size="s" tuiButton type="button" class="save" [disabled]="saving" appearance="accent" (click)="saveEdit()" *ngIf="contributor">{{ 'publisher.save' | translate }}</button>
+            </tui-loader>
+        </div>
+        <div class="placeholder" style="width: 100%; height: 20px;"></div>
+    </div>
+</div>
+
+<div class="alias-dialog dialog" (click)="aliasDialogClick($event)" #aliasDialog>
+    <div class="window" [class.show]="showAliasDialog">
+        <div class="title">{{ 'add-alias-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-alias-dialog.first-name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addAliasItem.first_name">
+            </tui-textfield>
+        </label>
+        <label>
+            {{ 'add-alias-dialog.last-name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addAliasItem.last_name">
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addAlias()">{{ 'add-alias-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="relation-dialog dialog" (click)="relationDialogClick($event)" #relationDialog>
+    <div class="window" [class.show]="showRelationDialog">
+        <div class="title">{{ 'add-relation-dialog.title' | translate }}</div>
+        <tui-combo-box [(ngModel)]="addRelationItem" [valueContent]="contributorContent" [stringify]="stringifyContributor" [tuiTextfieldSize]="'s'">
+            <ng-container *tuiDataList>
+                <cdk-virtual-scroll-viewport *tuiLet="typedContributors | tuiFilterByInput as items" appendOnly tuiScrollable class="scroll" autosize [style.height.px]="200" [itemSize]="32" (indexChange)="list.handleFocusLossIfNecessary()">
+                    <tui-data-list #list [size]="'s'">
+                        <button *cdkVirtualFor="let item of items" tuiOption type="button" [value]="item">
+                            {{ item.name }}
+                        </button>
+                    </tui-data-list>
+                </cdk-virtual-scroll-viewport>
+            </ng-container>
+        </tui-combo-box>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addRelation()">{{ 'add-relation-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="description-dialog dialog" (click)="descriptionDialogClick($event)" #descriptionDialog>
+    <div class="window" [class.show]="showDescriptionDialog">
+        <div class="title">{{ 'add-description-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-description-dialog.language' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="addDescriptionItem.language" [valueContent]="languageContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="languageContent" [items]="availableLanguages"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <div class="button-wrapper">
+            <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addDescription()">{{ 'add-description-dialog.add' | translate }}</button>
+        </div>
+    </div>
+</div>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #relationTypeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `contributor.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #contributorContent let-item>
+    <div class="contributor-item">
+        <span class="contributor-name">{{ item.name }}</span>
+    </div>
+</ng-template>
+
+<ng-template #typeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `contributor.type.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #genderContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `contributor.gender.${item.key.toLowerCase()}` | translate }}</span>
+    </div>
+</ng-template>

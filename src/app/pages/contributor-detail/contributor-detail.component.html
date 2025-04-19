@@ -42,6 +42,7 @@
                     <div class="label"><span>{{ 'contributor.links' | translate }}</span><ng-icon class="icon" name="solarLink" [style.fontSize.px]="18"></ng-icon></div>
                     <div class="value">
                         <span class="link" *ngFor="let link of contributor.links; index as i" (click)="openLinkDialog(link.url)">{{ link.domain }}<span style="color: black;" *ngIf="i < contributor?.links?.length - 1">,&nbsp;</span></span>
+                        <span *ngIf="contributor.links.length === 0">-</span>
                     </div>
                 </div>
             </div>
@@ -115,7 +116,7 @@
             <div class="relation" *ngFor="let relation of contributor.relations" (click)="relationClick(relation.slug)">
                 <img class="image" crossorigin="anonymous" loading="lazy" [src]="`${cdn_base}/contributor/image/${relation.relation_id}/scaled`">
                 <div class="details">
-                    <div class="name" tuiFade>{{ relation.name }}</div>
+                    <div class="name" tuiFade>{{ relation.last_name?.toUpperCase() }} {{ relation.first_name }}</div>
                     <div class="type">{{ `contributor.${relation.relation_type.toLowerCase()}` | translate }}</div>
                 </div>
             </div>

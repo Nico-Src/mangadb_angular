@@ -116,6 +116,10 @@
 
     "__SECTION__CONTENT__": "",
 
+    "admin": {
+        "upload-success": "Image uploaded successfully."
+    },
+
     "volume": {
         "nsfw-hint": "This cover has 16+ content. Enable it in settings to view.",
         "nsfw18-hint": "This cover has 18+ content. Enable it in settings to view.",
@@ -285,14 +289,19 @@
         "gender": {
             "label": "Gender",
             "male": "Male",
-            "female": "Female"
+            "female": "Female",
+            "unknown": "Unknown"
         },
         "links": "Links",
         "add": "Add Contributor",
+        "first-name": "First Name",
+        "last-name": "Last Name",
+        "slug": "Slug",
         "context": {
             "edit": "Edit",
             "delete": "Delete"
-        }
+        },
+        "aliases": "Aliases"
     },
 
     "report": {
@@ -768,6 +777,8 @@
         "title": "Add Alias",
         "alias": "Alias",
         "language": "Language",
+        "first-name": "First Name",
+        "last-name": "Last Name",
         "add": "Add"
     },
 

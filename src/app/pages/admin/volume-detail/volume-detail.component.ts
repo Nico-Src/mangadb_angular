@@ -350,7 +350,7 @@ export class AdminVolumeDetailComponent {
                     this.frontBase64 = null;
                     this.updateImageHash();
                     this.loadVolume(this.volume.id);
-                    const msg = await getTranslation(this.translate, `volume.upload-success`);
+                    const msg = await getTranslation(this.translate, `admin.upload-success`);
                     successAlert(this.alerts, msg, undefined, this.translate);
                 }, (err:any)=>{
                     this.uploadingImage = false;
@@ -371,7 +371,7 @@ export class AdminVolumeDetailComponent {
                     this.backBase64 = null;
                     this.updateImageHash();
                     this.loadVolume(this.volume.id);
-                    const msg = await getTranslation(this.translate, `volume.upload-success`);
+                    const msg = await getTranslation(this.translate, `admin.upload-success`);
                     successAlert(this.alerts, msg, undefined, this.translate);
                 }, (err:any)=>{
                     this.uploadingImage = false;
@@ -392,7 +392,7 @@ export class AdminVolumeDetailComponent {
                     this.spineBase64 = null;
                     this.updateImageHash();
                     this.loadVolume(this.volume.id);
-                    const msg = await getTranslation(this.translate, `volume.upload-success`);
+                    const msg = await getTranslation(this.translate, `admin.upload-success`);
                     successAlert(this.alerts, msg, undefined, this.translate);
                 }, (err:any)=>{
                     this.uploadingImage = false;
