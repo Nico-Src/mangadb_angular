@@ -65,7 +65,8 @@
         "admin-series": "Admin-Series",
         "admin-volumes": "Admin-Volumes",
         "admin-publishers": "Admin-Publishers",
-        "admin-contributors": "Admin-Contributors"
+        "admin-contributors": "Admin-Contributors",
+        "media-library": "Media Library"
     },
 
     "sidebar": {
@@ -580,6 +581,16 @@
         }
     },
 
+    "media": {
+        "add": "Add Media",
+        "name": "Name",
+        "tags": "Tags",
+        "context": {
+            "edit": "Edit",
+            "delete": "Delete"
+        }
+    },
+
     "__SECTION__PAGES__": "",
 
     "home": {
@@ -877,6 +888,12 @@
     },
 
     "add-media-dialog":{
-        "title": "Add Media"
+        "title": "Add Media",
+        "edit-title": "Edit Media",
+        "add": "Add",
+        "save": "Save",
+        "success": "Successfully added Media.",
+        "save-success": "Changes saved successfully.",
+        "delete-success": "Media Item deleted successfully."
     }
 }

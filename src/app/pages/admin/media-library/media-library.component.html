@@ -1,0 +1,142 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'media.add' | translate }}</button>
+    </div>
+</div>
+
+<div class="media-wrapper" *ngIf="media.length > 0">
+    <div class="media-item-wrapper" *ngFor="let item of media">
+        <div class="media-item">
+            <div class="image" tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+                <ng-template #contextMenu>
+                    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                        <button *ngFor="let menuItem of mediaMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
+                            <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                            <span>{{ `media.context.${menuItem.title}` | translate }}</span>
+                        </button>
+                    </tui-data-list>
+                </ng-template>
+                <img crossorigin="anonymous" [src]="`${cdn_base}/media/image/${item.id}/scaled`">
+            </div>
+            <div class="details">
+                <div class="name">{{ item.name }}</div>
+                <div class="tags">
+                    <div class="tag" *ngFor="let tag of item.tags">{{ tag }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="add-dialog dialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window" [class.show]="showAddDialog">
+        <div class="title">{{ 'add-media-dialog.title' | translate }}</div>
+        <div class="columns">
+            <div class="column" [style.flex]="1">
+                <div class="image-wrapper">
+                    <img [src]="base64" *ngIf="image">
+                </div>
+                <div class="input-wrapper">
+                    <label tuiInputFiles>
+                        <input accept="image/*" tuiInputFiles [multiple]="false" [(ngModel)]="image" (ngModelChange)="imageUpdate($event)"/>
+                    </label>
+                    <tui-files class="file">
+                        <tui-file state="normal" [file]="image" (remove)="imageRemoved($event)" *ngIf="image"/>
+                    </tui-files>
+                </div>
+            </div>
+            <div class="column" [style.flex]="2">
+                <label>
+                    {{ 'media.name' | translate }}
+                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                        <input tuiTextfield [(ngModel)]="addMediaItem.name">
+                    </tui-textfield>
+                </label>
+                <div class="header-title">
+                    <span>{{ `media.tags` | translate }}</span>
+                </div>
+                <div class="tag-wrapper">
+                    <div class="tag" *ngFor="let tag of addMediaItem.tags">
+                        {{ tag }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeAddTag(tag)"></ng-icon>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="addTagName" (keydown)="addTagKeyDown($event)">
+                        </tui-textfield>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingMedia">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addMedia()">{{ 'add-media-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<div class="edit-dialog dialog" (click)="editDialogClick($event)" #editDialog>
+    <div class="window" [class.show]="showEditDialog">
+        <div class="title">{{ 'add-media-dialog.edit-title' | translate }}</div>
+        <div class="columns">
+            <div class="column" [style.flex]="1">
+                <div class="image-wrapper">
+                    <img crossorigin="anonymous" *ngIf="editMediaItem" [src]="`${cdn_base}/media/image/${editMediaItem.id}/scaled`">
+                </div>
+            </div>
+            <div class="column" [style.flex]="2" *ngIf="editMediaItem">
+                <label>
+                    {{ 'media.name' | translate }}
+                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                        <input tuiTextfield [(ngModel)]="editMediaItem.name">
+                    </tui-textfield>
+                </label>
+                <div class="header-title">
+                    <span>{{ `media.tags` | translate }}</span>
+                </div>
+                <div class="tag-wrapper">
+                    <div class="tag" *ngFor="let tag of editMediaItem.tags">
+                        {{ tag }}&nbsp;<ng-icon name="tablerX" class="remove-icon" (click)="removeEditTag(tag)"></ng-icon>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <label>
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editTagName" (keydown)="editTagKeyDown($event)">
+                        </tui-textfield>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="editingMedia">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="saveMediaEdit()">{{ 'add-media-dialog.save' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>
