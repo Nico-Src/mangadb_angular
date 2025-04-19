@@ -23,6 +23,7 @@ import { AdminVolumesComponent } from './pages/admin/volumes/volumes.component';
 import { AdminVolumeDetailComponent } from './pages/admin/volume-detail/volume-detail.component';
 import { AdminPublishersComponent } from './pages/admin/publishers/publishers.component';
 import { AdminPublisherDetailComponent } from './pages/admin/publisher-detail/publisher-detail.component';
+import { AdminContributorsComponent } from './pages/admin/contributors/contributors.component';
 
 export const routes: Routes = [
     {
@@ -154,6 +155,14 @@ export const routes: Routes = [
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR],
             route: 'volume'
+        }
+    },
+    {
+        path: 'admin/contributors',
+        component: AdminContributorsComponent,
+        canActivate: [RoleGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR]
         }
     },
     // auto redirect

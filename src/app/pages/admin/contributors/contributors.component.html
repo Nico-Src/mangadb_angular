@@ -1,0 +1,88 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="openAddDialog()"><ng-icon name="tablerPlus" class="icon"></ng-icon>{{ 'contributor.add' | translate }}</button>
+    </div>
+</div>
+
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="contributors-table" [class.loading]="loading">
+    <thead>
+        <tr>
+            <th tuiTh [style.width.%]="35">{{ 'tables.contributors.name' | translate }}</th>
+            <th tuiTh [style.width.%]="65">{{ 'tables.contributors.slug' | translate }}</th>
+        </tr>
+    </thead>
+    <tbody tuiTbody>
+        <ng-container *ngFor="let item of contributors">
+            <tr tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+                <ng-template #contextMenu>
+                    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                        <button *ngFor="let menuItem of contributorMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
+                            <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                            <span>{{ `contributor.context.${menuItem.title}` | translate }}</span>
+                        </button>
+                    </tui-data-list>
+                </ng-template>
+                <td tuiTd [style.maxWidth.%]="35">
+                    {{ item.name }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="65">
+                    {{ item.slug }}
+                </td>
+                <div class="edit-placeholder" *ngIf="item.lockedBy?.id">
+                    <div class="name">{{ item.name }}</div>
+                    <div class="by">
+                        <span>{{ 'series.currently-edited' | translate }}</span>
+                        <div class="username">{{ item.lockedBy.username }}</div>
+                        <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${item.lockedBy.id}/scaled`">
+                    </div>
+                </div>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+
+<div class="add-dialog dialog" (click)="addDialogClick($event)" #addDialog>
+    <div class="window" [class.show]="showAddDialog">
+        <div class="title">{{ 'add-contributor-dialog.title' | translate }}</div>
+        <label>
+            {{ 'add-contributor-dialog.first-name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addContributorItem.first_name">
+            </tui-textfield>
+        </label>
+        <label>
+            {{ 'add-contributor-dialog.last-name' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [(ngModel)]="addContributorItem.last_name">
+            </tui-textfield>
+        </label>
+        <div class="button-wrapper">
+            <tui-loader class="loader" [overlay]="true" [showLoader]="addingContributor">
+                <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="addContributor()">{{ 'add-contributor-dialog.add' | translate }}</button>
+            </tui-loader>
+        </div>
+    </div>
+</div>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>

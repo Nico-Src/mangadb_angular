@@ -64,7 +64,8 @@
         "admin-dashboard": "Admin-Dashboard",
         "admin-series": "Admin-Series",
         "admin-volumes": "Admin-Volumes",
-        "admin-publishers": "Admin-Publishers"
+        "admin-publishers": "Admin-Publishers",
+        "admin-contributors": "Admin-Contributors"
     },
 
     "sidebar": {
@@ -286,7 +287,12 @@
             "male": "Male",
             "female": "Female"
         },
-        "links": "Links"
+        "links": "Links",
+        "add": "Add Contributor",
+        "context": {
+            "edit": "Edit",
+            "delete": "Delete"
+        }
     },
 
     "report": {
@@ -558,6 +564,10 @@
         "publisher": {
             "name": "Name",
             "slug": "Slug"
+        },
+        "contributors": {
+            "name": "Name",
+            "slug": "Slug"
         }
     },
 
@@ -785,7 +795,11 @@
     "add-contributor-dialog": {
         "title": "Add Contributor",
         "add": "Add",
-        "contributor": "Contributor"
+        "first-name": "First Name",
+        "last-name": "Last Name",
+        "contributor": "Contributor",
+        "success": "Contributor added successfully.",
+        "delete-success": "Contributor deleted successfully."
     },
 
     "add-tag-dialog": {
