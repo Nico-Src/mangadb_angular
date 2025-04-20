@@ -95,7 +95,7 @@
 <div class="header-item" *ngIf="inAdminArea">
     <span class="name" tuiFade>{{ 'sidebar.admin-management' | translate }}</span>
 </div>
-<div class="item" [routerLink]="['/admin-reports']" [class.active]="router.url === '/admin/reports'" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-reports' | translate) ">
+<div class="item" [routerLink]="['/admin/reports']" [class.active]="router.url.startsWith('/admin/reports')" *ngIf="inAdminArea" tuiHintAppearance="dark" tuiHintDirection="right" [tuiHint]="sidebar.isOpen() ? '' : ('sidebar.admin-reports' | translate) ">
     <ng-icon name="tablerMessageReport" class="icon" [style.fontSize.px]="18"></ng-icon>
     <span class="name" tuiFade>{{ 'sidebar.admin-reports' | translate }}</span>
 </div>

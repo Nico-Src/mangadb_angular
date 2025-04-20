@@ -66,7 +66,8 @@
         "admin-volumes": "Admin-Volumes",
         "admin-publishers": "Admin-Publishers",
         "admin-contributors": "Admin-Contributors",
-        "media-library": "Media Library"
+        "media-library": "Media Library",
+        "reports": "Reports"
     },
 
     "sidebar": {
@@ -526,6 +527,8 @@
         "subsidiary": "Subsidiary",
         "add": "Add Publisher",
         "context": {
+            "view": "View",
+            "view-item": "View Item",
             "edit": "Edit",
             "delete": "Delete"
         },
@@ -578,6 +581,18 @@
         "contributors": {
             "name": "Name",
             "slug": "Slug"
+        },
+        "reports": {
+            "type": {
+                "label": "Type",
+                "series": "Series",
+                "volume": "Volume"
+            },
+            "item": "Item",
+            "description": "Description",
+            "status": "Status",
+            "reported-by": "Reported by",
+            "reviewed-by": "Reviewed by"
         }
     },
 

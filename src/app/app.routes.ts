@@ -26,6 +26,7 @@ import { AdminPublisherDetailComponent } from './pages/admin/publisher-detail/pu
 import { AdminContributorsComponent } from './pages/admin/contributors/contributors.component';
 import { AdminContributorDetailComponent } from './pages/admin/contributor-detail/contributor-detail.component';
 import { AdminMediaComponent } from './pages/admin/media-library/media-library.component';
+import { AdminReportsComponent } from './pages/admin/reports/reports.component';
 
 export const routes: Routes = [
     {
@@ -179,6 +180,14 @@ export const routes: Routes = [
     {
         path: 'admin/media',
         component: AdminMediaComponent,
+        canActivate: [RoleGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/reports',
+        component: AdminReportsComponent,
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]

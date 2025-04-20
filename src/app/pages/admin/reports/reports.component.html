@@ -1,0 +1,79 @@
+<div class="theme" [class]="theme()"></div>
+
+<div class="controls">
+    <div class="control-row">
+        <tui-textfield iconStart="@tui.search" class="search-input" tuiTextfieldSize="s">
+            <input (keydown)="searchKeyDown($event)" [disabled]="loading" [placeholder]="'browse-series.search.placeholder' | translate" tuiTextfield [(ngModel)]="search" #searchEl/>
+        </tui-textfield>
+        <tui-select tuiTextfieldSize="s" [(ngModel)]="selectedOrder" (ngModelChange)="updateQueryParams()" class="order-select" [disabled]="loading" [valueContent]="orderContent" [tuiTextfieldLabelOutside]="true">
+            <tui-data-list-wrapper *tuiDataList [itemContent]="orderContent" [items]="orders"></tui-data-list-wrapper>
+        </tui-select>
+        <tui-pagination [(index)]="currentPage" [length]="maxPages" (indexChange)="updateQueryParams()"/>
+    </div>
+</div>
+
+<table tuiTable [size]="tableSize" [style.width.%]="100" class="reports-table" [class.loading]="loading">
+    <thead>
+        <tr>
+            <th tuiTh [style.width.%]="5">{{ 'tables.reports.type.label' | translate }}</th>
+            <th tuiTh [style.width.%]="30">{{ 'tables.reports.item' | translate }}</th>
+            <th tuiTh [style.width.%]="30">{{ 'tables.reports.description' | translate }}</th>
+            <th tuiTh [style.width.%]="15">{{ 'tables.reports.status' | translate }}</th>
+            <th tuiTh [style.width.%]="10">{{ 'tables.reports.reported-by' | translate }}</th>
+            <th tuiTh [style.width.%]="10">{{ 'tables.reports.reviewed-by' | translate }}</th>
+        </tr>
+    </thead>
+    <tbody tuiTbody>
+        <ng-container *ngFor="let item of reports">
+            <tr tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+                <ng-template #contextMenu>
+                    <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
+                        <button *ngFor="let menuItem of reportMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
+                            <ng-icon [name]="menuItem.icon" [style.fontSize.px]="20" [style.transform]="'translateY(-2px)'" [style.marginRight.px]="5"></ng-icon>
+                            <span>{{ `publisher.context.${menuItem.title}` | translate }}</span>
+                        </button>
+                    </tui-data-list>
+                </ng-template>
+                <td tuiTd [style.maxWidth.%]="5">
+                    {{ `tables.reports.type.${item.report_type}` | translate }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="30">
+                    {{ item.report_type === 'series' ? item.series.name : item.volume.name }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="30">
+                    {{ item.description }}
+                </td>
+                <td tuiTd [style.maxWidth.%]="15">
+                    <div class="status">
+                        <div class="indicator" [class]="item.status.key"></div>
+                        <div class="text">{{ `report.status.${item.status.key}` | translate }}</div>
+                    </div>
+                </td>
+                <td tuiTd [style.maxWidth.%]="10">
+                    <div class="image-wrapper">
+                        <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${item.user_id}/scaled`" [tuiHint]="item.user.username" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'dark'">
+                    </div>
+                </td>
+                <td tuiTd [style.maxWidth.%]="10">
+                    <div class="image-wrapper" *ngIf="item.reviewed_by">
+                        <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${item.reviewed_by}/scaled`" [tuiHint]="item.reviewer.username" [tuiHintDirection]="'bottom'" [tuiHintAppearance]="'dark'">
+                    </div>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>
+
+<ng-template #orderContent let-item>
+    <div class="order-item">
+        <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
+        <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #languageContent let-item>
+    <div class="language-item">
+        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <span class="language-name">{{ `language.${item.value}` | translate }}</span>
+    </div>
+</ng-template>

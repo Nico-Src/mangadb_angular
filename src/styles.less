@@ -179,6 +179,18 @@ tui-calendar,[tuiAppearance][data-appearance=action]{
     }
 }
 
+.indicator{
+    &.open{
+        background-color: rgb(110, 110, 217);
+        box-shadow: 0 0 4px 2px rgba(110, 110, 217,.2);
+    }
+
+    &.under-review{
+        background-color: rgb(229, 145, 75);
+        box-shadow: 0 0 4px 2px rgba(229, 145, 75,.2);
+    }
+}
+
 body.light {
     background-color: @bg-color;
     app-root, tui-root{background-color: @bg-color;}
