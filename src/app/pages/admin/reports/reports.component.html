@@ -15,9 +15,9 @@
 <table tuiTable [size]="tableSize" [style.width.%]="100" class="reports-table" [class.loading]="loading">
     <thead>
         <tr>
-            <th tuiTh [style.width.%]="5">{{ 'tables.reports.type.label' | translate }}</th>
+            <th tuiTh [style.width.%]="15">{{ 'tables.reports.type.label' | translate }}</th>
             <th tuiTh [style.width.%]="30">{{ 'tables.reports.item' | translate }}</th>
-            <th tuiTh [style.width.%]="30">{{ 'tables.reports.description' | translate }}</th>
+            <th tuiTh [style.width.%]="20">{{ 'tables.reports.description' | translate }}</th>
             <th tuiTh [style.width.%]="15">{{ 'tables.reports.status' | translate }}</th>
             <th tuiTh [style.width.%]="10">{{ 'tables.reports.reported-by' | translate }}</th>
             <th tuiTh [style.width.%]="10">{{ 'tables.reports.reviewed-by' | translate }}</th>
@@ -34,13 +34,13 @@
                         </button>
                     </tui-data-list>
                 </ng-template>
-                <td tuiTd [style.maxWidth.%]="5">
-                    {{ `tables.reports.type.${item.report_type}` | translate }}
+                <td tuiTd [style.maxWidth.%]="15">
+                    {{ `tables.reports.type.${item.report_type}` | translate }} - {{ `report.type.${item.type.key}` | translate }}
                 </td>
                 <td tuiTd [style.maxWidth.%]="30">
                     {{ item.report_type === 'series' ? item.series.name : item.volume.name }}
                 </td>
-                <td tuiTd [style.maxWidth.%]="30">
+                <td tuiTd [style.maxWidth.%]="20">
                     {{ item.description }}
                 </td>
                 <td tuiTd [style.maxWidth.%]="15">
@@ -64,10 +64,58 @@
     </tbody>
 </table>
 
+<div class="view-dialog dialog" (click)="viewDialogClick($event)" #viewDialog>
+    <div class="window" [class.show]="showViewDialog">
+        <div class="title">{{ 'view-report-dialog.title' | translate }}</div>
+        <label *ngIf="viewReportObj.report_type === 'volume' && viewReportObj">
+            {{ 'tables.reports.type.volume' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [value]="viewReportObj.volume?.name" [readOnly]="true">
+            </tui-textfield>
+        </label>
+        <label *ngIf="viewReportObj">
+            {{ 'tables.reports.type.series' | translate }}
+            <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                <input tuiTextfield [value]="viewReportObj.series?.name" [readOnly]="true">
+            </tui-textfield>
+        </label>
+        <label  *ngIf="viewReportObj">
+            {{ 'tables.reports.type.label' | translate }}
+            <tui-select tuiTextfieldSize="s" [disabled]="true" [(ngModel)]="viewReportObj.type" [valueContent]="typeContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="typeContent" [items]="reportTypes"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+        <label [style.marginTop.px]="10" [style.display]="'block'">
+            <span class="select-label">
+                {{ "tables.reports.description" | translate }}
+            </span>
+            <tui-textarea class="report-description" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true" [(ngModel)]="viewReportObj.description" [disabled]="true"/>
+        </label>
+        <label  *ngIf="viewReportObj">
+            {{ 'tables.reports.status' | translate }}
+            <tui-select tuiTextfieldSize="s" [(ngModel)]="viewReportObj.status" (ngModelChange)="reportStatusUpdate($event,viewReportObj.id,viewReportObj.report_type)" [valueContent]="statusContent" [tuiTextfieldLabelOutside]="true">
+                <tui-data-list-wrapper *tuiDataList [itemContent]="statusContent" [items]="reportStatuses"></tui-data-list-wrapper>
+            </tui-select>
+        </label>
+    </div>
+</div>
+
 <ng-template #orderContent let-item>
     <div class="order-item">
         <span class="order-name">{{ `browse-series.order.${item.key}` | translate }}</span>
         <ng-icon class="icon" [name]="item.icon"></ng-icon>
+    </div>
+</ng-template>
+
+<ng-template #typeContent let-item>
+    <div class="type-item">
+        <span class="type-name">{{ `report.type.${item.key}` | translate }}</span>
+    </div>
+</ng-template>
+
+<ng-template #statusContent let-item>
+    <div class="status-item">
+        <span class="status-name">{{ `report.status.${item.key}` | translate }}</span>
     </div>
 </ng-template>
 

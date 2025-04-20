@@ -6,18 +6,18 @@ import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiAlertService, TuiButton, TuiDataList, TuiHint, TuiLoader, TuiTextfield } from '@taiga-ui/core';
-import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiComboBoxModule, TuiSelectModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { tablerEdit, tablerExternalLink, tablerEye, tablerPlus, tablerSortAscendingNumbers, tablerSortDescendingNumbers, tablerTrash } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { TuiPagination, } from '@taiga-ui/kit';
-import { CDN_BASE, errorAlert, getTranslation, LANGS, successAlert, langToLocale, REPORT_STATUSES } from '../../../../globals';
+import { CDN_BASE, errorAlert, getTranslation, LANGS, successAlert, langToLocale, REPORT_STATUSES, REPORT_TYPES } from '../../../../globals';
 import { TuiTable } from '@taiga-ui/addon-table';
 
 @Component({
     selector: 'app-admin-reports',
-    imports: [NgFor,NgIf,TuiTextfield,ScrollingModule,TuiTable,TuiHint,TuiComboBoxModule,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
+    imports: [NgFor,NgIf,TuiTextfield,ScrollingModule,TuiTextareaModule,TuiTable,TuiHint,TuiComboBoxModule,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './reports.component.html',
     styleUrl: './reports.component.less',
     providers: [],
@@ -43,14 +43,18 @@ export class AdminReportsComponent {
     ]
     selectedOrder: any = this.orders[1];
     reports: any = [];
+    reportTypes:any = REPORT_TYPES;
     reportStatuses = REPORT_STATUSES;
     reportMenuItems = [
         {title: 'view', icon: 'tablerEye', action: this.viewReport.bind(this)},
         {title: 'view-item', icon: 'tablerExternalLink', action: this.viewReportItem.bind(this)},
-        {title: 'edit', icon: 'tablerEdit', action: this.editReport.bind(this)},
         {title: 'delete', icon: 'tablerTrash', action: this.confirmDeleteReport.bind(this)},
     ];
     @ViewChild('dropdown') dropdown:any;
+
+    showViewDialog:boolean = false;
+    @ViewChild('viewDialog') viewDialog:any;
+    viewReportObj:any = {};
 
     constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute) { }
     
@@ -88,6 +92,9 @@ export class AdminReportsComponent {
         const PAGE_LIMIT = 50;
         const offset = this.currentPage * PAGE_LIMIT;
         this.api.request<any>(HttpMethod.POST, `reports`, {order: this.selectedOrder.value,limit: PAGE_LIMIT,offset,search:this.search}).subscribe((res:any)=>{
+            for(const report of res.reports){
+                report.type = this.reportTypes.find((t:any) => t.key === report.type);
+            }
             this.reports = res.reports;
             console.log(this.reports)
             this.maxPages = res.max;
@@ -96,6 +103,21 @@ export class AdminReportsComponent {
             }
             this.loading = false;
         });
+    }
+
+    reportStatusUpdate(e:any,id:number,type:string){
+        this.api.request<string>(HttpMethod.POST, `reports/update/${id}/${type}`, {status: e.key}, 'text').subscribe(async(res:any)=>{
+            const msg = await getTranslation(this.translate, `report.update-status-success`);
+            successAlert(this.alerts, msg, undefined, this.translate);
+            this.loadReports();
+        });
+    }
+
+    // if backdrop of dialog is clicked close it
+    viewDialogClick(e:any){
+        if (e.target === this.viewDialog.nativeElement) {
+            this.showViewDialog = false;
+        }
     }
 
     // keydown handler for search input
@@ -113,7 +135,8 @@ export class AdminReportsComponent {
     }
 
     viewReport(report:any){
-
+        this.viewReportObj = JSON.parse(JSON.stringify(report));
+        this.showViewDialog = true;
     }
 
     viewReportItem(report:any){
@@ -127,10 +150,6 @@ export class AdminReportsComponent {
         }
     }
 
-    editReport(report:any){
-        
-    }
-
     // delete report
     async confirmDeleteReport(report:any){
         if(!report) return;
@@ -138,13 +157,13 @@ export class AdminReportsComponent {
         const confirmDelete = confirm(msg);
         // if user wants to delete publisher send delete request
         if(confirmDelete){
-            /*this.api.request<string>(HttpMethod.DELETE, `admin-contributors/delete/${contributor.id}`, {}, 'text').subscribe(async(res:any)=>{
-                const msg = await getTranslation(this.translate, `add-contributor-dialog.delete-success`);
+            this.api.request<string>(HttpMethod.DELETE, `reports/delete/${report.id}/${report.report_type}`, {}, 'text').subscribe(async(res:any)=>{
+                const msg = await getTranslation(this.translate, `report.delete-success`);
                 successAlert(this.alerts, msg, undefined, this.translate);
-                this.loadContributors();
+                this.loadReports();
             }, (err:any)=>{
                 errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
-            });*/
+            });
         }
     }
 }

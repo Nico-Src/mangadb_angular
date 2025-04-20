@@ -320,7 +320,9 @@
             "under-review": "Under Review",
             "resolved": "Resolved",
             "refused": "Dismissed"
-        }
+        },
+        "update-status-success": "Report Status updated successfully.",
+        "delete-success": "Report deleted successfully."
     },
 
     "tags":{
@@ -910,5 +912,9 @@
         "success": "Successfully added Media.",
         "save-success": "Changes saved successfully.",
         "delete-success": "Media Item deleted successfully."
+    },
+
+    "view-report-dialog":{
+        "title": "Report Details"
     }
 }
