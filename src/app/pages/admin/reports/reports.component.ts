@@ -17,7 +17,7 @@ import { TuiTable } from '@taiga-ui/addon-table';
 
 @Component({
     selector: 'app-admin-reports',
-    imports: [NgFor,NgIf,TuiTextfield,ScrollingModule,TuiTextareaModule,TuiTable,TuiHint,TuiComboBoxModule,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
+    imports: [NgFor,NgIf,TuiTextfield,ScrollingModule,TuiTextareaModule,TuiTable,TuiHint,TuiComboBoxModule,TuiDataList,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './reports.component.html',
     styleUrl: './reports.component.less',
     providers: [],

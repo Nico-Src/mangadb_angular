@@ -55,7 +55,8 @@ export class TopBar {
         { url: '/admin/series/', state: 'translucent' },
         { url: '/admin/volumes/', state: 'translucent' },
         { url: '/admin/publishers/', state: 'translucent' },
-        { url: '/admin/contributors/', state: 'translucent' }
+        { url: '/admin/contributors/', state: 'translucent' },
+        { url: '/admin/users/', state: 'translucent' }
     ];
 
     routeTranslucent = () => {

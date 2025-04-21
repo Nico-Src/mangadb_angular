@@ -28,6 +28,7 @@ import { AdminContributorDetailComponent } from './pages/admin/contributor-detai
 import { AdminMediaComponent } from './pages/admin/media-library/media-library.component';
 import { AdminReportsComponent } from './pages/admin/reports/reports.component';
 import { AdminUsersComponent } from './pages/admin/users/users.component';
+import { AdminUserDetailComponent } from './pages/admin/user-detail/user-detail.component';
 
 export const routes: Routes = [
     {
@@ -200,6 +201,15 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/users/:id',
+        component: AdminUserDetailComponent,
+        canActivate: [RoleGuard,EditGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR],
+            route: 'volume'
         }
     },
     // auto redirect

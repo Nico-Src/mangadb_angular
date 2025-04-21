@@ -17,7 +17,7 @@ import { TuiTable } from '@taiga-ui/addon-table';
 
 @Component({
     selector: 'app-admin-users',
-    imports: [NgFor,NgIf,TuiTextfield,ScrollingModule,TuiTextareaModule,TuiTable,TuiHint,TuiComboBoxModule,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
+    imports: [NgFor,NgIf,TuiTextfield,ScrollingModule,TuiTextareaModule,TuiTable,TuiHint,TuiComboBoxModule,TuiDataList,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './users.component.html',
     styleUrl: './users.component.less',
     providers: [],
@@ -29,6 +29,8 @@ export class AdminUsersComponent {
     private readonly api = inject(APIService);
     private readonly auth = inject(AuthService);
     readonly theme = computed(() => this.auth.theme());
+
+    currentUser:any = computed(()=>this.auth.getUser());
     cdn_base = CDN_BASE;
     tableSize:any = 's';
     search:string = "";

@@ -25,7 +25,7 @@
     </thead>
     <tbody tuiTbody>
         <ng-container *ngFor="let item of users">
-            <tr tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown">
+            <tr tuiDropdownContext [tuiDropdown]="contextMenu" #dropdown="tuiDropdown" [class.disabled]="currentUser().id == item.id">
                 <ng-template #contextMenu>
                     <tui-data-list role="menu" size="s" [tuiDropdownAlign]="'center'" tuiDataListDropdownManager class="context-menu">
                         <button *ngFor="let menuItem of userMenuItems" tuiOption type="button" (click)="menuItem.action(item); dropdown.toggle(false)">
@@ -56,6 +56,14 @@
                     <ng-icon *ngIf="item.age_verified" class="icon checked" name="tablerCheck"></ng-icon>
                     <ng-icon *ngIf="!item.age_verified" class="icon" name="tablerX"></ng-icon>
                 </td>
+                <div class="edit-placeholder" *ngIf="item.lockedBy?.id">
+                    <div class="name">{{ item.username }}</div>
+                    <div class="by">
+                        <span>{{ 'series.currently-edited' | translate }}</span>
+                        <div class="username">{{ item.lockedBy.username }}</div>
+                        <img class="image" crossorigin="anonymous" [src]="`${cdn_base}/user/avatar/${item.lockedBy.id}/scaled`">
+                    </div>
+                </div>
             </tr>
         </ng-container>
     </tbody>
