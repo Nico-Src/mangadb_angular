@@ -27,6 +27,7 @@ import { AdminContributorsComponent } from './pages/admin/contributors/contribut
 import { AdminContributorDetailComponent } from './pages/admin/contributor-detail/contributor-detail.component';
 import { AdminMediaComponent } from './pages/admin/media-library/media-library.component';
 import { AdminReportsComponent } from './pages/admin/reports/reports.component';
+import { AdminUsersComponent } from './pages/admin/users/users.component';
 
 export const routes: Routes = [
     {
@@ -188,6 +189,14 @@ export const routes: Routes = [
     {
         path: 'admin/reports',
         component: AdminReportsComponent,
+        canActivate: [RoleGuard],
+        data: {
+            roles: [UserRole.ADMIN, UserRole.EDITOR]
+        }
+    },
+    {
+        path: 'admin/users',
+        component: AdminUsersComponent,
         canActivate: [RoleGuard],
         data: {
             roles: [UserRole.ADMIN, UserRole.EDITOR]

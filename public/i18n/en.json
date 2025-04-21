@@ -67,7 +67,8 @@
         "admin-publishers": "Admin-Publishers",
         "admin-contributors": "Admin-Contributors",
         "media-library": "Media Library",
-        "reports": "Reports"
+        "reports": "Reports",
+        "admin-users": "Admin-Users"
     },
 
     "sidebar": {
@@ -595,6 +596,14 @@
             "status": "Status",
             "reported-by": "Reported by",
             "reviewed-by": "Reviewed by"
+        },
+        "users":{
+            "name": "Username",
+            "profile-image": "Profile Image",
+            "slug": "Slug",
+            "registered": "Registered",
+            "role": "Role",
+            "age_verified": "Age Verified"
         }
     },
 
@@ -606,6 +615,15 @@
             "edit": "Edit",
             "delete": "Delete"
         }
+    },
+
+    "user": {
+        "context": {
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "delete-question": "Are you sure you want to delete this user. This action cannot be undone.",
+        "delete-success": "User deleted successfully."
     },
 
     "__SECTION__PAGES__": "",
