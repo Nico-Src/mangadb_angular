@@ -166,15 +166,15 @@ export class VolumeGalleryDialog {
 
             // spine, edge, edge, edge, front, back
             const urls = [
-                `${CDN_BASE}/volumes/cover/${this.volume.id}/spine/high`, `/img/3d/edge.png`,
-                `/img/3d/edge.png`,`/img/3d/edge.png`,
+                `${CDN_BASE}/volumes/cover/${this.volume.id}/spine/high`, `./img/3d/edge.png`,
+                `./img/3d/edge.png`,`./img/3d/edge.png`,
                 `${CDN_BASE}/volumes/cover/${this.volume.id}/front/high`,
                 `${CDN_BASE}/volumes/cover/${this.volume.id}/back/high`
             ];
 
             // switch spine and edge when volume is novel (they are not right to left)
             if(this.volume.seriesType === 'Novel'){
-                urls[0] = `/img/3d/edge.png`;
+                urls[0] = `./img/3d/edge.png`;
                 urls[1] = `${CDN_BASE}/volumes/cover/${this.volume.id}/spine/high`;
             }
                     

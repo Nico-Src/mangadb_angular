@@ -112,7 +112,7 @@
                 </div>
                 <div class="link-wrapper" *ngIf="volume.links?.length > 0">
                     <div class="item" *ngFor="let link of volume.links" (click)="openLinkDialog(link.url)">
-                        <img [src]="link.src">
+                        <img [src]="`./${link.src}`">
                         <span>{{ link.name }}</span>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
 
 <ng-template #languageContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>

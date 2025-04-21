@@ -7,7 +7,7 @@
 <div class="details">
     <div class="header">
         <div class="title">
-            <img class="origin" [src]="`/img/flags/${toLocale(series.origin)}.png`">
+            <img class="origin" [src]="`./img/flags/${toLocale(series.origin)}.png`">
             <span class="text" [innerHTML]="highlightSearch(series.name)"></span>
         </div>
         <div class="alias" v-if="series.alias" [innerHTML]="highlightSearch(series.alias)"></div>

@@ -130,7 +130,7 @@
 
 <ng-template #languageContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>

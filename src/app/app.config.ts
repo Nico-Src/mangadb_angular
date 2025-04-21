@@ -1,7 +1,7 @@
 import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import { provideRouter, withHashLocation, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withFetch, HttpClient } from "@angular/common/http";
 import { CookieService } from 'ngx-cookie-service';
 import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withFetch()), 
         CookieService, 
         provideZoneChangeDetection({ eventCoalescing: true }), 
-        provideRouter(routes, withViewTransitions()),
+        provideRouter(routes, withViewTransitions(), withHashLocation()),
         NG_EVENT_PLUGINS,
         provideTranslateService({
             defaultLanguage: 'en',

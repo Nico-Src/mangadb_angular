@@ -23,7 +23,7 @@
         <div class="inner-item" [class.solid]="i % 2 == 1">
             <ng-container>
                 <div class="header">
-                    <img class="origin" [src]="`/img/flags/${toLocale(ser.origin)}.png`">
+                    <img class="origin" [src]="`./img/flags/${toLocale(ser.origin)}.png`">
                     <div class="text">{{ ser.name }} - {{ `series.type.${ser.type.toLowerCase()}` | translate }}</div>
                 </div>
                 <div class="date">

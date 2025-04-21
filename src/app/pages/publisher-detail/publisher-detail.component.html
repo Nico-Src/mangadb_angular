@@ -10,7 +10,7 @@
     <div class="content" #content>
         <div class="cover-wrapper" *ngIf="!show404">
             <div class="flag">
-                <img *ngIf="publisher?.headquarter" [class.light]="headquarterToLocale(publisher?.headquarter) === 'jpn'" [src]="`/img/flags/${headquarterToLocale(publisher?.headquarter)}.png`">
+                <img *ngIf="publisher?.headquarter" [class.light]="headquarterToLocale(publisher?.headquarter) === 'jpn'" [src]="`./img/flags/${headquarterToLocale(publisher?.headquarter)}.png`">
             </div>
             <img *ngIf="publisher?.id" [src]="`${cdn_base}/publisher/image/${publisher?.id}/high`" [tuiSkeleton]="imgLoading" tuiLoading="lazy" (load)="imgLoading = false;">
         </div>
@@ -122,7 +122,7 @@
 
 <ng-template #languageContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>

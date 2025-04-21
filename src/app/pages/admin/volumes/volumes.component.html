@@ -59,7 +59,7 @@
                     [{{ item.series?.type }}] {{ item.series?.name }}
                 </td>
                 <td tuiTd [style.maxWidth.%]="10" [style.textAlign]="'center'">
-                    <img [src]="`/img/flags/${toLoc(volume.language)}.png`" class="flag">
+                    <img [src]="`./img/flags/${toLoc(volume.language)}.png`" class="flag">
                 </td>
                 <div class="edit-placeholder" *ngIf="volume.lockedBy?.id">
                     <div class="name">{{ volume.name }}</div>
@@ -85,7 +85,7 @@
         </label>
         <div class="volume-names">
             <div class="name" *ngFor="let name of localizedVolumeNames" (click)="addVolumeItem.name = name.label">
-                <img [src]="`/img/flags/${name.key}.png`">
+                <img [src]="`./img/flags/${name.key}.png`">
                 <span>{{name.label}}</span>
             </div>
         </div>
@@ -191,7 +191,7 @@
         <div class="volume-wrapper" cdkDropList (cdkDropListDropped)="volumeDrop($event)">
             <div *ngFor="let vol of reorderVolumes" class="volume" cdkDrag cdkDragPreviewContainer="parent">
                 <span>{{ vol.name }}<span *ngIf="vol.special == true"> - {{ vol.special_name }}</span></span>
-                <img [src]="`/img/flags/${toLoc(vol.language)}.png`">
+                <img [src]="`./img/flags/${toLoc(vol.language)}.png`">
             </div>
         </div>
         <div class="button-wrapper">
@@ -246,7 +246,7 @@
 
 <ng-template #languageContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>

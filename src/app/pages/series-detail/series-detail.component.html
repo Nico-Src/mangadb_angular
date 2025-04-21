@@ -151,7 +151,7 @@
                 <ng-container *ngFor="let publisher of series.publishers">
                     <tr class="publisher" [class.origin]="publisher.origin === 1" [class.border]="publisher.editions?.length === 0 && publisher.origin === 0" (click)="publisherClick(publisher)">
                         <td tuiTd>
-                            <img [style.height.px]="15" [src]="`/img/flags/${langToLoc(publisher.language)}.png`">
+                            <img [style.height.px]="15" [src]="`./img/flags/${langToLoc(publisher.language)}.png`">
                         </td>
                         <td tuiTd class="publisher-name">
                             {{ publisher.name }}
@@ -215,7 +215,7 @@
         <div class="section-title" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">{{ 'series.aliases' | translate }}</div>
         <div class="alias-wrapper" *ngIf="series.groupedAliases?.length > 0" [class.hide]="checkingDescOverflow">
             <div class="alias-item" *ngFor="let alias of series?.groupedAliases">
-                <div class="lang" *ngFor="let lang of alias.languages"  (click)="searchAmazon(alias, lang)"><img [src]="`/img/flags/${langToLoc(lang.name)}.png`"></div>
+                <div class="lang" *ngFor="let lang of alias.languages"  (click)="searchAmazon(alias, lang)"><img [src]="`./img/flags/${langToLoc(lang.name)}.png`"></div>
                 {{ alias.title }}
             </div>
         </div>
@@ -276,7 +276,7 @@
 
 <ng-template #languageContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>
@@ -289,7 +289,7 @@
 
 <ng-template #editionContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${langToLoc(item.language)}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${langToLoc(item.language)}.png`">
         <span class="language-name" *ngIf="item.id">{{ `language.${langToLoc(item.language)}` | translate }}&nbsp;-&nbsp;{{ item.name }}</span>
         <span class="language-name" *ngIf="!item.id">{{ `language.${langToLoc(item.language)}` | translate }}</span>
     </div>

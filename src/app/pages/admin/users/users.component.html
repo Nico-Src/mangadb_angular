@@ -37,7 +37,7 @@
                 <td tuiTd [style.maxWidth.%]="10">
                     <div class="image-wrapper">
                         <img class="image" *ngIf="item.profile_image?.trim() !== ''" crossorigin="anonymous" [src]="item.profile_image?.includes('http') ? item.profile_image : `${cdn_base}/user/avatar/${item.id}/scaled`">
-                        <img class="image" *ngIf="item.profile_image?.trim() === ''" crossorigin="anonymous" src="/img/default/profile.jpg">
+                        <img class="image" *ngIf="item.profile_image?.trim() === ''" crossorigin="anonymous" src="./img/default/profile.jpg">
                     </div>
                 </td>
                 <td tuiTd [style.maxWidth.%]="25">
@@ -78,7 +78,7 @@
 
 <ng-template #languageContent let-item>
     <div class="language-item">
-        <img class="language-image" crossorigin="anonymous" [src]="`/img/flags/${item.value}.png`">
+        <img class="language-image" crossorigin="anonymous" [src]="`./img/flags/${item.value}.png`">
         <span class="language-name">{{ `language.${item.value}` | translate }}</span>
     </div>
 </ng-template>
