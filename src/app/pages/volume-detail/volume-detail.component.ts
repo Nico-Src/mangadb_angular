@@ -84,9 +84,11 @@ export class VolumeDetailComponent {
 
             this.content.nativeElement.classList.remove('fits');
 
-            const slug = this.route.snapshot.paramMap.get('slug');
-            const series = this.route.snapshot.paramMap.get('series');
-            this.loadVolume(series, slug);
+            setTimeout(()=>{
+                const slug = this.route.snapshot.paramMap.get('slug');
+                const series = this.route.snapshot.paramMap.get('series');
+                this.loadVolume(series, slug);
+            },200);
         });
 
         const slug = this.route.snapshot.paramMap.get('slug');

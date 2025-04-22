@@ -332,6 +332,12 @@ export class AdminVolumeDetailComponent {
         }
     }
 
+    // set founding date to unknown
+    setDateUnknown(){
+        const dateParts = '1001-01-01'.toString().split('-').map((p:string) => parseInt(p));
+        this.editVolume.release_date = new TuiDay(dateParts[0],dateParts[1]-1,dateParts[2])
+    }
+
     // upload image to database for given cover type (front,back,spine)
     async uploadImage(type:string){
         this.uploadingImage = true;

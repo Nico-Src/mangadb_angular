@@ -118,7 +118,10 @@
                         --tui-status-positive: rgb(var(--accent-color));
                         
                         label,input{width: 100%;}
-                        tui-loader{width:100%}
+                        ::ng-deep .t-loader{
+                            stroke: rgb(var(--mid-accent)) !important;
+                        }
+                        tui-loader{width:100%;}
                         button{
                             width: 100%;
                             --tui-background-accent-2: rgb(var(--accent-color));
@@ -158,6 +161,22 @@
                         margin-bottom: 10px;
 
                         label{flex: 1;}
+
+                        .label-wrapper{
+                            display:flex;
+                            justify-content: flex-start;
+                            align-items: center;
+                            gap: 5px;
+    
+                            .unknown{
+                                padding: 2px 5px;
+                                line-height: 10px;
+                                border-radius: 6px;
+                                font-size: 10px;
+                                cursor: pointer;
+                                background-color: rgba(0,0,0,0.1);
+                            }
+                        }
 
                         ::ng-deep [tuiAppearance][data-appearance=textfield][data-mode~=readonly]{opacity: 0.75;}
                         ::ng-deep [tuiWrapper][data-appearance=textfield], ::ng-deep [tuiAppearance][data-appearance=textfield]{box-shadow: none !important; background: #ccc !important;}

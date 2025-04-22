@@ -158,7 +158,10 @@
                         </tui-textfield>
                     </label>
                     <label [style.flex]="1">
-                        {{ "volume.release_date" | translate }}
+                        <div class="label-wrapper">
+                            {{ 'volume.release_date' | translate }}
+                            <div class="unknown" (click)="setDateUnknown()">{{ 'date.unknown' | translate }}</div>
+                        </div>
                         <tui-input-date [style.flex]="1" [(ngModel)]="editVolume.release_date" tuiTextfieldSize="s"></tui-input-date>
                     </label>
                 </div>

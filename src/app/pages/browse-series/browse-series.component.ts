@@ -15,6 +15,7 @@ import { MangaSeriesListComponent } from '../../manga-series-list/manga-series-l
 import { MangaSeriesColumnComponent } from '../../manga-series-column/manga-series-column.component';
 import { MangaSeriesGridComponent } from '../../manga-series-grid/manga-series-grid.component';
 import { APIService, HttpMethod } from '../../../services/api.service';
+import { SideBarService } from '../../../services/sidebar.service';
 
 @Component({
     selector: 'app-browse-series',
@@ -186,7 +187,9 @@ export class BrowseSeriesComponent {
         this.api.request<any>(HttpMethod.POST, `series`, {order: this.selectedOrder.value, limit: PAGE_LIMIT, offset: PAGE_LIMIT * this.currentPage, search: this.search.trim(), lang: lang, filters: this.filters}).subscribe((res:any)=>{
             setTimeout(()=>this.series = res.series,300);
             this.maxPages = res.max;
-            setTimeout(()=>this.loading = false,600);
+            setTimeout(()=>{
+                this.loading = false;
+            },600);
         });
     }
 

@@ -21,7 +21,7 @@
                         <div class="label">{{ 'language.label' | translate }}</div>
                         <div class="value">{{ `language.${langToLoc(volume?.language)}` | translate }}</div>
                     </div>
-                    <div class="item">
+                    <div class="item" *ngIf="volume?.pages">
                         <div class="label">{{ 'volume.pages' | translate }}</div>
                         <div class="value">{{volume?.pages || '-'}}</div>
                     </div>
@@ -37,7 +37,7 @@
                         <div class="label">ISBN-13</div>
                         <div class="value">{{volume?.isbn13 || '-'}}</div>
                     </div>
-                    <div class="item">
+                    <div class="item" *ngIf="volume?.measures_text !== '-'">
                         <div class="label">{{ 'volume.dimensions' | translate }}</div>
                         <div class="value tooltip" [tuiHintAppearance]="'dark'" [tuiHintDirection]="'bottom'" [tuiHint]="formatMeasures(true)">{{volume?.measures_text || '-'}}</div>
                     </div>
@@ -45,7 +45,7 @@
                         <div class="label">{{ 'volume.release_date' | translate }}</div>
                         <div class="value">{{releaseDate(volume?.release_date)}}</div>
                     </div>
-                    <div class="item">
+                    <div class="item" *ngIf="volume?.rating">
                         <div class="label">{{ 'volume.rating' | translate }}</div>
                         <div class="value">{{volume?.rating || '-'}}+</div>
                     </div>

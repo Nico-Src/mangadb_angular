@@ -197,6 +197,7 @@ export class AdminVolumesComponent {
 
         this.api.request<any>(HttpMethod.POST, `admin-volumes`, {order: this.selectedOrder.value, limit: PAGE_LIMIT,offset,search:this.search}).subscribe((res:any)=>{
             this.groups = res.groups;
+            console.log(this.groups)
             this.maxPages = res.max;
             this.loading = false;
         }, (err:any)=>{

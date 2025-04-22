@@ -163,7 +163,9 @@ export class SeriesDetailComponent {
 
             // put editions in publisher
             for(const publisher of this.series.publishers || []){
-                const editions = this.series.publisher_editions?.filter((e:any)=>e.publisher_id === publisher.id) || [];
+                const editions = this.series.publisher_editions?.filter((e:any)=>e.publisher_id === publisher.id && !e.default_edition) || [];
+                publisher.default_edition = this.series.publisher_editions?.find((e:any)=>e.publisher_id === publisher.id && e.default_edition);
+                console.log(publisher.default_edition)
                 publisher['editions'] = editions;
             }
 
@@ -377,6 +379,7 @@ export class SeriesDetailComponent {
 
     // edition changed event
     editionSelected(e:any){
+        this.page = 0;
         // load volumes for new edition
         this.loadVolumes(this.getEditionKey(this.selectedEdition),true, false);
         // update router params

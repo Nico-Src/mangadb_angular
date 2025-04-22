@@ -154,14 +154,17 @@
                             <img [style.height.px]="15" [src]="`./img/flags/${langToLoc(publisher.language)}.png`">
                         </td>
                         <td tuiTd class="publisher-name">
-                            {{ publisher.name }}
-                            <span class="range">{{ `${publisher.start || '?'} - ${publisher.end || '?'}` }}</span>
+                            {{ publisher.name }}<span *ngIf="publisher.default_edition">&nbsp;&nbsp;•&nbsp;&nbsp;{{ publisher.default_edition.name }}</span>
+                            <span class="range" *ngIf="!publisher.default_edition">{{ `${publisher.start || '?'} - ${publisher.end || '?'}` }}</span>
+                            <span class="range" *ngIf="publisher.default_edition">{{ `${publisher.default_edition.start || '?'} - ${publisher.default_edition.end || '?'}` }}</span>
                         </td>
                         <td tuiTd [style.textAlign]="'center'" class="chapter">
-                            <span class="badge">{{ publisher.chapter || '?' }}</span>
+                            <span class="badge" *ngIf="!publisher.default_edition">{{ publisher.chapter || '?' }}</span>
+                            <span class="badge" *ngIf="publisher.default_edition">{{ publisher.default_edition.chapter || '?' }}</span>
                         </td>
                         <td tuiTd [style.textAlign]="'center'" class="volumes">
-                            <span class="badge">{{ publisher.volumes || '?' }}</span>
+                            <span class="badge" *ngIf="!publisher.default_edition">{{ publisher.volumes || '?' }}</span>
+                            <span class="badge" *ngIf="publisher.default_edition">{{ publisher.default_edition.volumes || '?' }}</span>
                         </td>
                         <td tuiTd [style.textAlign]="'center'">
                             {{ `tags.${publisher.status.toLowerCase()}` | translate }}
