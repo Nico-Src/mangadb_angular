@@ -20,7 +20,7 @@
 </div>
 <div class="details" [class.release-hidden]="!showRelease" *ngIf="!showCollectionMetadata">
     <div class="name">{{ volume.name }}</div>
-    <div class="pages"><span>{{ volume.pages || 0 }}</span>&nbsp;<ng-icon class="icon" name="solarNotebook"/></div>
+    <div class="pages"><span>{{ volume.pages || '-' }}</span>&nbsp;<ng-icon class="icon" name="solarNotebook"/></div>
 </div>
 <div class="details" [class.release-hidden]="!showRelease" *ngIf="showCollectionMetadata">
     <div class="name">{{ volume.name }}</div>
