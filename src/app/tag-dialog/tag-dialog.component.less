@@ -34,20 +34,18 @@
         transition: transform var(--transition-duration) ease;
         will-change: transform;
         transform: scale(0.9);
-        background-color: white;
+        background-color: var(--dialog-bg);
 
         .title{
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 10px;
-            color: #222;
             display:flex;
             justify-content: flex-start;
             align-items: center;
 
             .tag{
                 margin-left: 10px;
-                background-color: rgba(0,0,0,.1);
                 padding: 2px 10px;
                 border-radius: 4px;
                 font-weight: 500;
@@ -58,12 +56,10 @@
         .description{
             font-size: 14px;
             margin-bottom: 10px;
-            color: #555;
             margin-top: 5px;
         }
 
         .count{
-            color: #999;
             font-size: 12px;
         }
 
@@ -78,5 +74,31 @@
             --tui-background-accent-2-hover: rgb(var(--mid-accent));
             --tui-background-accent-2-pressed: rgb(var(--dark-accent));
         }
+    }
+}
+
+:host:has(.theme.light){
+    .title{color: #222;}
+    .description{color: #555;}
+    .count{color: #999;}
+    .tag{background-color: rgba(0,0,0,.1);}
+}
+
+:host:has(.theme.dark){
+    .title{color: #ccc;}
+    .description{color: #aaa;}
+    .count{color: #999;}
+    .tag{background-color: rgba(255,255,255,.1);}
+}
+
+@media (prefers-color-scheme: light) {
+    :host:has(.theme.system){
+        
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :host:has(.theme.system){
+
     }
 }

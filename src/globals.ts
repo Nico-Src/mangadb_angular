@@ -33,7 +33,6 @@ export const THEMES = [
     {key: 'system'},
     {key: 'light'},
     {key: 'dark'},
-    {key: 'crimson', disable: true},
 ];
 
 export const DEFAULT_SETTINGS:any = {

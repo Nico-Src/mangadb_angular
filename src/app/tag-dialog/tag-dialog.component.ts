@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, Input, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, Input, ViewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiButton, TuiAppearance } from '@taiga-ui/core';
 import { PluralTranslatePipe } from '../../pipes/pluralTranslate';
@@ -7,6 +7,7 @@ import { NgIf } from '@angular/common';
 import { TuiElasticContainer } from '@taiga-ui/kit';
 import { Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'tag-dialog',
@@ -16,7 +17,9 @@ import { APIService, HttpMethod } from '../../services/api.service';
 })
 export class TagDialog {
     private readonly api = inject(APIService);
+    private readonly auth = inject(AuthService);
     constructor(private el: ElementRef, private router: Router){}
+    readonly theme = computed(() => this.auth.theme());
     @Input() tag: any = null;
     show = false;
     tagDataLoading = false;

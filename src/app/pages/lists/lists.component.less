@@ -84,7 +84,6 @@
         margin-top: 10px;
 
         .list-item{
-            background-color: rgba(0,0,0,.05);
             border-radius: 6px;
             height: 150px;
             display:flex;
@@ -98,8 +97,6 @@
                 .cover-wrapper manga-cover{
                     transform: scale(0.95);
                 }
-
-                background-color: rgba(0,0,0,.1);
             }
 
             .details{
@@ -113,7 +110,6 @@
         
                 .name{
                     width: 100%;
-                    color: #303030;
                     font-weight: 400;
                     font-size: 24px;
                     cursor: pointer;
@@ -121,7 +117,6 @@
         
                 .entries{
                     width: 100%;
-                    color: #505050;
                     display:flex;
                     align-items: center;
                     font-weight: 400;
@@ -135,7 +130,6 @@
         
                 .time{
                     width: 100%;
-                    color: #707070;
                     font-weight: 400;
                     font-size: 14px;
                     margin-top: auto;
@@ -194,6 +188,15 @@
 
 :host:has(.theme.light){
     .search-input{background-color: rgba(0, 0, 0, 0.05);}
+    .list-item{
+        background-color: rgba(0,0,0,.05); 
+        &:hover{background-color: rgba(0,0,0,.1);}
+        .details{
+            .name{color: #303030;}
+            .entries{color: #505050;}
+            .time{color: #707070;}
+        }
+    }
 }
 
 :host:has(.theme.dark){
@@ -207,11 +210,31 @@
 
     tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{background: #444 !important;}
     tui-select ::ng-deep [tuiWrapper][data-appearance=icon],.order-item .order-name, .order-item .icon{color: #ccc !important;}
+
+    .section-title{color: #fff;}
+    .list-item{
+        background-color: rgba(255,255,255,.1); 
+        &:hover{background-color: rgba(255,255,255,.15);}
+        .details{
+            .name{color: #ccc;}
+            .entries{color: #aaa;}
+            .time{color: #888;}
+        }
+    }
 }
 
 @media (prefers-color-scheme: light) {
     :host:has(.theme.system){
         .search-input{background-color: rgba(0, 0, 0, 0.05);}
+        .list-item{
+            background-color: rgba(0,0,0,.05); 
+            &:hover{background-color: rgba(0,0,0,.1);}
+            .details{
+                .name{color: #303030;}
+                .entries{color: #505050;}
+                .time{color: #707070;}
+            }
+        }
     }
 }
 
@@ -227,5 +250,16 @@
 
         tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{background: #444 !important;}
         tui-select ::ng-deep [tuiWrapper][data-appearance=icon]{color: #ccc !important;}
+
+        .section-title{color: #fff;}
+        .list-item{
+            background-color: rgba(255,255,255,.1); 
+            &:hover{background-color: rgba(255,255,255,.15);}
+            .details{
+                .name{color: #ccc;}
+                .entries{color: #aaa;}
+                .time{color: #888;}
+            }
+        }
     }
 }

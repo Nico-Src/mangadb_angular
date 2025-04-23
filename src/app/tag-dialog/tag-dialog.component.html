@@ -1,3 +1,5 @@
+<div class="theme" [class]="theme()"></div>
+
 <div class="window" [class.show]="show" #window>
     <div class="title" *ngIf="tag?.id">{{ `tags.category.${tag?.type}` | translate }}: <div class="tag">{{ `tags.${tag.name.toLowerCase()}` | translate }}</div></div>
     <tui-elastic-container class="description" *ngIf="tag?.id">{{ tagDataLoading ? '' : (`tags.desc.${tag.name.toLowerCase()}` | translate) }}</tui-elastic-container>

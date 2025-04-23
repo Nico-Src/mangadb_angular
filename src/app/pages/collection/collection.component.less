@@ -72,8 +72,6 @@
 
         .series-header{
             width: 100%;
-            color: #505050;
-            border-bottom: 2px solid #ccc;
             font-size: 16px;
             font-weight: 500;
             padding: 2px 5px;
@@ -96,6 +94,7 @@
 
 :host:has(.theme.light){
     .search-input{background-color: rgba(0, 0, 0, 0.05);}
+    .volume-wrapper .series-header{color: #505050;border-bottom: 2px solid #ccc;}
 }
 
 :host:has(.theme.dark){
@@ -106,6 +105,8 @@
         ::ng-deep [tuiAppearance][data-appearance=icon]::before{ color: #aaa; }
         ::ng-deep [tuiAppearance][data-appearance=icon]:hover::before{ color: #ccc; }
     }
+
+    .volume-wrapper .series-header{color: #ccc;border-bottom: 2px solid #505050;}
 
     tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{background: #444 !important;}
     tui-select ::ng-deep [tuiWrapper][data-appearance=icon],.order-item .order-name, .order-item .icon{color: #ccc !important;}
@@ -118,6 +119,7 @@
 @media (prefers-color-scheme: light) {
     :host:has(.theme.system){
         .search-input{background-color: rgba(0, 0, 0, 0.05);}
+        .volume-wrapper .series-header{color: #505050;border-bottom: 2px solid #ccc;}
     }
 }
 
@@ -130,6 +132,8 @@
             ::ng-deep [tuiAppearance][data-appearance=icon]::before,tui-textfield[data-size=s]:before{ color: #aaa; }
             ::ng-deep [tuiAppearance][data-appearance=icon]:hover::before{ color: #ccc; }
         }
+
+        .volume-wrapper .series-header{color: #ccc;border-bottom: 2px solid #505050;}
 
         tui-select ::ng-deep [tuiWrapper][data-appearance=textfield]{background: #444 !important;}
         tui-select ::ng-deep [tuiWrapper][data-appearance=icon]{color: #ccc !important;}

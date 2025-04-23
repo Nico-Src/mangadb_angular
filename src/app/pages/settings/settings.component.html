@@ -33,13 +33,10 @@
             <div class="title">{{ 'settings.appearance.theme.title' | translate }}</div>
             <div class="description">{{ 'settings.appearance.theme.desc' | translate }}</div>
             <div class="themes" ref="themes">
-                <div class="theme" [class.active]="selectedTheme === theme.key" [class.disable]="theme.disable" *ngFor="let theme of availableThemes" (click)="selectTheme(theme.key)">
+                <div class="theme" [class.active]="selectedTheme === theme.key" *ngFor="let theme of availableThemes" (click)="selectTheme(theme.key)">
                     <div class="mockup">
                         <div class="selected">
                             <ng-icon class="icon" name="tablerCheck" [style.fontSize.px]="16"></ng-icon>
-                        </div>
-                        <div class="wip" *ngIf="theme.disable">
-                            WIP
                         </div>
                         <img class="image" [src]="`img/themes/${theme.key}.jpg`">
                     </div>

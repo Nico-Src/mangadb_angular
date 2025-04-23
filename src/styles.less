@@ -133,10 +133,9 @@ tui-calendar,[tuiAppearance][data-appearance=action]{
         transition: transform var(--transition-duration) ease;
         will-change: transform;
         transform: scale(0.9);
-        background-color: white;
         overflow-y: auto;
+        background-color: var(--dialog-bg);
 
-        --tui-background-base: #eee;
         --tui-background-accent-1: rgb(var(--accent-color));
 
         [tuiAppearance][data-appearance=textfield]{box-shadow: none !important;}
@@ -146,13 +145,11 @@ tui-calendar,[tuiAppearance][data-appearance=action]{
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 10px;
-            color: #222;
         }
 
         .description{
             font-size: 14px;
             margin-bottom: 10px;
-            color: #505050;
         }
 
         label{
@@ -205,17 +202,34 @@ tui-calendar,[tuiAppearance][data-appearance=action]{
 body.light {
     background-color: @bg-color;
     app-root, tui-root{background-color: @bg-color;}
+    
+    --dialog-bg: white;
+    .dialog{--tui-background-base: #eee;}
+    .dialog .title{color: #222;}
+    .dialog .description{color: #505050;}
 }
 
 body.dark {
     background-color: @dark-bg-color;
     app-root, tui-root{background-color: @dark-bg-color;}
+    
+    --dialog-bg: #303030;
+    .dialog, tui-calendar{--tui-background-base: #404040; --tui-text-primary: #ccc; --tui-text-secondary: #999; --tui-text-tertiary: #777;}
+    .dialog label{color: #aaa;}
+    .t-cell{color: #ccc;}
+    .dialog .title{color: #ccc;}
+    .dialog .description{color: #aaa;}
 }
 
 @media (prefers-color-scheme: light) {
     body.system{
         background-color: @bg-color;
         app-root, tui-root{background-color: @dark-bg-color;}
+        
+        --dialog-bg: white;
+        .dialog{--tui-background-base: #eee;}
+        .dialog .title{color: #222;}
+        .dialog .description{color: #505050;}
     }
 }
 
@@ -223,5 +237,12 @@ body.dark {
     body.system {
         background-color: @dark-bg-color;
         app-root, tui-root{background-color: @dark-bg-color;}
+        
+        --dialog-bg: #303030;
+        .dialog{--tui-background-base: #404040; --tui-text-primary: #ccc; --tui-text-secondary: #999; --tui-text-tertiary: #777;}
+        .dialog label{color: #aaa;}
+        .t-cell{color: #ccc;}
+        .dialog .title{color: #ccc;}
+        .dialog .description{color: #aaa;}
     }
 }

@@ -95,7 +95,6 @@
 
                 .date{
                     font-weight: bold;
-                    color: black;
                     opacity: .5;
                     margin-top: 7.5px;
                 }
@@ -167,7 +166,6 @@
                             font-size: 15px;
                             margin-top: 3px;
                             text-align: justify;
-                            color: #555;
                             display: -webkit-box;
                             -webkit-box-orient: vertical;
                             -webkit-line-clamp: 6;
@@ -211,11 +209,9 @@
                             margin: 10px 0px;
                             gap: 2px;
                             font-size: 16px !important;
-                            color: #505050;
                         }
                 
                         .ago{
-                            color: #707070;
                             font-size: 12px;
                             margin-top: 5px;
                             width: 100%;
@@ -235,9 +231,7 @@
                                 justify-content: center;
                                 align-items: center;
                                 overflow: hidden;
-                                background-color: #ccc;
                                 border-radius: 4px;
-                                color: #303030;
                                 font-size: 11px;
                                 font-weight: 500;
                                 white-space: nowrap;
@@ -261,7 +255,6 @@
                                 }
                 
                                 .label{
-                                    background-color: #bbb;
                                     padding: 1px 8px;
                                     display:flex;
                                     justify-content: center;
@@ -308,6 +301,13 @@
 
 :host:has(.theme.light){
     .search-input{background-color: rgba(0, 0, 0, 0.05);}
+    .series-item{
+        .date{color: black;}
+        .details .description, .details .rating{color: #555;}
+        .details .ago{color: #707070;}
+        .details .stat{background-color: #ccc; color: #303030;}
+        .details .stat .label{background-color: #bbb;}
+    }
 }
 
 :host:has(.theme.dark){
@@ -325,11 +325,27 @@
     tui-pagination{
         --tui-text-action: #ccc !important;
     }
+
+    .series-item{
+        .date{color: #fff;}
+        .text{color: #ddd;}
+        .details .description, .details .rating{color: #aaa;}
+        .details .ago{color: #888;}
+        .details .stat{background-color: #555; color: #aaa;}
+        .details .stat .label{background-color: #444;}
+    }
 }
 
 @media (prefers-color-scheme: light) {
     :host:has(.theme.system){
         .search-input{background-color: rgba(0, 0, 0, 0.05);}
+        .series-item{
+            .date{color: black;}
+            .details .description, .details .rating{color: #555;}
+            .details .ago{color: #707070;}
+            .details .stat{background-color: #ccc; color: #303030;}
+            .details .stat .label{background-color: #bbb;}
+        }
     }
 }
 
@@ -348,6 +364,15 @@
 
         tui-pagination{
             --tui-text-action: #ccc !important;
+        }
+
+        .series-item{
+            .date{color: #fff;}
+            .text{color: #ddd;}
+            .details .description, .details .rating{color: #aaa;}
+            .details .ago{color: #888;}
+            .details .stat{background-color: #555; color: #aaa;}
+            .details .stat .label{background-color: #444;}
         }
     }
 }
