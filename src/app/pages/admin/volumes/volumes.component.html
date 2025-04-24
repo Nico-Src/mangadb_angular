@@ -18,9 +18,9 @@
     <thead>
         <tr>
             <th tuiTh [style.width.%]="20">{{ 'tables.volume.name' | translate }}</th>
-            <th tuiTh [style.width.%]="45">{{ 'tables.volume.series' | translate }}</th>
-            <th tuiTh [style.width.%]="30">{{ 'tables.volume.slug' | translate }}</th>
-            <th tuiTh [style.width.%]="5" [style.textAlign]="'center'">{{ 'tables.volume.language' | translate }}</th>
+            <th tuiTh [style.width.%]="30">{{ 'tables.volume.series' | translate }}</th>
+            <th tuiTh [style.width.%]="45">{{ 'tables.volume.slug' | translate }}</th>
+            <th tuiTh [style.width.%]="5" [style.textAlign]="'center'"></th>
         </tr>
     </thead>
     <tbody tuiTbody>
@@ -37,10 +37,10 @@
                 <td tuiTd [style.maxWidth.%]="20">
                     {{ item.name }}
                 </td>
-                <td tuiTd [style.maxWidth.%]="45">
+                <td tuiTd [style.maxWidth.%]="30">
                     [{{ item.series?.type }}] {{ item.series?.name }}
                 </td>
-                <td tuiTd [style.maxWidth.%]="30">
+                <td tuiTd [style.maxWidth.%]="45">
                     
                 </td>
                 <td tuiTd [style.maxWidth.%]="5">
@@ -59,10 +59,10 @@
                 <td tuiTd [style.maxWidth.%]="20">
                     {{ volume.name }}<span *ngIf="volume.special == true"> - {{ volume.special_name }}</span><span *ngIf="volume.nsfw == true" class="rating">16+</span><span *ngIf="volume.nsfw18 == true" class="rating">18+</span><span *ngIf="volume.edition" class="edition"> - {{ volume.edition.name }}</span>
                 </td>
-                <td tuiTd [style.maxWidth.%]="45">
+                <td tuiTd [style.maxWidth.%]="30">
                     [{{ item.series?.type }}] {{ item.series?.name }}
                 </td>
-                <td tuiTd [style.maxWidth.%]="30">
+                <td tuiTd [style.maxWidth.%]="45" [tuiHint]="volume.slug" tuiHintAppearance="dark">
                     {{ volume.slug }}
                 </td>
                 <td tuiTd [style.maxWidth.%]="5" [style.textAlign]="'center'">

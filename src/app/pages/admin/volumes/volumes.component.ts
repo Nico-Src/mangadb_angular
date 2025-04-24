@@ -6,7 +6,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APIService, HttpMethod } from '../../../../services/api.service';
 import { TuiTable } from '@taiga-ui/addon-table';
-import { TuiAlertService, TuiButton, TuiDataList, TuiLoader, TuiTextfield } from '@taiga-ui/core';
+import { TuiAlertService, TuiButton, TuiDataList, TuiHint, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -45,7 +45,7 @@ const STRINGIFY_GROUP: TuiStringHandler<GroupItem> = (item: GroupItem) =>
 
 @Component({
     selector: 'app-admin-volumes',
-    imports: [NgFor,NgIf,TuiTable,TuiTextfield,CdkDropList,CdkDrag,ScrollingModule,TuiComboBoxModule,TuiFilterByInputPipe,TuiLet,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
+    imports: [NgFor,NgIf,TuiTable,TuiTextfield,CdkDropList,CdkDrag,TuiHint,ScrollingModule,TuiComboBoxModule,TuiFilterByInputPipe,TuiLet,TuiDataList,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './volumes.component.html',
     styleUrl: './volumes.component.less',
     providers: [tuiItemsHandlersProvider({stringify: STRINGIFY_SERIES}),tuiItemsHandlersProvider({stringify: STRINGIFY_EDITION}),tuiItemsHandlersProvider({stringify: STRINGIFY_GROUP})],

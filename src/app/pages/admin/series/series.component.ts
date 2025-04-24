@@ -9,7 +9,7 @@ import { TuiAlertService, TuiButton, TuiLoader, TuiTextfield } from '@taiga-ui/c
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerEdit, tablerLock, tablerPlus, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
+import { tablerEdit, tablerLock, tablerPlus, tablerSignature, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { TuiPagination } from '@taiga-ui/kit';
 import { solarGlobal } from '@ng-icons/solar-icons/outline';
@@ -20,7 +20,7 @@ import { CDN_BASE, errorAlert, getTranslation, SERIES_TYPES, successAlert } from
     imports: [NgFor,NgIf,TuiTable,TuiTextfield,TuiButton,TuiLoader,TuiPagination,TuiSelectModule,ReactiveFormsModule,FormsModule,TranslatePipe,NgIcon,TuiTextfieldControllerModule],
     templateUrl: './series.component.html',
     styleUrl: './series.component.less',
-    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit,tablerPlus,tablerTrash})]
+    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSignature,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit,tablerPlus,tablerTrash})]
 })
 export class AdminSeriesComponent {
     private readonly alerts = inject(TuiAlertService);
@@ -44,6 +44,7 @@ export class AdminSeriesComponent {
     menuItems = [
         {title: 'edit', icon: 'tablerEdit', action: this.editSeries.bind(this)},
         {title: 'delete', icon: 'tablerTrash', action: this.confirmDeleteSeries.bind(this)},
+        {title: 'regenerate-slug', icon: 'tablerSignature', action: this.regenerateSlug.bind(this)},
     ];
     @ViewChild('dropdown') dropdown:any;
 
@@ -68,6 +69,19 @@ export class AdminSeriesComponent {
         });
 
         this.updateQueryParams();
+    }
+
+    // regenerate slug for series
+    regenerateSlug(series:any){
+        return new Promise((resolve)=>{
+            this.api.request<string>(HttpMethod.POST, `admin-series/regen-slug/${series.id}`, {}, 'text').subscribe((res:any)=>{
+                series.slug = res;
+                resolve(true);
+            }, (err:any)=>{
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+                resolve(true);
+            });
+        });
     }
 
     // update query params
