@@ -10,7 +10,7 @@ import { TuiAlertService, TuiButton, TuiDataList, TuiLoader, TuiTextfield } from
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { tablerArrowsMove, tablerEdit, tablerLock, tablerMenuOrder, tablerPlus, tablerReorder, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
+import { tablerArrowsMove, tablerEdit, tablerLock, tablerMenuOrder, tablerPlus, tablerReorder, tablerSignature, tablerSortAscendingLetters, tablerSortDescendingLetters, tablerTrash } from '@ng-icons/tabler-icons';
 import { NgFor, NgIf } from '@angular/common';
 import { TuiFilterByInputPipe, tuiItemsHandlersProvider, TuiPagination, } from '@taiga-ui/kit';
 import { solarGlobal, solarMagicStick3 } from '@ng-icons/solar-icons/outline';
@@ -49,7 +49,7 @@ const STRINGIFY_GROUP: TuiStringHandler<GroupItem> = (item: GroupItem) =>
     templateUrl: './volumes.component.html',
     styleUrl: './volumes.component.less',
     providers: [tuiItemsHandlersProvider({stringify: STRINGIFY_SERIES}),tuiItemsHandlersProvider({stringify: STRINGIFY_EDITION}),tuiItemsHandlersProvider({stringify: STRINGIFY_GROUP})],
-    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerArrowsMove,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit,tablerPlus,tablerTrash,tablerMenuOrder,tablerReorder,solarMagicStick3})]
+    viewProviders: [provideIcons({tablerSortAscendingLetters,tablerSignature,tablerArrowsMove,tablerSortDescendingLetters,tablerLock,solarGlobal,tablerEdit,tablerPlus,tablerTrash,tablerMenuOrder,tablerReorder,solarMagicStick3})]
 })
 
 export class AdminVolumesComponent {
@@ -83,10 +83,12 @@ export class AdminVolumesComponent {
         {title: 'reorder-groups', icon: 'tablerMenuOrder', action: this.openReorderGroupDialog.bind(this)},
         {title: 'auto-reorder', icon: 'solarMagicStick3', action: this.autoOrderSeries.bind(this)},
         {title: 'delete', icon: 'tablerTrash', action: this.deleteGroup.bind(this)},
+        {title: 'regenerate-slugs', icon: 'tablerSignature', action: this.regenerateAllSlugs.bind(this)}
     ];
     volumeMenuItems = [
         {title: 'edit', icon: 'tablerEdit', action: this.editVolume.bind(this)},
         {title: 'delete', icon: 'tablerTrash', action: this.confirmDeleteVolume.bind(this)},
+        {title: 'regenerate-slug', icon: 'tablerSignature', action: this.regenerateSlug.bind(this)}
     ];
     localizedVolumeNames:any = [
         {key: 'de', label: 'Band 1'},
@@ -142,6 +144,31 @@ export class AdminVolumesComponent {
         this.loadSeries();
         this.loadAllVolumeGroups();
         this.updateQueryParams();
+    }
+
+    // regenerate slug for volume
+    regenerateSlug(volume:any){
+        return new Promise((resolve)=>{
+            this.api.request<string>(HttpMethod.POST, `admin-volumes/regen-slug/${volume.id}`, {}, 'text').subscribe((res:any)=>{
+                volume.slug = res;
+                resolve(true);
+            }, (err:any)=>{
+                errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+                resolve(true);
+            });
+        });
+    }
+
+    // regenerate all slugs for series volumes
+    async regenerateAllSlugs(group:any){
+        const seriesId = group.series_id;
+        const groups = this.groups.filter((group:any) => group.series_id === seriesId);
+        // iterate over all groups
+        for(const group of groups){
+            for(const volume of group.volumes){
+                await this.regenerateSlug(volume);
+            }
+        }
     }
 
     // update query params

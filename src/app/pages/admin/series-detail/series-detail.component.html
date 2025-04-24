@@ -15,12 +15,17 @@
                         <input tuiTextfield [(ngModel)]="editSeries.name">
                     </tui-textfield>
                 </label>
-                <label>
-                    {{ 'series.slug' | translate }}
-                    <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
-                        <input tuiTextfield [(ngModel)]="editSeries.slug" [readOnly]="true">
-                    </tui-textfield>
-                </label>
+                <div class="wrapper">
+                    <label>
+                        {{ 'series.slug' | translate }}
+                        <tui-textfield tuiTextfieldSize="s" [tuiTextfieldLabelOutside]="true" class="input">
+                            <input tuiTextfield [(ngModel)]="editSeries.slug" [readOnly]="true">
+                        </tui-textfield>
+                    </label>
+                    <tui-loader class="loader" [overlay]="true" [showLoader]="regeneratingSlug">
+                        <button size="s" tuiButton type="button" class="save" appearance="accent" (click)="regenSlug()" *ngIf="series">{{ 'series.regenerate' | translate }}</button>
+                    </tui-loader>
+                </div>
                 <div class="wrapper">
                     <label>
                         {{ "series.type.label" | translate }}

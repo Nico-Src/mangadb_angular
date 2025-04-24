@@ -99,7 +99,7 @@
                     flex: unset !important;
                     flex-shrink: 0;
                     width: fit-content;
-                    margin-top: 17.5px;
+                    margin-bottom: 5px;
                     margin-left: 10px;
                 }
 
@@ -124,10 +124,16 @@
                     width: 100%;
                     display:flex;
                     justify-content: flex-start;
-                    align-items: center;
+                    align-items: flex-end;
                     gap: 10px;
 
                     label{flex: 1;}
+
+                    button{
+                        --tui-background-accent-2: rgb(var(--accent-color));
+                        --tui-background-accent-2-hover: rgb(var(--mid-accent));
+                        --tui-background-accent-2-pressed: rgb(var(--dark-accent));
+                    }
                 }
 
                 ::ng-deep [tuiAppearance][data-appearance=textfield][data-mode~=readonly]{opacity: 0.75;}

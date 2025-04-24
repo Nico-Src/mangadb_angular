@@ -117,6 +117,8 @@ export class AdminSeriesDetailComponent {
     scraping:boolean = false;
     scraperUrl:string = '';
     @ViewChild('scrapeDialog') scrapeDialog:any;
+
+    regeneratingSlug:boolean = false;
     constructor(private translate: TranslateService, private title: Title, private router: Router, private route: ActivatedRoute, private location: Location, private http: HttpClient) { }
     
     ngOnInit() {
@@ -185,6 +187,19 @@ export class AdminSeriesDetailComponent {
                 this.sidebar.setScrollTop(prevScrollTop);
                 this.loading = false;
             }, 200);
+        });
+    }
+
+    // regenerate slug
+    regenSlug(){
+        this.regeneratingSlug = true;
+
+        this.api.request<string>(HttpMethod.POST, `admin-series/regen-slug/${this.series.id}`, {}, 'text').subscribe((res:any)=>{
+            this.regeneratingSlug = false;
+            this.loadSeries(this.series.id);
+        }, (err:any)=>{
+            errorAlert(this.alerts, JSON.stringify(err), undefined, this.translate);
+            this.regeneratingSlug = false;
         });
     }
 
