@@ -60,7 +60,15 @@
         "marketplace": "Marktplatz",
         "about-us": "Über uns",
         "privacy": "Datenschutz",
-        "imprint": "Impressum"
+        "imprint": "Impressum",
+        "admin-dashboard": "Admin-Dashboard",
+        "admin-series": "Admin-Serien",
+        "admin-volumes": "Admin-Bände",
+        "admin-publishers": "Admin-Verlage",
+        "admin-contributors": "Admin-Mitwirkende",
+        "media-library": "Medien-Bibliothek",
+        "reports": "Meldungen",
+        "admin-users": "Admin-Benutzer"
     },
 
     "sidebar": {
@@ -79,7 +87,17 @@
         "marketplace": "Marktplatz",
         "about-us": "Über uns",
         "privacy": "Datenschutz",
-        "imprint": "Impressum"
+        "imprint": "Impressum",
+        "admin-dashboard": "Dashboard",
+        "admin-content": "Inhalte",
+        "admin-series": "Serien",
+        "admin-volumes": "Bände",
+        "admin-publishers": "Verlage",
+        "admin-contributors": "Mitwirkende",
+        "admin-media": "Medien-Bibliothek",
+        "admin-management": "Management",
+        "admin-reports": "Meldungen",
+        "admin-users": "Benutzer"
     },
 
     "topbar": {
@@ -101,6 +119,10 @@
 
     "__SECTION__CONTENT__": "",
 
+    "admin": {
+        "upload-success": "Bilder erfolgreich hochgeladen."
+    },
+
     "volume": {
         "nsfw-hint": "Dieses Cover enthält 16+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
         "nsfw18-hint": "Dieses Cover enthält 18+ Inhalte. Aktiviere sie in den Einstellungen, um es zu sehen.",
@@ -113,7 +135,57 @@
         "dimensions": "Abmessungen",
         "release_date": "Veröffentlichung",
         "rating": "Altersempfehlung",
-        "info-header": "Informationen"
+        "info-header": "Informationen",
+        "lists": "Listen",
+        "three-d": "3D-Ansicht",
+        "of": "von",
+        "cover": {
+            "front": "Vorne",
+            "spine": "Rücken",
+            "back": "Hinten",
+            "spread": "Spread"
+        },
+        "links": "Links",
+        "extras": "Extras",
+        "context": {
+            "add-collection": "Zur Sammlung hinzufügen",
+            "remove-collection": "Aus Sammlung entfernen",
+            "quick-view": "Schnell-Ansicht",
+            "edit-price": "Preis bearbeiten",
+            "edit-date": "Datum bearbeiten",
+            "remove-from-list": "Aus Liste entfernen",
+            "edit": "Bearbeiten",
+            "delete": "Löschen",
+            "reorder": "Neu Sortieren",
+            "reorder-groups": "Gruppen sortieren",
+            "auto-reorder": "Automatisch Sortieren",
+            "regenerate-slug": "Slug generieren",
+            "regenerate-slugs": "Slugs generieren"
+        },
+        "add": "Band hinzufügen",
+        "add-group": "Gruppe hinzufügen",
+        "delete-question": "Bist du dir sicher, dass du diesen Band löschen willst? Dies kann nicht rückgängig gemacht werden.",
+        "delete-success": "Band erfolgreich gelöscht.",
+        "upload": "Hochladen",
+        "upload-hint": "Legen Sie ein Bild ab oder klicken Sie zum Hochladen.",
+        "no-image-upload": "Kein Bild ausgewählt...",
+        "image-delete-success": "Bild erfolgreich gelöscht.",
+        "nsfw": "16+",
+        "nsfw18": "18+",
+        "special-edition": "Sonderausgabe",
+        "3d": "3D verfügbar",
+        "name": "Name",
+        "slug": "Slug",
+        "save-success": "Änderungen erfolgreich gespeichert.",
+        "special-name": "Special Name",
+        "copyright": "Copyright",
+        "media": "Medien",
+        "regenerate": "Neu generieren"
+    },
+
+    "group": {
+        "delete-question": "Bist du dir sicher, dass du diese Gruppe löschen willst? Dies kann nicht rückgängig gemacht werden.",
+        "delete-success": "Gruppe erfolgreich gelöscht."
     },
 
     "series": {
@@ -152,7 +224,37 @@
         "status":"Status",
         "publishers": "Herausgeber",
         "contributors": "Mitwirkende",
-        "aliases": "Andere Titel"
+        "aliases": "Andere Titel",
+        "currently-edited": "Wird bearbeitet von",
+        "context": {
+            "edit": "Bearbeiten",
+            "delete": "Löschen",
+            "regenerate-slug": "Slug generieren"
+        },
+        "name": "Name",
+        "slug": "Slug",
+        "public": "Öffentlich",
+        "free-lock": "Freigeben",
+        "save": "Speichern",
+        "save-success": "Änderungen erfolgreich gespeichert.",
+        "descriptions": "Beschreibungen",
+        "new-alias": "Neuer Alias",
+        "new-description": "Neue Beschreibung",
+        "new-relation": "Neue Beziehung",
+        "new-publisher": "Neuer Verlag", 
+        "new-contributor": "Neuer Mitwirkender",
+        "new-tag": "Neuer Tag",
+        "start": "Start",
+        "end": "Ende",
+        "origin": "Herkunft",
+        "default": "Standard",
+        "auto-tags": "Auto",
+        "tags": "Tags",
+        "scrape": "Scrape",
+        "add": "Serie hinzufügen",
+        "delete-question": "Bist du dir sicher, dass du diese Serie löschen willst? Dies kann nicht rückgängig gemacht werden.",
+        "delete-success": "Serie erfolgreich gelöscht.",
+        "regenerate": "Neu generieren"
     },
 
     "contributor":{
@@ -170,14 +272,43 @@
         "character designer-unknown": "Charakterdesigner*in",
         "original creator-female": "Originale Schöpferin",
         "original creator-male": "Originaler Schöpfer",
-        "original creator-unknown": "Originale*r Schöpfer*in"
+        "original creator-unknown": "Originale*r Schöpfer*in",
+        "also-known-as": "Auch bekannt als:",
+        "works": "Werke",
+        "relations": "Beziehungen",
+        "member": "Mitglied",
+        "member-of": "Mitglied von",
+        "type": {
+            "label": "Typ",
+            "person": "Person",
+            "group": "Gruppe",
+            "company": "Firma"
+        },
+        "gender": {
+            "label": "Geschlecht",
+            "male": "Männlich",
+            "female": "Weiblich",
+            "unknown": "Unbekannt"
+        },
+        "links": "Links",
+        "add": "Mitwirkende/r hinzufügen",
+        "first-name": "Vorname",
+        "last-name": "Nachname",
+        "slug": "Slug",
+        "context": {
+            "edit": "Bearbeiten",
+            "delete": "Löschen"
+        },
+        "aliases": "Aliases"
     },
 
     "report": {
         "type": {
+            "broken-link": "Kaputter Link",
             "wrong-info": "Falsche Informationen",
             "missing-info": "Fehlende Informationen",
             "missing-volumes": "Fehlende Bände",
+            "explicit-content": "Expliziter Inhalt",
             "other": "Sonstiges"
         },
         "status": {
@@ -185,7 +316,9 @@
             "under-review": "In Bearbeitung",
             "resolved": "Bearbeitet",
             "refused": "Abgelehnt"
-        }
+        },
+        "update-status-success": "Meldungstatus aktualisiert.",
+        "delete-success": "Meldung erfolgreich gelöscht."
     },
 
     "tags":{
@@ -344,12 +477,154 @@
         }
     },
 
+    "reading-status": {
+        "visibility": {
+            "label": "Sichtbarkeit",
+            "private": "Privat",
+            "public": "Öffentlich"
+        },
+        "status": {
+            "label": "Status",
+            "started": "Angefangen",
+            "completed": "Abgeschlossen",
+            "paused": "Pausiert",
+            "dropped": "Abgebrochen"
+        },
+        "progress-type": {
+            "label": "Typ",
+            "progress": "Fortschritt",
+            "chapters": "Kapitel",
+            "volumes": "Bände"
+        },
+        "reread": {
+            "label": "Erneut gelesen",
+            "postfix": "-mal"
+        },
+        "priority": {
+            "label": "Priorität",
+            "low": "Niedrig",
+            "mid": "Mittel",
+            "high": "Hoch"
+        },
+        "score": "Bewertung",
+        "start": "Start",
+        "end": "Ende"
+    },
+
+    "publisher": {
+        "also-known-as": "Auch bekannt als:",
+        "founded": "Gegründet",
+        "website": "Website",
+        "not-found": "Verlag nicht gefunden...",
+        "source": "Quelle",
+        "works": "Publizierte Werke",
+        "relations": "Beziehungen",
+        "imprint": "Imprint",
+        "parent": "Muttergesellschaft",
+        "joint venture": "Joint Venture",
+        "subsidiary": "Tochtergesellschaft",
+        "add": "Verlag hinzufügen",
+        "context": {
+            "view": "Ansehen",
+            "view-item": "Eintrag ansehen",
+            "edit": "Bearbeiten",
+            "delete": "Löschen"
+        },
+        "free-lock": "Freigeben",
+        "save": "Speichern",
+        "scrape": "Scrape",
+        "image-source": "Bild Quelle",
+        "headquarter": "Hauptsitz",
+        "short-name": "Kurzname",
+        "aliases": "Aliases",
+        "new-alias": "Neuer Alias"
+    },
+
+    "lists": {
+        "volume-lists": "Band-Listen",
+        "series-lists": "Serien-Listen",
+        "entries": {
+            "none": "Einträge",
+            "singular": "Eintrag",
+            "plural": "Einträge"
+        },
+        "add": "Liste hinzufügen",
+        "type": {
+            "volume": "Bände",
+            "series": "Serien"
+        },
+        "order": "Sortieren",
+        "cancel-reorder": "Abbrechen",
+        "save-reorder": "Speichern",
+        "reorder-success": "Reihenfolge gespeichert.",
+        "item-removed": "Eintrag erfolgreich aus Liste entfernt."
+    },
+
     "tables": {
         "volume": {
             "name": "Name",
             "series": "Serie",
+            "slug": "Slug",
             "language": "Sprache"
+        },
+        "series": {
+            "name": "Name",
+            "type": "Typ",
+            "slug": "Slug",
+            "visibility": "Sichtbarkeit"
+        },
+        "publisher": {
+            "name": "Name",
+            "slug": "Slug"
+        },
+        "contributors": {
+            "name": "Name",
+            "slug": "Slug"
+        },
+        "reports": {
+            "type": {
+                "label": "Typ",
+                "series": "Serie",
+                "volume": "Band"
+            },
+            "item": "Item",
+            "description": "Beschreibung",
+            "status": "Status",
+            "reported-by": "gemeldet von",
+            "reviewed-by": "berarbeitet von"
+        },
+        "users":{
+            "name": "Benutzername",
+            "profile-image": "Profilbild",
+            "slug": "Slug",
+            "registered": "Registriert",
+            "role": "Rolle",
+            "age_verified": "Altersverifiziert"
         }
+    },
+
+    "media": {
+        "add": "Medien hinzufügen",
+        "name": "Name",
+        "tags": "Tags",
+        "context": {
+            "edit": "Bearbeiten",
+            "delete": "Löschen"
+        }
+    },
+
+    "user": {
+        "context": {
+            "edit": "Bearbeiten",
+            "delete": "Löschen"
+        },
+        "delete-question": "Bist du dir sicher, dass du diesen Benutzer löschen willst? Dies kann nicht rückgängig gemacht werden.",
+        "delete-success": "Benutzer erfolgreich gelöscht.",
+        "logout-success": "Benutzer erfolgreich abgemeldet",
+        "save-success": "Änderungen erfolgreich gespeichert.",
+        "logout": "Abmelden",
+        "name": "Name",
+        "slug": "Slug"
     },
 
     "__SECTION__PAGES__": "",
@@ -371,7 +646,13 @@
         },
         "order": {
             "name": "Name",
-            "added": "Hinzugefügt"
+            "added": "Hinzugefügt",
+            "update": "Letzte Änderung",
+            "priority": "Priorität",
+            "score": "Bewertung",
+            "end-date": "End-Datum",
+            "start-date": "Start-Datum",
+            "series-title": "Serien-Name"
         }
     },
 
@@ -395,6 +676,10 @@
             "theme_accent": {
                 "title": "Theme Akzent-Farbe",
                 "desc": "Wähle deine eigene Akzent-Farbe um das Erscheinungsbild unserer Website anzupassen."
+            },
+            "show-drag-indicator": {
+                "title": "3D Ansicht - Rotationsindikator anzeigen",
+                "desc": "Blenden Sie den Rotationsindikator aus oder ein, der in der 3D-Ansicht eines Volumens angezeigt wird, wenn es zum ersten Mal geöffnet wird."
             }
         },
         "language": {
@@ -474,6 +759,181 @@
         "title": "Bewertung",
         "your": "Deine Bewertung",
         "delete": "Löschen",
+        "save": "Speichern",
+        "add-success": "Bewertung erfolgreich hinzugefügt.",
+        "save-success": "Bewertung erfolgreich gespeichert.",
+        "delete-success": "Bewertung erfolgreich gelöscht."
+    },
+
+    "reading-dialog": {
+        "title": "Leserverlauf",
+        "delete": "Löschen",
+        "save": "Speichern",
+        "add-success": "Lese-Status erfolgreich hinzugefügt.",
+        "save-success": "Lese-Status erfolgreich gespeichert.",
+        "delete-success": "Lese-Status erfolgreich entfernt."
+    },
+
+    "list-dialog": {
+        "title": "Listen",
+        "no-lists": "Du hast noch keine Listen für Serien erstellt.",
+        "no-volume-lists": "Du hast noch keine Listen für Bände erstellt.",
+        "add": "Hinzufügen",
+        "not-selected": "Du musst eine Liste auswählen.",
+        "add-success": "Serie zu Liste hinzugefügt",
+        "add-volume-success": "Band zu Liste hinzugefügt.",
+        "already-in-list": "Serie ist bereits in dieser Liste.",
+        "already-in-list-volume": "Band ist bereits in dieser Liste.",
+        "in-list": "Bereits in Liste"
+    },
+
+    "volume-jump-dialog": {
+        "title": "Zu Band springen: ",
+        "go": "Los",
+        "already": "Du bist bereits bei diesem Band."
+    },
+
+    "edit-dialog": {
+        "price-title": "Preis bearbeiten",
+        "date-title": "Kaufdatum bearbeiten",
         "save": "Speichern"
+    },
+
+    "delete-list-dialog": {
+        "title": "Liste löschen?",
+        "desc": "Bist du sicher, dass du diese Liste löschen willst? Dies kann nicht rückgängig gemacht werden."
+    },
+
+    "add-list-dialog": {
+        "title": "Liste hinzufügen",
+        "add": "Hinzufügen",
+        "name": "Name",
+        "type": "Typ",
+        "success": "Liste erfolgreich hinzugefügt.",
+        "already-exists": "Liste mit diesem Namen und Typen existiert bereits."
+    },
+
+    "edit-list-dialog": {
+        "title": "Liste bearbeiten",
+        "save": "Speichern",
+        "success": "Änderungen erfolgreich gespeichert.",
+        "error-change-type": "Der Typ einer Liste kann nicht geändert werden, wenn die Liste bereits Einträge enthält."
+    },
+
+    "add-alias-dialog": {
+        "title": "Alias hinzufügen",
+        "alias": "Alias",
+        "language": "Sprache",
+        "first-name": "Vorname",
+        "last-name": "Nachname",
+        "add": "Hinzufügen"
+    },
+
+    "add-description-dialog": {
+        "title": "Beschreibung hinzufügen",
+        "language": "Sprache",
+        "add": "Hinzufügen",
+        "exists": "Beschreibung mit dieser Sprache existiert bereits."
+    },
+
+    "add-relation-dialog": {
+        "title": "Beziehung hinzufügen",
+        "add": "Hinzufügen"
+    },
+
+    "add-publisher-dialog": {
+        "title": "Verlag hinzufügen",
+        "publisher": "Verlag",
+        "add": "Hinzufügen",
+        "success": "Verlag erfolgreich hinzugefügt.",
+        "delete-success": "Verlag erfolgreich gelöscht.",
+        "name": "Name"
+    },
+
+    "add-contributor-dialog": {
+        "title": "Mitwirkenden hinzufügen",
+        "add": "Hinzufügen",
+        "first-name": "Vorname",
+        "last-name": "Nachname",
+        "contributor": "Mitwirkender",
+        "success": "Mitwirkender erfolgreich hinzugefügt.",
+        "delete-success": "Mitwirkender erfolgreich gelöscht."
+    },
+
+    "add-tag-dialog": {
+        "title": "Tag hinzufügen",
+        "add": "Hinzufügen"
+    },
+
+    "scrape-dialog": {
+        "title": "Scrape URL",
+        "url": "URL",
+        "scrape": "Scrape"
+    },
+
+    "add-series-dialog": {
+        "title": "Serie hinzufügen",
+        "add": "Hinzufügen",
+        "name": "Name",
+        "type": "Typ",
+        "success": "Series erfolgreich hinzugefügt.",
+        "exists-already": "Serie mit diesem Namen und Typen existiert bereits."
+    },
+
+    "edit-group-dialog": {
+        "title": "Gruppe bearbeiten",
+        "name": "Name",
+        "series": "Serie",
+        "save": "Speichern",
+        "success": "Änderungen erfolgreich gespeichert."
+    },
+
+    "reorder-dialog": {
+        "title": "Bände neu sortieren",
+        "save": "Speichern",
+        "auto": "Auto",
+        "success": "Reihenfolge erfolgreich gespeichert."
+    },
+
+    "reorder-group-dialog": {
+        "title": "Gruppen neu sortieren",
+        "save": "Speichern",
+        "success": "Reihenfolge erfolgreich gespeichert."
+    },
+
+    "add-group-dialog": {
+        "title": "Gruppe hinzufügen",
+        "add": "Hinzufügen",
+        "name": "Name",
+        "series": "Serie",
+        "success": "Gruppe erfolgreich hinzugefügt.",
+        "exists-already": "Gruppe mit diesem existiert in der ausgewählten Serie bereits."
+    },
+
+    "add-volume-dialog": {
+        "title": "Band hinzufügen",
+        "add": "Hinzufügen",
+        "name": "Name",
+        "group": "Gruppe",
+        "edition": "Edition",
+        "language": "Sprache",
+        "success": "Bände erfolgreich hinzugefügt",
+        "range-start-bigger": "Reichweiten-Anfang muss kleiner sein als das Ende",
+        "range-start-small": "Reichweiten-Anfang muss größer als 0 sein..",
+        "range-too-big": "Nicht genug Gruppen gefunden."
+    },
+
+    "add-media-dialog":{
+        "title": "Medien hinzufügen",
+        "edit-title": "Medien bearbeiten",
+        "add": "Hinzufügen",
+        "save": "Speichern",
+        "success": "Medien erfolgreich hinzugefügt.",
+        "save-success": "Änderungen erfolgreich gespeichert.",
+        "delete-success": "Medien erfolgreich gelöscht."
+    },
+
+    "view-report-dialog":{
+        "title": "Meldungsdetails"
     }
 }

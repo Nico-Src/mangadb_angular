@@ -554,9 +554,9 @@
         "volume-lists": "Volume-Lists",
         "series-lists": "Series-Lists",
         "entries": {
-            "none": "Einträge",
-            "singular": "Eintrag",
-            "plural": "Einträge"
+            "none": "Entries",
+            "singular": "Entry",
+            "plural": "Entries"
         },
         "add": "Add List",
         "type": {
