@@ -187,7 +187,7 @@ export class TopBar {
     // change handler for language switcher (update locale and cookie)
     languageSelected(lang: { value: string, key: string }) {
         this.translate.use(lang.value);
-        this.cookieService.set('language', lang.value);
+        this.cookieService.set('language', lang.value, 365);
     }
 
     // navigate to series detail page

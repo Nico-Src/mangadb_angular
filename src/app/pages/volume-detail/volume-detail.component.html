@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div class="section-title" [style.marginTop.px]="20" *ngIf="volume.extrasObj?.items?.length > 0">
-                    <span>{{ 'volume.extras' | translate }}</span>
+                    <span>{{ 'volume.extras' | translate }}<span *ngIf="volume.extrasObj?.name?.trim() !== ''"> - {{ volume.extrasObj.name }}</span></span>
                 </div>
                 <div class="extras-wrapper" *ngIf="volume.extrasObj?.items?.length > 0">
                     <div class="extra-item" [class.images]="extra.images?.length > 0" *ngFor="let extra of volume.extrasObj?.items">
