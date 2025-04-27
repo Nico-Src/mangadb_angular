@@ -9,13 +9,15 @@ import { tablerRating16Plus, tablerRating18Plus } from '@ng-icons/tabler-icons';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TuiButton } from '@taiga-ui/core';
 import { lucideFullscreen } from '@ng-icons/lucide';
+import { PluralTranslatePipe } from '../../pipes/pluralTranslate';
+import { solarGalleryBold } from '@ng-icons/solar-icons/bold';
 
 @Component({
     selector: 'manga-cover',
-    imports: [NgIf, TuiImgLazyLoading, TuiButton, TuiSkeleton, NgIcon, TranslatePipe],
+    imports: [NgIf, TuiImgLazyLoading, PluralTranslatePipe, TuiButton, TuiSkeleton, NgIcon, TranslatePipe],
     templateUrl: './manga-cover.component.html',
     styleUrl: './manga-cover.component.less',
-    viewProviders: [provideIcons({ tablerRating16Plus, tablerRating18Plus, lucideFullscreen })]
+    viewProviders: [provideIcons({ tablerRating16Plus, tablerRating18Plus, lucideFullscreen, solarGalleryBold })]
 })
 export class MangaCover {
     readonly cdn_base = CDN_BASE;
@@ -33,11 +35,13 @@ export class MangaCover {
     @Input() coverType: string = 'front';
     @Input() hasTransparentBg: boolean = false;
     @Input() showGalleryBtn: boolean = false;
+    @Input() imageNumber:number = 0;
     @Input() imageHash:string = '';
     @Output() openGallery: EventEmitter<any> = new EventEmitter();
     needsNSFWPlaceholder = signal(false);
     needsNSFW18Placeholder = signal(false);
     needsSkeleton = signal(false);
+    images:number = 0;
 
     ngOnChanges(){
         this.loading = true;

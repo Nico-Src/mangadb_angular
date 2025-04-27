@@ -10,3 +10,6 @@
 <button appearance="accent" size="m" tuiIconButton type="button" class="gallery-btn" *ngIf="showGalleryBtn && !(needsNSFWPlaceholder() || needsNSFW18Placeholder())" (click)="toggleGallery()">
     <ng-icon class="icon" name="lucideFullscreen" [style.fontSize.px]="20"></ng-icon>
 </button>
+<div class="gallery-number" *ngIf="showGalleryBtn && !(needsNSFWPlaceholder() || needsNSFW18Placeholder())" (click)="toggleGallery()">
+    {{ imageNumber }}<ng-icon class="icon" name="solarGalleryBold" [style.fontSize.px]="16"></ng-icon>
+</div>

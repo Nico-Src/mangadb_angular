@@ -11,7 +11,7 @@
         <div class="columns">
             <div class="column">
                 <div class="cover-wrapper" [class.non-3d]="volume.three_d === 0" *ngIf="!show404">
-                    <manga-cover [showGalleryBtn]="true" (openGallery)="galleryDialog.showDialog()" *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
+                    <manga-cover [showGalleryBtn]="true" [imageNumber]="volume.imageCount" (openGallery)="galleryDialog.showDialog()" *ngIf="volume?.id" [hasTransparentBg]="true" [res]="'high'" [id]="volume.id" [nsfw]="volume.nsfw === 1" [nsfw18]="volume.nsfw18 === 1" [aspectRatio]="volume.aspect_ratio"></manga-cover>
                 </div>
                 <div class="info">
                     <div class="header">

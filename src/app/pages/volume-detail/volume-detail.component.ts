@@ -105,8 +105,16 @@ export class VolumeDetailComponent {
         const completeSlug = `${seriesSlug}:${slug}`;
 
         this.api.request<any>(HttpMethod.GET, `volumes/slug/${completeSlug}?user_lang=${lang}`, {}).subscribe((res:any)=>{
+            // calc how many images there are for this volume
+            let imageCount = 0;
+            if(res.cover_path) imageCount++;
+            if(res.back_cover_path) imageCount++;
+            if(res.spine_cover_path) imageCount++;
             this.volume = res;
             this.volume.images = this.volume.images.filter((i:any)=>i.name);
+            // any extras
+            imageCount += this.volume.images.length;
+            this.volume.imageCount = imageCount;
             this.volume.measures_text = this.formatMeasures();
             if(this.volume.extras && this.volume.extras.trim() !== ''){
                 const tmpExtraObj = {

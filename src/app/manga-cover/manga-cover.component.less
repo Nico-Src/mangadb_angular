@@ -3,7 +3,7 @@
     width: fit-content;
 
     &:hover{
-        .gallery-btn{opacity: 1;}
+        .gallery-btn,.gallery-number{opacity: 1;}
     }
 
     .cover{
@@ -36,6 +36,36 @@
 
         .icon{
             transform: translateY(-2px);
+        }
+    }
+
+    .gallery-number{
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: white;
+        border-radius: 12px;
+        padding: 4px 10px;
+        font-size: 12px;
+        opacity: 0;
+        transition: all var(--transition-duration) ease;
+        background-color: rgba(0,0,0,.35);
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+
+        .icon{
+            transform: translateY(-2px);
+        }
+
+        &:hover{
+            background-color: rgba(0,0,0,.65);
+        }
+
+        &:active{
+            background-color: rgba(0,0,0,.85) !important;
         }
     }
 
